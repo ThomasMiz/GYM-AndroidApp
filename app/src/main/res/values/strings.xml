@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GYM-AndroidApp</string>
+    <string name="inciar_sesion">Inciar Sesión</string>
+    <string name="registrarse">Registrarse</string>
 </resources>
