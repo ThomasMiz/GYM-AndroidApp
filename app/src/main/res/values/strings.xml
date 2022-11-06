@@ -3,4 +3,7 @@
 
     <string name="pedro">Peter</string>
     <string name="message_id">Received id %1$d</string>
+    <string name="search">Search</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
 </resources>
