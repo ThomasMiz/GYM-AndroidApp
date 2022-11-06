@@ -1,4 +1,4 @@
-package com.example.gym_androidapp
+package com.grupo14.gym_androidapp
 
 import org.junit.Test
 
