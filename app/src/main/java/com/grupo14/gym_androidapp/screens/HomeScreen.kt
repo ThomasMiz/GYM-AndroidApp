@@ -1,4 +1,4 @@
-package com.grupo14.gym_androidapp
+package com.grupo14.gym_androidapp.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
+import com.grupo14.gym_androidapp.R
 
 @Composable
 fun HomeScreen(

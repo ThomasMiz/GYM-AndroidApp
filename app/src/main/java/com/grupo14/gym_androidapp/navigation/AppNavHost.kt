@@ -1,4 +1,4 @@
-package com.grupo14.gym_androidapp
+package com.grupo14.gym_androidapp.navigation
 
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,7 +18,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.grupo14.gym_androidapp.ui.theme.GYMAndroidAppTheme
+import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.screens.HomeScreen
+import com.grupo14.gym_androidapp.screens.OtherScreen
+import com.grupo14.gym_androidapp.screens.ProfileScreen
+import com.grupo14.gym_androidapp.screens.SearchScreen
 
 @Composable
 fun AppNavHost(
@@ -29,24 +33,38 @@ fun AppNavHost(
         topBar = { MyTopAppBar { navController.popBackStack() } },
         bottomBar = { MyBottomAppBar(navController) }
     ) {
-        NavHost(
-            navController = navController,
-            startDestination = startDestination
-        ) {
-            composable("home") {
-                HomeScreen(
-                    onNavigateToOtherScreen = { id -> navController.navigate("other/$id") }
-                )
-            }
+        MyNavGraph(navController, startDestination)
+    }
+}
 
-            composable(
-                "other/{id}",
-                arguments = listOf(navArgument("id") { type = NavType.IntType })
-            ) { navBarStackEntry ->
-                OtherScreen(navBarStackEntry.arguments?.getInt("id") ?: 0)
-            }
+@Composable
+fun MyNavGraph(navController: NavHostController, startDestination: String) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination
+    ) {
+        composable(route = "home") {
+            HomeScreen(
+                onNavigateToOtherScreen = { id -> navController.navigate("other/$id") }
+            )
+        }
+
+        composable(
+            route = "other/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) { navBarStackEntry ->
+            OtherScreen(navBarStackEntry.arguments?.getInt("id") ?: 0)
+        }
+
+        composable(route = "search") {
+            SearchScreen()
+        }
+
+        composable(route = "profile") {
+            ProfileScreen()
         }
     }
+
 }
 
 @Composable
@@ -80,7 +98,7 @@ fun MyBottomAppBar(navController: NavController) {
             alwaysShowLabel = true,
             selected = currentRoute == searchRoute,
             onClick = {
-                /*navController.navigate(searchRoute) {
+                navController.navigate(searchRoute) {
                     navController.graph.startDestinationRoute?.let { screenRoute ->
                         popUpTo(screenRoute) {
                             saveState = true
@@ -88,7 +106,7 @@ fun MyBottomAppBar(navController: NavController) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                }*/
+                }
             }
         )
 
@@ -100,7 +118,7 @@ fun MyBottomAppBar(navController: NavController) {
             alwaysShowLabel = true,
             selected = currentRoute == homeRoute,
             onClick = {
-                /*navController.navigate(homeRoute) {
+                navController.navigate(homeRoute) {
                     navController.graph.startDestinationRoute?.let { screenRoute ->
                         popUpTo(screenRoute) {
                             saveState = true
@@ -108,7 +126,7 @@ fun MyBottomAppBar(navController: NavController) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                }*/
+                }
             }
         )
 
@@ -120,7 +138,7 @@ fun MyBottomAppBar(navController: NavController) {
             alwaysShowLabel = true,
             selected = currentRoute == profileRoute,
             onClick = {
-                /*navController.navigate(profileRoute) {
+                navController.navigate(profileRoute) {
                     navController.graph.startDestinationRoute?.let { screenRoute ->
                         popUpTo(screenRoute) {
                             saveState = true
@@ -128,7 +146,7 @@ fun MyBottomAppBar(navController: NavController) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                }*/
+                }
             }
         )
     }
