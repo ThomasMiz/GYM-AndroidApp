@@ -151,13 +151,3 @@ fun MyBottomAppBar(navController: NavController) {
         )
     }
 }
-
-@Composable
-fun MyBottomAppBarOLD() {
-    BottomAppBar(
-        backgroundColor = colorResource(R.color.dark),
-        contentColor = colorResource(R.color.white)
-    ) {
-        Text("Bottom text XD")
-    }
-}
