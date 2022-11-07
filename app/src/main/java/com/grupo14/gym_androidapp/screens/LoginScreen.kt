@@ -31,7 +31,7 @@ import com.grupo14.gym_androidapp.R
 fun LoginScreen(navController: NavHostController) {
     val context = LocalContext.current
 
-    val emailVal = remember { mutableStateOf("") }
+    val userVal = remember { mutableStateOf("") }
     val passwordVal = remember { mutableStateOf("") }
 
     val passwordVisibility = remember { mutableStateOf(false) }
@@ -53,9 +53,9 @@ fun LoginScreen(navController: NavHostController) {
         )
 
         OutlinedTextField(
-            value = emailVal.value,
-            onValueChange = { emailVal.value = it },
-            label = { Text(text = "Usuario") },
+            value = userVal.value,
+            onValueChange = { userVal.value = it },
+            label = { Text(text = "Usuario", color = Color.Gray) },
             placeholder = { Text(text = "Usuario") },
             singleLine = true,
             modifier = Modifier
@@ -85,7 +85,7 @@ fun LoginScreen(navController: NavHostController) {
                     )
                 }
             },
-            label = { Text(text = "Contraseña") },
+            label = { Text(text = "Contraseña", color = Color.Gray) },
             placeholder = { Text(text = "Contraseña") },
             singleLine = true,
             visualTransformation = if (passwordVisibility.value)
@@ -106,7 +106,7 @@ fun LoginScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-                if (emailVal.value.isEmpty()) {
+                if (userVal.value.isEmpty()) {
                     Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
                 } else if (passwordVal.value.isEmpty()) {
                     Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()

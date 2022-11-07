@@ -60,7 +60,7 @@ fun RegisterScreen(navController: NavHostController) {
         OutlinedTextField(
             value = emailVal.value,
             onValueChange = { emailVal.value = it },
-            label = { Text(text = "Correo electrónico") },
+            label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
             modifier = Modifier
@@ -79,7 +79,7 @@ fun RegisterScreen(navController: NavHostController) {
         OutlinedTextField(
             value = userVal.value,
             onValueChange = { userVal.value = it },
-            label = { Text(text = "Nombre de usuario") },
+            label = { Text(text = "Nombre de usuario", color = Color.Gray) },
             placeholder = { Text(text = "Nombre de usuario") },
             singleLine = true,
             modifier = Modifier
@@ -109,7 +109,7 @@ fun RegisterScreen(navController: NavHostController) {
                     )
                 }
             },
-            label = { Text(text = "Contraseña") },
+            label = { Text(text = "Contraseña", color = Color.Gray) },
             placeholder = { Text(text = "Contraseña") },
             singleLine = true,
             visualTransformation = if (passwordVisibility.value)
@@ -141,7 +141,7 @@ fun RegisterScreen(navController: NavHostController) {
                     )
                 }
             },
-            label = { Text(text = "Repetir contraseña") },
+            label = { Text(text = "Repetir contraseña", color = Color.Gray) },
             placeholder = { Text(text = "Repetir contraseña") },
             singleLine = true,
             visualTransformation = if (repPasswordVisibility.value)
