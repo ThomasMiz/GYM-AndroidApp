@@ -12,61 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.grupo14.gym_androidapp.R
-import com.grupo14.gym_androidapp.screens.HomeScreen
-import com.grupo14.gym_androidapp.screens.OtherScreen
-import com.grupo14.gym_androidapp.screens.ProfileScreen
-import com.grupo14.gym_androidapp.screens.SearchScreen
-
-@Composable
-fun AppNavHost(
-    navController: NavHostController = rememberNavController(),
-    startDestination: String = "home"
-) {
-    Scaffold(
-        topBar = { MyTopAppBar { navController.popBackStack() } },
-        bottomBar = { MyBottomAppBar(navController) }
-    ) {
-        MyNavGraph(navController, startDestination)
-    }
-}
-
-@Composable
-fun MyNavGraph(navController: NavHostController, startDestination: String) {
-    NavHost(
-        navController = navController,
-        startDestination = startDestination
-    ) {
-        composable(route = "home") {
-            HomeScreen(
-                onNavigateToOtherScreen = { id -> navController.navigate("other/$id") }
-            )
-        }
-
-        composable(
-            route = "other/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.IntType })
-        ) { navBarStackEntry ->
-            OtherScreen(navBarStackEntry.arguments?.getInt("id") ?: 0)
-        }
-
-        composable(route = "search") {
-            SearchScreen()
-        }
-
-        composable(route = "profile") {
-            ProfileScreen()
-        }
-    }
-
-}
 
 @Composable
 fun MyTopAppBar(onBackClicked: () -> Unit) {

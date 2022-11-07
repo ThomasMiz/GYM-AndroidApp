@@ -1,7 +1,6 @@
-package com.grupo14.gym_androidapp.navigation
+package com.grupo14.gym_androidapp.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,14 +9,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -28,32 +23,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.grupo14.gym_androidapp.R
 
-
 @Composable
-fun WelcomeNavHost(navController: NavHostController = rememberNavController()){
+fun LoginScreen(navController: NavHostController) {
 
-    Surface (
-        modifier= Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
-    ) {
-        Login(navController = navController)
-    }
+    val emailVal = remember { mutableStateOf("") }
+    val passwordVal = remember { mutableStateOf("") }
 
-}
-
-@Composable
-fun Login(navController: NavController) {
-
-    val context = LocalContext.current
-    val emailVal = remember { mutableStateOf("")}
-    val passwordVal = remember { mutableStateOf("")}
-
-    val passwordVisibility = remember { mutableStateOf(false)}
+    val passwordVisibility = remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
 
@@ -79,7 +58,7 @@ fun Login(navController: NavController) {
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth(0.8f),
-            leadingIcon = { Icon(imageVector = Icons.Default.Person, null)},
+            leadingIcon = { Icon(imageVector = Icons.Default.Person, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = MaterialTheme.colors.background,
@@ -111,7 +90,7 @@ fun Login(navController: NavController) {
                 VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth(0.8f),
-            leadingIcon = { Icon(imageVector = Icons.Default.Lock, null)},
+            leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = MaterialTheme.colors.background,
@@ -124,18 +103,18 @@ fun Login(navController: NavController) {
         )
 
         Button(
-            onClick = {},
+            onClick = {navController.navigate("home")},
             modifier = Modifier.fillMaxWidth(0.8f),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
         ) {
-          Text(
-              "Ingresar",
+            Text(
+                "Ingresar",
                 Modifier
                     .padding(vertical = 8.dp),
                 color = MaterialTheme.colors.secondary,
                 fontSize = 25.sp
-              )
+            )
         }
 
         Divider(
