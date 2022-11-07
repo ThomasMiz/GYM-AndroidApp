@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -97,6 +98,8 @@ fun MyBottomAppBar(navController: NavController) {
             label = { Text(text = searchTitle) },
             alwaysShowLabel = true,
             selected = currentRoute == searchRoute,
+            selectedContentColor = MaterialTheme.colors.primary,
+            unselectedContentColor = Color.White,
             onClick = {
                 navController.navigate(searchRoute) {
                     navController.graph.startDestinationRoute?.let { screenRoute ->
@@ -117,6 +120,8 @@ fun MyBottomAppBar(navController: NavController) {
             label = { Text(text = homeTitle) },
             alwaysShowLabel = true,
             selected = currentRoute == homeRoute,
+            selectedContentColor = MaterialTheme.colors.primary,
+            unselectedContentColor = Color.White,
             onClick = {
                 navController.navigate(homeRoute) {
                     navController.graph.startDestinationRoute?.let { screenRoute ->
@@ -137,6 +142,8 @@ fun MyBottomAppBar(navController: NavController) {
             label = { Text(text = profileTitle) },
             alwaysShowLabel = true,
             selected = currentRoute == profileRoute,
+            selectedContentColor = MaterialTheme.colors.primary,
+            unselectedContentColor = Color.White,
             onClick = {
                 navController.navigate(profileRoute) {
                     navController.graph.startDestinationRoute?.let { screenRoute ->

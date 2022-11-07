@@ -6,4 +6,8 @@
     <string name="search">Search</string>
     <string name="home">Home</string>
     <string name="profile">Profile</string>
+    <string name="editProfile">Edit Profile</string>
+
+    <string name="profileSeggsLabel">Sex: %1$s</string>
+    <string name="profileBithdateLabel">Birthdate: %1$s</string>
 </resources>
