@@ -173,7 +173,7 @@ fun RegisterScreen(navController: NavHostController) {
                     Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, "Usuario registrado con éxito", Toast.LENGTH_SHORT).show()
-                    navController.navigate("login")
+                    navController.navigate("verify")
                 }
             },
             modifier = Modifier.fillMaxWidth(0.8f),

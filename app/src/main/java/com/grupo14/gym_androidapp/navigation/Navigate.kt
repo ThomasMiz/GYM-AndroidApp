@@ -41,6 +41,10 @@ fun Activities(navController: NavHostController = rememberNavController()){
             RegisterScreen(navController)
         }
 
+        composable(route = "verify") {
+            VerifyUser(navController)
+        }
+
         composable(route = "home") {
             Scaffold(
                 topBar = { MyTopAppBar { navController.popBackStack() } },
