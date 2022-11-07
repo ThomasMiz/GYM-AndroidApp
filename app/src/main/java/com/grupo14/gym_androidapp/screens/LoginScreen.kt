@@ -1,5 +1,6 @@
 package com.grupo14.gym_androidapp.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -27,6 +29,7 @@ import com.grupo14.gym_androidapp.R
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
+    val context = LocalContext.current
 
     val emailVal = remember { mutableStateOf("") }
     val passwordVal = remember { mutableStateOf("") }
@@ -102,7 +105,15 @@ fun LoginScreen(navController: NavHostController) {
         )
 
         Button(
-            onClick = {navController.navigate("home")},
+            onClick = {
+                if (emailVal.value.isEmpty()) {
+                    Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
+                } else if (passwordVal.value.isEmpty()) {
+                    Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
+                } else {
+                    navController.navigate("home")
+                }
+          },
             modifier = Modifier.fillMaxWidth(0.8f),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
