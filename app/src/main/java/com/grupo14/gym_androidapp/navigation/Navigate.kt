@@ -30,7 +30,7 @@ fun Activities(navController: NavHostController = rememberNavController()){
 
     NavHost(
         navController = navController,
-        startDestination =  "login",
+        startDestination =  "home",
 
     ) {
         composable(route = "login") {

@@ -10,4 +10,8 @@
 
     <string name="profileSeggsLabel">Sexo: %1$s</string>
     <string name="profileBithdateLabel">Nacimiento: %1$s</string>
+
+    <string name="male">Hombre</string>
+    <string name="female">Mujer</string>
+    <string name="other">Otro</string>
 </resources>
