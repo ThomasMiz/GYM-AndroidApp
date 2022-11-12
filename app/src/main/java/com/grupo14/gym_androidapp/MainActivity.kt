@@ -7,7 +7,12 @@ import com.grupo14.gym_androidapp.navigation.Activities
 import com.grupo14.gym_androidapp.ui.theme.GYMAndroidAppTheme
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        var instance: MainActivity? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        instance = this;
         super.onCreate(savedInstanceState)
         setContent {
             GYMAndroidAppTheme {

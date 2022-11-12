@@ -4,8 +4,8 @@ import com.grupo14.gym_androidapp.api.models.UserApiModel
 import kotlinx.coroutines.delay
 import java.util.Date
 
-class GymApi {
-    suspend fun fetchCurrentUser(): UserApiModel {
+class GymApiChau {
+    /*suspend fun fetchCurrentUser(): UserApiModel {
         delay(3000)
         return UserApiModel(
             id = 69,
@@ -21,5 +21,5 @@ class GymApi {
             lastActivity = Date(284007600000),
             verified = true
         )
-    }
+    }*/
 }

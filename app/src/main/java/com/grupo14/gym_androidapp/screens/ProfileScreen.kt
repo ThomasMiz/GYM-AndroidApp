@@ -19,8 +19,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.grupo14.gym_androidapp.GymViewModel
+import com.grupo14.gym_androidapp.*
 import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.api.models.Gender
+import com.grupo14.gym_androidapp.api.models.UserApiModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.listItemsSingleChoice
@@ -107,27 +109,20 @@ fun ProfileScreenLoaded(
 ) {
     var isEditing by remember { mutableStateOf(false) }
 
-    var username by remember { mutableStateOf("Felipe Piña") }
-    var seggsIndex by remember { mutableStateOf(0) }
-    var birthdate by remember { mutableStateOf(java.time.LocalDate.now()) }
+    val user: UserApiModel = viewModel.loginUiState.user!!
+    val fullName = "${user.firstName} ${user.lastName}"
 
-    var usernameEditing by remember { mutableStateOf(username) }
-    var seggsIndexEditing by remember { mutableStateOf(seggsIndex) }
-    var birthdateEditing by remember { mutableStateOf(birthdate) }
+    var fullnameEditing by remember { mutableStateOf(fullName) }
+    var seggsIndexEditing by remember { mutableStateOf(user.gender.ordinal) }
+    var birthdateEditing by remember { mutableStateOf(user.birthdate) }
 
     val seggsDialogState = rememberMaterialDialogState()
     val datepickerDialogState = rememberMaterialDialogState()
 
-    val seggsOptionsList = listOf(
-        stringResource(R.string.male),
-        stringResource(R.string.female),
-        stringResource(R.string.other)
-    )
+    val genderOptionsList = createGendersList()
 
     Box(
         modifier = Modifier.padding(horizontal = 75.dp, vertical = 20.dp)
-        //.background(Color(0, 255, 0, 127))
-
     ) {
         Image(
             painter = painterResource(R.drawable.profile_placeholder),
@@ -143,28 +138,32 @@ fun ProfileScreenLoaded(
 
     if (!isEditing) {
         Text(
-            text = username,
+            text = fullName,
             fontSize = 40.sp,
+            modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp)
+        )
+        Text(
+            text = user.username,
             modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp)
         )
 
         Text(
-            text = stringResource(R.string.profileSeggsLabel, seggsOptionsList[seggsIndex]),
+            text = stringResource(R.string.profileSeggsLabel, stringResource(id = user.gender.stringResourceId)),
             fontSize = 24.sp,
             modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp)
         )
 
         Text(
-            text = stringResource(R.string.profileBithdateLabel, birthdate),
+            text = stringResource(R.string.profileBithdateLabel, formatDate(user.birthdate)),
             fontSize = 24.sp,
             modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp)
         )
 
         Button(
             onClick = {
-                usernameEditing = username
-                seggsIndexEditing = seggsIndex
-                birthdateEditing = birthdate
+                fullnameEditing = fullName
+                seggsIndexEditing = user.gender.ordinal
+                birthdateEditing = user.birthdate
                 isEditing = true
             }, modifier = Modifier.padding(10.dp)
         ) {
@@ -184,7 +183,7 @@ fun ProfileScreenLoaded(
             modifier = Modifier.padding(top = 10.dp, start = 50.dp, end = 50.dp)
         ) {
             TextField(
-                value = usernameEditing, onValueChange = { newValue -> usernameEditing = newValue },
+                value = fullnameEditing, onValueChange = { newValue -> fullnameEditing = newValue },
                 //fontSize = 40.sp,
                 modifier = Modifier
                     .padding(horizontal = 0.dp, vertical = 10.dp)
@@ -197,7 +196,7 @@ fun ProfileScreenLoaded(
             ) {
                 Text(
                     text = stringResource(
-                        R.string.profileSeggsLabel, seggsOptionsList[seggsIndexEditing]
+                        R.string.profileSeggsLabel, genderOptionsList[seggsIndexEditing]
                     ), color = Color.Black, modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -206,9 +205,10 @@ fun ProfileScreenLoaded(
                 onClick = { datepickerDialogState.show() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
             ) {
+
                 Text(
                     text = stringResource(
-                        R.string.profileBithdateLabel, birthdateEditing.toString()
+                        R.string.profileBithdateLabel, formatDate(birthdateEditing)
                     ), color = Color.Black, modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -217,20 +217,20 @@ fun ProfileScreenLoaded(
         MaterialDialog(
             dialogState = datepickerDialogState,
             buttons = {
-                positiveButton("Ok")
-                negativeButton("Cancel")
+                positiveButton(text = stringResource(id = R.string.ok))
+                negativeButton(text = stringResource(id = R.string.cancel))
             },
         ) {
             datepicker { date ->
-                birthdateEditing = date
+                birthdateEditing = ConvertLocalDateToDate(date)
             }
         }
 
         MaterialDialog(dialogState = seggsDialogState, buttons = {
-            negativeButton("Cancel")
+            negativeButton(stringResource(id = R.string.cancel))
         }) {
             listItemsSingleChoice(
-                list = seggsOptionsList,
+                list = genderOptionsList,
                 initialSelection = seggsIndexEditing,
                 onChoiceChange = { selectedIndex ->
                     seggsIndexEditing = selectedIndex
@@ -249,9 +249,10 @@ fun ProfileScreenLoaded(
         ) {
             IconButton(
                 onClick = {
-                    username = usernameEditing
-                    seggsIndex = seggsIndexEditing
-                    birthdate = birthdateEditing
+                    // TODO: Save shit to API and update viewmodel
+                    // username = usernameEditing
+                    // seggsIndex = seggsIndexEditing
+                    // birthdate = birthdateEditing
                     isEditing = false
                 }, modifier = Modifier.padding(end = 10.dp)
             ) {

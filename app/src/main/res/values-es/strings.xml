@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">GYM-AndroidApp</string>
 
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancelar</string>
+    <string name="accept">Aceptar</string>
+
     <string name="pedro">Pedro</string>
     <string name="message_id">Se recibió el id %1$d</string>
     <string name="search">Buscar</string>

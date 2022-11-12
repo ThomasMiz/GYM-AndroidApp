@@ -25,6 +25,7 @@ class GymViewModel(
             try {
                 loginUiState = loginUiState.copy(isFetchingUser = true)
                 val userResult: UserApiModel = gymRepository.fetchCurrentUser()
+                println("Got user: ${userResult}")
                 loginUiState = loginUiState.copy(
                     user = userResult,
                     fetchUserErrorStringId = null,

@@ -1,18 +1,21 @@
 package com.grupo14.gym_androidapp.api.models
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Date
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class UserApiModel(
-    val id: Long,
-    val username: String,
-    val firstName: String,
-    val lastName: String,
-    val gender: String,
-    val birthdate: Date,
-    val email: String,
-    val phone: String,
-    val avatarUrl: String,
-    val date: Date,
-    val lastActivity: Date,
-    val verified: Boolean
+    @JsonProperty("id") val id: Long,
+    @JsonProperty("username") val username: String,
+    @JsonProperty("firstName") val firstName: String,
+    @JsonProperty("lastName") val lastName: String,
+    @JsonProperty("gender") val gender: Gender,
+    @JsonProperty("birthdate") val birthdate: Date,
+    @JsonProperty("email") val email: String,
+    @JsonProperty("phone") val phone: String,
+    @JsonProperty("avatarUrl") val avatarUrl: String,
+    @JsonProperty("date") val date: Date,
+    @JsonProperty("lastActivity") val lastActivity: Date,
+    @JsonProperty("verified") val verified: Boolean
 )
