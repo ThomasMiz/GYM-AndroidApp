@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.grupo14.gym_androidapp.GymViewModel
 import com.grupo14.gym_androidapp.R
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
@@ -27,7 +28,9 @@ import com.vanpra.composematerialdialogs.listItemsSingleChoice
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    viewModel: GymViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,6 +57,14 @@ fun ProfileScreen() {
             stringResource(R.string.female),
             stringResource(R.string.other)
         )
+
+        if (viewModel.loginUiState.isFetchingUser) {
+            CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
+        } else {
+            Button(onClick = {viewModel.fetchCurrentUser()}){
+                Text(text = "Traeme al Pedro")
+            }
+        }
 
         Box(
             modifier = Modifier.padding(horizontal = 75.dp, vertical = 20.dp)
