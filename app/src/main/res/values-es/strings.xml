@@ -7,6 +7,10 @@
     <string name="home">Inicio</string>
     <string name="profile">Perfil</string>
     <string name="editProfile">Editar Perfil</string>
+    <string name="oops">Ups!</string>
+    <string name="fetchUserFailed">No se ha podido cargar su usuario.</string>
+    <string name="tryAgainLater">Por favor vuelva a intentar más tarde.</string>
+    <string name="tryAgain">Volver a intentar</string>
 
     <string name="profileSeggsLabel">Sexo: %1$s</string>
     <string name="profileBithdateLabel">Nacimiento: %1$s</string>

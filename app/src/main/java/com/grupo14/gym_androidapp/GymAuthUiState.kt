@@ -11,7 +11,7 @@ data class GymAuthUiState(
     val birthdate: java.time.LocalDate? = null,*/
 
     val user: UserApiModel? = null,
-    val fetchUserError: String? = null,
+    val fetchUserErrorStringId: Int? = null,
     val isFetchingUser: Boolean = false,
 )
 

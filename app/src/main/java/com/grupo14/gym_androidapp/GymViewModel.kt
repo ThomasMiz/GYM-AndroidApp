@@ -3,6 +3,7 @@ package com.grupo14.gym_androidapp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grupo14.gym_androidapp.api.GymRepository
@@ -26,12 +27,13 @@ class GymViewModel(
                 val userResult: UserApiModel = gymRepository.fetchCurrentUser()
                 loginUiState = loginUiState.copy(
                     user = userResult,
+                    fetchUserErrorStringId = null,
                     isFetchingUser = false,
                 )
             } catch (e: Exception) {
                 loginUiState = loginUiState.copy(
                     user = null,
-                    fetchUserError = "Failed to fetch user", // TODO: Use stringResource()
+                    fetchUserErrorStringId = R.string.fetchUserFailed,
                     isFetchingUser = false,
                 )
             }

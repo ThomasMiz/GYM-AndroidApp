@@ -7,6 +7,10 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="editProfile">Edit Profile</string>
+    <string name="oops">Oops!</string>
+    <string name="fetchUserFailed">We couldn\'t fetch your user data.</string>
+    <string name="tryAgainLater">Please try again later.</string>
+    <string name="tryAgain">Try again</string>
 
     <string name="profileSeggsLabel">Sex: %1$s</string>
     <string name="profileBithdateLabel">Birthdate: %1$s</string>
