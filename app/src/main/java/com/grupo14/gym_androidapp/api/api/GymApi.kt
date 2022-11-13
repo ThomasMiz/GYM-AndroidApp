@@ -5,6 +5,8 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface GymApi {
+    // ↓ USERS ↓
+
     @POST("users")
     fun registerNewUser(@Body user: UserApiModel): Call<UserApiModel>
 
@@ -34,30 +36,167 @@ interface GymApi {
 
     @GET("users/current/routines")
     fun getCurrentUserRoutines(
-        @Query("difficulty") difficulty: Difficulty?,
-        @Query("search") search: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("orderBy") orderBy: String,
-        @Query("direction") direction: String
-    ) : Call<ApiModelListPageOf<SmallRoutineApiModel>>
+        @Query("search") search: String?,
+        @Query("difficulty") difficulty: Difficulty?,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<RoutineApiModel>>
 
     @GET("users/{userId}/routines")
     fun getUserRoutines(
         @Path("userId") userId: Int,
-        @Query("difficulty") difficulty: Difficulty?,
-        @Query("search") search: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("orderBy") orderBy: String,
-        @Query("direction") direction: String
-    ) : Call<ApiModelListPageOf<SmallRoutineApiModel>>
+        @Query("search") search: String?,
+        @Query("difficulty") difficulty: Difficulty?,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<RoutineApiModel>>
 
     @GET("users/current/routines")
     fun getCurrentUserReviews(
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("orderBy") orderBy: String,
-        @Query("direction") direction: String
-    ) : Call<ApiModelListPageOf<SmallRoutineApiModel>>
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<RoutineApiModel>>
+
+    // ↑ USERS ↑
+    // ↓ FAVORITES ↓
+
+    @GET("favourites")
+    fun getCurrentUserFavorites(
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Call<ApiModelListPageOf<RoutineApiModel>>
+
+    @POST("favourites/{routineId}")
+    fun postCurrentUserFavorites(@Path("routineId") routineId: Int): Call<ErrorApiModel>
+
+    @DELETE("favourites/{routineId}")
+    fun deleteCurrentUserFavorites(@Path("routineId") routineId: Int): Call<ErrorApiModel>
+
+    // ↑ FAVORITES ↑
+    // ↓ CATEGORIES ↓
+
+    @GET("categories")
+    fun getCategories(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("search") search: String?,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<Category>>
+
+    @POST("categories")
+    fun postCategories(@Body category: Category): Call<Category>
+
+    @GET("categories/{categoryId}")
+    fun getCategory(@Path("categoryId") categoryId: Int): Call<Category>
+
+    @PUT("categories/{categoryId}")
+    fun putCategory(@Path("categoryId") categoryId: Int, @Body category: Category): Call<Category>
+
+    @DELETE("categories/{categoryId}")
+    fun deleteCategory(@Path("categoryId") categoryId: Int): Call<ErrorApiModel>
+
+    // ↑ CATEGORIES ↑
+    // ↓ ROUTINES ↓
+
+    @GET("routines")
+    fun getRoutines(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("search") search: String?,
+        @Query("userId") userId: Int?,
+        @Query("categoryId") categoryId: Int?,
+        @Query("difficulty") difficulty: String?,
+        @Query("score") score: Int?,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<RoutineApiModel>>
+
+    @GET("routines/{routineId}")
+    fun getRoutine(@Path("routineId") routineId: Int): Call<RoutineApiModel>
+
+    // ↑ ROUTINES ↑
+    // ↓ ROUTINES CYCLES ↓
+
+    @GET("routines/{routineId}/cycles")
+    fun getRoutineCycles(
+        @Path("routineId") routineId: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<CycleApiModel>>
+
+    @GET("routines/{routineId}/cycles/{cycleId}")
+    fun getRoutineCycle(
+        @Path("routineId") routineId: Int,
+        @Path("cycleId") cycleId: Int
+    ): Call<CycleApiModel>
+
+    // ↑ ROUTILES CYCLES ↑
+    // ↓ CYCLES EXERCISES ↓
+
+    @GET("cycles/{cyclesId}/exercises")
+    fun getCycleExercises(
+        @Path("cycleId") cycleId: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<CycleExerciseApiModel>>
+
+    @GET("cycles/{cyclesId}/exercises/{exerciseId}")
+    fun getCycleExercise(
+        @Path("cycleId") cycleId: Int,
+        @Path("exerciseId") exerciseId: Int
+    ): Call<CycleExerciseApiModel>
+
+    // ↑ CYCLES EXERCISES ↑
+    // ↓ EXERCISES ↓
+
+    @GET("exercises")
+    fun getExercises(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("search") search: String?,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<ExerciseApiModel>>
+
+    @GET("exercises/{exerciseId}")
+    fun getExercise(@Path("exerciseId") exerciseId: Int): Call<ExerciseApiModel>
+
+    // ↑ EXERCISES ↑
+    // ↓ EXERCISES IMAGES ↓
+
+
+    // ↑ EXERCISES IMAGES ↑
+    // ↓ EXERCISES VIDEOS ↓
+
+
+    // ↑ EXERCISES VIDEOS ↑
+    // ↓ REVIEWS ↓
+
+    @GET("reviews/{routineId}")
+    fun getRoutineReviews(
+        @Path("routineId") routineId: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<ReviewApiModel>>
+
+    @GET("reviews/{routineId}")
+    fun postRoutineReview(
+        @Path("routineId") routineId: Int,
+        @Body review: ReviewApiModel
+    ): Call<ReviewApiModel>
+
+    // ↑ REVIEWS ↑
 }

@@ -6,6 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ErrorApiModel(
     @JsonProperty("code") val code: Int?,
-    @JsonProperty("description") val description: String,
-    @JsonProperty("details") val details: List<String>
+    @JsonProperty("description") val description: String?,
+    @JsonProperty("details") val details: List<String>?
 )
