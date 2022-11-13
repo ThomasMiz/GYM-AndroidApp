@@ -24,13 +24,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.grupo14.gym_androidapp.GymViewModel
 import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun Activities(navController: NavHostController = rememberNavController()){
-    val viewModel by remember { mutableStateOf(GymViewModel()) }
+fun Activities(
+    navController: NavHostController = rememberNavController(),
+    gymRepository: GymRepository = GymRepository()
+){
+    val viewModel by remember { mutableStateOf(GymViewModel(gymRepository)) }
 
     NavHost(
         navController = navController,

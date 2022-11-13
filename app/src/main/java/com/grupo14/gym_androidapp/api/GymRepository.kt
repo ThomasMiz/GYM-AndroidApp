@@ -6,5 +6,9 @@ class GymRepository(
     private val gymRemoteDataSource: GymRemoteDataSource = GymRemoteDataSource(),
     // private val gymLocalDataSource: GymLocalDataSource // No explicaron como hacer esto 👍
 ) {
+    fun setAuthtoken(authToken: String) {
+        gymRemoteDataSource.setAuthToken(authToken);
+    }
+
     suspend fun fetchCurrentUser(): UserApiModel = gymRemoteDataSource.fetchCurrentUser()
 }

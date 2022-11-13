@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class GymViewModel(
-    private val gymRepository: GymRepository = GymRepository()
+    val gymRepository: GymRepository = GymRepository()
 ) : ViewModel() {
     var loginUiState by mutableStateOf(GymAuthUiState())
         private set

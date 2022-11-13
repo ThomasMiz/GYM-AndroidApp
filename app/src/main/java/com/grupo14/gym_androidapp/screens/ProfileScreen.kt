@@ -140,23 +140,23 @@ fun ProfileScreenLoaded(
         Text(
             text = fullName,
             fontSize = 40.sp,
-            modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp)
+            modifier = Modifier.padding(top = 10.dp)
         )
         Text(
-            text = user.username,
-            modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp)
+            text = "@" + user.username,
+            modifier = Modifier.padding(bottom = 10.dp)
         )
 
         Text(
             text = stringResource(R.string.profileSeggsLabel, stringResource(id = user.gender.stringResourceId)),
             fontSize = 24.sp,
-            modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp)
+            modifier = Modifier.padding(vertical = 10.dp)
         )
 
         Text(
             text = stringResource(R.string.profileBithdateLabel, formatDate(user.birthdate)),
             fontSize = 24.sp,
-            modifier = Modifier.padding(horizontal = 0.dp, vertical = 10.dp)
+            modifier = Modifier.padding(vertical = 10.dp)
         )
 
         Button(
