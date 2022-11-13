@@ -60,7 +60,7 @@ class GymApiManager(private val baseUrl: String = MainActivity.BASE_URL) {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request();
 
-            println("Outgoing request to ${request.url()} with authorization \"${request.headers().get("Authorization")}\"");
+            println("Outgoing request to ${request.url} with authorization \"${request.headers["Authorization"]}\"");
             return chain.proceed(request);
         }
     }
