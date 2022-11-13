@@ -23,4 +23,10 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="other">Other</string>
+
+    <string name="rookie">Rookie</string>
+    <string name="beginner">Beginner</string>
+    <string name="intermediate">Intermediate</string>
+    <string name="advanced">Advanced</string>
+    <string name="expert">Expert</string>
 </resources>
