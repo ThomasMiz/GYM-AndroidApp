@@ -42,22 +42,22 @@ class GymRemoteDataSource(
     suspend fun putCurrentUser(user: UserApiModel) = handleApiRequest { it.putCurrentUser(user) }
     suspend fun deleteCurrentUser() = handleApiRequest { it.deleteCurrentUser() }
 
-    suspend fun getCurrentUserRoutines(
+    suspend fun fetchCurrentUserRoutines(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, difficulty: Difficulty? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest { it.getCurrentUserRoutines(page, size, search, difficulty, orderBy, direction) }
 
-    suspend fun getUserRoutines(
+    suspend fun fetchUserRoutines(
         userId: Int, page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, difficulty: Difficulty? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest { it.getUserRoutines(userId, page, size, search, difficulty, orderBy, direction) }
 
-    suspend fun getCurrentUserReviews(
+    suspend fun fetchCurrentUserReviews(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest { it.getCurrentUserReviews(page, size, orderBy, direction) }
 
     // ↑ USERS ↑
     // ↓ FAVORITES ↓
 
-    suspend fun getCurrentUserFavorites(
+    suspend fun fetchCurrentUserFavorites(
         page: Int, size: Int = DEFAULT_PAGE_SIZE
     ) = handleApiRequest { it.getCurrentUserFavorites(page, size) }
 
@@ -67,50 +67,50 @@ class GymRemoteDataSource(
     // ↑ FAVORITES ↑
     // ↓ CATEGORIES ↓
 
-    suspend fun getCategories(
+    suspend fun fetchCategories(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest { it.getCategories(page, size, search, orderBy, direction) }
 
     suspend fun postCategories(category: Category) = handleApiRequest { it.postCategories(category) }
-    suspend fun getCategory(categoryId: Int) = handleApiRequest { it.getCategory(categoryId) }
+    suspend fun fetchCategory(categoryId: Int) = handleApiRequest { it.getCategory(categoryId) }
     suspend fun putCategory(category: Category) = handleApiRequest { it.putCategory(category.id!!, category) }
     suspend fun deleteCategory(categoryId: Int) = handleApiRequest { it.deleteCategory(categoryId) }
 
     // ↑ CATEGORIES ↑
     // ↓ ROUTINES ↓
 
-    suspend fun getRoutines(
+    suspend fun fetchRoutines(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, userId: Int? = null, categoryId: Int? = null, difficulty: String? = null, score: Int? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest { it.getRoutines(page, size, search, userId, categoryId, difficulty, score, orderBy, direction) }
 
-    suspend fun getRoutine(routineId: Int) = handleApiRequest { it.getRoutine(routineId) }
+    suspend fun fetchRoutine(routineId: Int) = handleApiRequest { it.getRoutine(routineId) }
 
     // ↑ ROUTINES ↑
     // ↓ ROUTINES CYCLES ↓
 
-    suspend fun getRoutineCycles(
+    suspend fun fetchRoutineCycles(
         routineId: Int, page: Int, size: Int = DEFAULT_PAGE_SIZE, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest { it.getRoutineCycles(routineId, page, size, orderBy, direction) }
 
-    suspend fun getRoutineCycle(routineId: Int, cycleId: Int) = handleApiRequest { it.getRoutineCycle(routineId, cycleId) }
+    suspend fun fetchRoutineCycle(routineId: Int, cycleId: Int) = handleApiRequest { it.getRoutineCycle(routineId, cycleId) }
 
     // ↑ ROUTILES CYCLES ↑
     // ↓ CYCLES EXERCISES ↓
 
-    suspend fun getCycleExercises(
+    suspend fun fetchCycleExercises(
         cycleId: Int, page: Int, size: Int = DEFAULT_PAGE_SIZE, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest { it.getCycleExercises(cycleId, page, size, orderBy, direction) }
 
-    suspend fun getCycleExercise(cycleId: Int, exerciseId: Int) = handleApiRequest { it.getCycleExercise(cycleId, exerciseId) }
+    suspend fun fetchCycleExercise(cycleId: Int, exerciseId: Int) = handleApiRequest { it.getCycleExercise(cycleId, exerciseId) }
 
     // ↑ CYCLES EXERCISES ↑
     // ↓ EXERCISES ↓
 
-    suspend fun getExercises(
+    suspend fun fetchExercises(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest{ it.getExercises(page, size, search, orderBy, direction) }
 
-    suspend fun getExercise(exerciseId: Int) = handleApiRequest { it.getExercise(exerciseId) }
+    suspend fun fetchExercise(exerciseId: Int) = handleApiRequest { it.getExercise(exerciseId) }
 
     // ↑ EXERCISES ↑
     // ↓ EXERCISES IMAGES ↓
@@ -123,7 +123,7 @@ class GymRemoteDataSource(
     // ↑ EXERCISES VIDEOS ↑
     // ↓ REVIEWS ↓
 
-    suspend fun getRoutineReviews(
+    suspend fun fetchRoutineReviews(
         routineId: Int, page: Int, size: Int = DEFAULT_PAGE_SIZE, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest{ it.getRoutineReviews(routineId, page, size, orderBy, direction) }
 
