@@ -25,6 +25,8 @@ import com.grupo14.gym_androidapp.api.models.Gender
 import com.grupo14.gym_androidapp.api.models.UserApiModel
 import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.DatePickerColors
+import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.listItemsSingleChoice
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -227,7 +229,12 @@ fun ProfileScreenLoaded(
             },
         ) {
             datepicker(
-                initialDate = birthdateEditing
+                initialDate = birthdateEditing,
+                colors = DatePickerDefaults.colors(
+                    headerBackgroundColor = MaterialTheme.colors.secondaryVariant,
+                    calendarHeaderTextColor = MaterialTheme.colors.secondaryVariant,
+                    dateActiveBackgroundColor = MaterialTheme.colors.secondaryVariant
+                )
             ) { date ->
                 birthdateEditing = date
             }
