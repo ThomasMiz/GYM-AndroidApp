@@ -8,25 +8,25 @@ interface GymApi {
     // ↓ USERS ↓
 
     @POST("users")
-    fun registerNewUser(@Body user: UserApiModel): Call<UserApiModel>
+    fun registerNewUser(@Body user: LoginUserApiModel): Call<UserApiModel>
 
     @GET("users/{userId}")
-    fun fetchUser(@Path("userId") userId: Int): Call<UserApiModel>
+    fun getUser(@Path("userId") userId: Int): Call<UserApiModel>
 
     @POST("users/resend_verification")
     fun resendUserVerification(@Body user: UserApiModel): Call<ErrorApiModel>
 
     @POST("users/verify_email")
-    fun verifyUserEmail(@Body user: UserApiModel): Call<ErrorApiModel>
+    fun verifyUserEmail(@Body user: VerifyUserApiModel): Call<ErrorApiModel>
 
     @POST("users/login")
-    fun loginUser(@Body user: UserApiModel): Call<TokenApiModel>
+    fun loginUser(@Body user: LoginUserApiModel): Call<TokenApiModel>
 
     @POST("users/logout")
     fun logoutUser(): Call<ErrorApiModel>
 
     @GET("users/current")
-    fun fetchCurrentUser(): Call<UserApiModel>
+    fun getCurrentUser(): Call<UserApiModel>
 
     @PUT("users/current")
     fun putCurrentUser(@Body user: UserApiModel): Call<UserApiModel>
