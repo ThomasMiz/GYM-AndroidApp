@@ -10,7 +10,7 @@ class GymRepository(
     private val DEFAULT_ORDERBY: String? = null
     private val DEFAULT_DIRECTION: String? = null
 
-    fun setAuthtoken(authToken: String) {
+    fun setAuthtoken(authToken: String?) {
         gymRemoteDataSource.setAuthToken(authToken);
     }
 
@@ -20,8 +20,18 @@ class GymRepository(
     suspend fun fetchUser(userId: Int) = gymRemoteDataSource.fetchUser(userId)
     suspend fun resendUserVerification(email: String) = gymRemoteDataSource.resendUserVerification(email)
     suspend fun verifyUserEmail(email: String, code: String) = gymRemoteDataSource.verifyUserEmail(email, code)
-    suspend fun loginUser(username: String, password: String) = gymRemoteDataSource.loginUser(username, password)
-    suspend fun logoutUser() = gymRemoteDataSource.logoutUser()
+
+    suspend fun loginUser(username: String, password: String): TokenApiModel {
+        val result = gymRemoteDataSource.loginUser(username, password)
+        setAuthtoken(result.token)
+        return result;
+    }
+    suspend fun logoutUser(): ErrorApiModel {
+        val result = gymRemoteDataSource.logoutUser()
+        setAuthtoken(null)
+        return result;
+    }
+
     suspend fun fetchCurrentUser() = gymRemoteDataSource.fetchCurrentUser()
     suspend fun putCurrentUser(user: UserApiModel) = gymRemoteDataSource.putCurrentUser(user)
     suspend fun deleteCurrentUser() = gymRemoteDataSource.deleteCurrentUser()

@@ -20,7 +20,7 @@ class GymRemoteDataSource(
     private val DEFAULT_ORDERBY: String? = null
     private val DEFAULT_DIRECTION: String? = null
 
-    fun setAuthToken(authToken: String) {
+    fun setAuthToken(authToken: String?) {
         gymApiManager.setAuthToken(authToken);
     }
 
