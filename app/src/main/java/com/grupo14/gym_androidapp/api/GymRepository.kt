@@ -11,4 +11,7 @@ class GymRepository(
     }
 
     suspend fun fetchCurrentUser(): UserApiModel = gymRemoteDataSource.fetchCurrentUser()
+
+    suspend fun putCurrentUser(user: UserApiModel): UserApiModel =
+        gymRemoteDataSource.putCurrentUser(user)
 }

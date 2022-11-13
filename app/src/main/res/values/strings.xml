@@ -13,6 +13,7 @@
     <string name="editProfile">Edit Profile</string>
     <string name="oops">Oops!</string>
     <string name="fetchUserFailed">We couldn\'t fetch your user data.</string>
+    <string name="putUserFailed">We couldn\'t update your user data.</string>
     <string name="tryAgainLater">Please try again later.</string>
     <string name="tryAgain">Try again</string>
 

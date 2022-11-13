@@ -22,7 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.grupo14.gym_androidapp.GymViewModel
+import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
@@ -33,14 +33,12 @@ import com.grupo14.gym_androidapp.screens.*
 fun Activities(
     navController: NavHostController = rememberNavController(),
     gymRepository: GymRepository = GymRepository()
-){
-    val viewModel by remember { mutableStateOf(GymViewModel(gymRepository)) }
-
+) {
     NavHost(
         navController = navController,
-        startDestination =  "home",
+        startDestination = "home",
 
-    ) {
+        ) {
 
         composable(route = "login") {
             LoginScreen(navController)
@@ -84,9 +82,11 @@ fun Activities(
         }
 
         composable(route = "profile") {
+            val viewModel by remember { mutableStateOf(ProfileViewModel(gymRepository)) }
+
             Scaffold(
                 topBar = { MyTopAppBar { navController.popBackStack() } },
-                bottomBar = { MyBottomAppBar(navController) } ) {
+                bottomBar = { MyBottomAppBar(navController) }) {
                 ProfileScreen(viewModel = viewModel)
             }
         }

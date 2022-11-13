@@ -23,6 +23,7 @@ import com.grupo14.gym_androidapp.*
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.models.Gender
 import com.grupo14.gym_androidapp.api.models.UserApiModel
+import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.listItemsSingleChoice
@@ -30,7 +31,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun ProfileScreen(
-    viewModel: GymViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     Column(
         modifier = Modifier
@@ -55,7 +56,7 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileScreenLoading(
-    viewModel: GymViewModel
+    viewModel: ProfileViewModel
 ) {
     Box(
         contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
@@ -68,7 +69,7 @@ fun ProfileScreenLoading(
 
 @Composable
 fun ProfileScreenError(
-    viewModel: GymViewModel
+    viewModel: ProfileViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -105,16 +106,14 @@ fun ProfileScreenError(
 
 @Composable
 fun ProfileScreenLoaded(
-    viewModel: GymViewModel
+    viewModel: ProfileViewModel
 ) {
-    var isEditing by remember { mutableStateOf(false) }
-
     val user: UserApiModel = viewModel.loginUiState.user!!
     val fullName = "${user.firstName} ${user.lastName}"
 
     var fullnameEditing by remember { mutableStateOf(fullName) }
-    var seggsIndexEditing by remember { mutableStateOf(user.gender.ordinal) }
-    var birthdateEditing by remember { mutableStateOf(user.birthdate) }
+    var seggsIndexEditing by remember { mutableStateOf(user.gender!!.ordinal) }
+    var birthdateEditing by remember { mutableStateOf(ConvertDateToLocalDate(user.birthdate!!)) }
 
     val seggsDialogState = rememberMaterialDialogState()
     val datepickerDialogState = rememberMaterialDialogState()
@@ -136,7 +135,7 @@ fun ProfileScreenLoaded(
         )
     }
 
-    if (!isEditing) {
+    if (!viewModel.loginUiState.isEditingUser) {
         Text(
             text = fullName,
             fontSize = 40.sp,
@@ -148,13 +147,16 @@ fun ProfileScreenLoaded(
         )
 
         Text(
-            text = stringResource(R.string.profileSeggsLabel, stringResource(id = user.gender.stringResourceId)),
+            text = stringResource(
+                R.string.profileSeggsLabel,
+                stringResource(id = user.gender!!.stringResourceId)
+            ),
             fontSize = 24.sp,
             modifier = Modifier.padding(vertical = 10.dp)
         )
 
         Text(
-            text = stringResource(R.string.profileBithdateLabel, formatDate(user.birthdate)),
+            text = stringResource(R.string.profileBithdateLabel, formatDate(user.birthdate!!)),
             fontSize = 24.sp,
             modifier = Modifier.padding(vertical = 10.dp)
         )
@@ -162,9 +164,9 @@ fun ProfileScreenLoaded(
         Button(
             onClick = {
                 fullnameEditing = fullName
-                seggsIndexEditing = user.gender.ordinal
-                birthdateEditing = user.birthdate
-                isEditing = true
+                seggsIndexEditing = user.gender!!.ordinal
+                birthdateEditing = ConvertDateToLocalDate(user.birthdate)
+                viewModel.startEditUser()
             }, modifier = Modifier.padding(10.dp)
         ) {
             Icon(
@@ -187,12 +189,14 @@ fun ProfileScreenLoaded(
                 //fontSize = 40.sp,
                 modifier = Modifier
                     .padding(horizontal = 0.dp, vertical = 10.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                enabled = !viewModel.loginUiState.isPuttingUser
             )
 
             Button(
                 onClick = { seggsDialogState.show() },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                enabled = !viewModel.loginUiState.isPuttingUser
             ) {
                 Text(
                     text = stringResource(
@@ -203,7 +207,8 @@ fun ProfileScreenLoaded(
 
             Button(
                 onClick = { datepickerDialogState.show() },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                enabled = !viewModel.loginUiState.isPuttingUser
             ) {
 
                 Text(
@@ -221,8 +226,10 @@ fun ProfileScreenLoaded(
                 negativeButton(text = stringResource(id = R.string.cancel))
             },
         ) {
-            datepicker { date ->
-                birthdateEditing = ConvertLocalDateToDate(date)
+            datepicker(
+                initialDate = birthdateEditing
+            ) { date ->
+                birthdateEditing = date
             }
         }
 
@@ -247,29 +254,43 @@ fun ProfileScreenLoaded(
                 .fillMaxWidth()
                 .padding(top = 20.dp)
         ) {
-            IconButton(
-                onClick = {
-                    // TODO: Save shit to API and update viewmodel
-                    // username = usernameEditing
-                    // seggsIndex = seggsIndexEditing
-                    // birthdate = birthdateEditing
-                    isEditing = false
-                }, modifier = Modifier.padding(end = 10.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = "acceptEdit",
-                    tint = Color.Black
+            if (viewModel.loginUiState.isPuttingUser) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colors.secondaryVariant
                 )
-            }
-            IconButton(
-                onClick = { isEditing = false }, modifier = Modifier.padding(start = 10.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = "cancelEdit",
-                    tint = Color.Black
-                )
+            } else {
+                IconButton(
+                    onClick = {
+                        fullnameEditing = fullnameEditing.trim()
+                        val i = fullnameEditing.indexOf(' ')
+                        viewModel.putCurrentUser(
+                            user.copy(
+                                firstName = if (i >= 0) fullnameEditing.substring(0, i)
+                                    .trim() else fullnameEditing,
+                                lastName = if (i >= 0) fullnameEditing.substring(i)
+                                    .trim() else null,
+                                birthdate = ConvertLocalDateToDate(birthdateEditing),
+                                gender = Gender.values()[seggsIndexEditing]
+                            )
+                        )
+                    }, modifier = Modifier.padding(end = 10.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "acceptEdit",
+                        tint = Color.Black
+                    )
+                }
+                IconButton(
+                    onClick = { viewModel.cancelEditUser() },
+                    modifier = Modifier.padding(start = 10.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "cancelEdit",
+                        tint = Color.Black
+                    )
+                }
             }
         }
     }

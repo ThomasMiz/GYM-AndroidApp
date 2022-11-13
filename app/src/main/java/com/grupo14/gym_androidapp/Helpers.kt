@@ -3,7 +3,6 @@ package com.grupo14.gym_androidapp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.grupo14.gym_androidapp.api.models.Gender
-import java.text.DateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -31,4 +30,8 @@ fun formatDate(date: Date): String {
     // TODO: Localization somehow idk
     val instant = Instant.ofEpochMilli(date.time).atZone(ZoneId.systemDefault())
     return "${instant.dayOfMonth}/${instant.month.value}/${instant.year}";
+}
+
+fun formatDate(date: LocalDate): String {
+    return formatDate(ConvertLocalDateToDate(date))
 }

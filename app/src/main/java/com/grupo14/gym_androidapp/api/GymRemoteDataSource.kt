@@ -23,4 +23,10 @@ class GymRemoteDataSource(
         // println("Response! ${response.isSuccessful} ${response.code()} ${response.message()}");
         response.body() ?: throw ApiException(response)
     }
+
+    suspend fun putCurrentUser(user: UserApiModel): UserApiModel = withContext(ioDispatcher) {
+        val response = gymApi.putCurrentUser(user).execute()
+        // println("Response! ${response.isSuccessful} ${response.code()} ${response.message()}");
+        response.body() ?: throw ApiException(response)
+    }
 }

@@ -13,6 +13,7 @@
     <string name="editProfile">Editar Perfil</string>
     <string name="oops">Ups!</string>
     <string name="fetchUserFailed">No se ha podido cargar su usuario.</string>
+    <string name="putUserFailed">No se ha podido actualizar su usuario.</string>
     <string name="tryAgainLater">Por favor vuelva a intentar más tarde.</string>
     <string name="tryAgain">Volver a intentar</string>
 
