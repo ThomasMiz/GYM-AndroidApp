@@ -10,7 +10,7 @@ import com.grupo14.gym_androidapp.ui.theme.GYMAndroidAppTheme
 class MainActivity : ComponentActivity() {
     companion object {
         var instance: MainActivity? = null
-        const val BASE_URL = "http://192.168.85.29:8080/api/"
+        const val BASE_URL = "http://localhost:8080/api/"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
