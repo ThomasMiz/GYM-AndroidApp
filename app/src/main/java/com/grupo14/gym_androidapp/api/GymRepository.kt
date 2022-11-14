@@ -26,10 +26,9 @@ class GymRepository(
         setAuthtoken(result.token)
         return result;
     }
-    suspend fun logoutUser(): ErrorApiModel {
-        val result = gymRemoteDataSource.logoutUser()
+    suspend fun logoutUser() {
+        gymRemoteDataSource.logoutUser()
         setAuthtoken(null)
-        return result;
     }
 
     suspend fun fetchCurrentUser() = gymRemoteDataSource.fetchCurrentUser()

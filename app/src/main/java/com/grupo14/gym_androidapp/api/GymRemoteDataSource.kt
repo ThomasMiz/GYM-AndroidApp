@@ -27,20 +27,29 @@ class GymRemoteDataSource(
     private suspend fun <T> handleApiRequest(requestGetter: (GymApi) -> Call<T>) =
         withContext(ioDispatcher) {
             val response = requestGetter(gymApi).execute()
-            response.body() ?: throw ApiException(response)
+            if (!response.isSuccessful)
+                throw ApiException(response)
+            response.body()!!
+        }
+
+    private suspend fun handleVoidApiRequest(requestGetter: (GymApi) -> Call<Void>) =
+        withContext(ioDispatcher) {
+            val response = requestGetter(gymApi).execute()
+            if (!response.isSuccessful)
+                throw ApiException(response)
         }
 
     // ↓ USERS ↓
 
     suspend fun registerNewUser(user: LoginUserApiModel) = handleApiRequest { it.registerNewUser(user) }
     suspend fun fetchUser(userId: Int) = handleApiRequest { it.getUser(userId) }
-    suspend fun resendUserVerification(email: String) = handleApiRequest { it.resendUserVerification(UserApiModel(email = email)) }
-    suspend fun verifyUserEmail(email: String, code: String) = handleApiRequest { it.verifyUserEmail(VerifyUserApiModel(email = email, code = code)) }
+    suspend fun resendUserVerification(email: String) = handleVoidApiRequest { it.resendUserVerification(UserApiModel(email = email)) }
+    suspend fun verifyUserEmail(email: String, code: String) = handleVoidApiRequest { it.verifyUserEmail(VerifyUserApiModel(email = email, code = code)) }
     suspend fun loginUser(username: String, password: String) = handleApiRequest { it.loginUser(LoginUserApiModel(username = username, password = password)) }
-    suspend fun logoutUser() = handleApiRequest { it.logoutUser() }
+    suspend fun logoutUser() = handleVoidApiRequest { it.logoutUser() }
     suspend fun fetchCurrentUser() = handleApiRequest { it.getCurrentUser() }
     suspend fun putCurrentUser(user: UserApiModel) = handleApiRequest { it.putCurrentUser(user) }
-    suspend fun deleteCurrentUser() = handleApiRequest { it.deleteCurrentUser() }
+    suspend fun deleteCurrentUser() = handleVoidApiRequest { it.deleteCurrentUser() }
 
     suspend fun fetchCurrentUserRoutines(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, difficulty: Difficulty? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
@@ -61,8 +70,8 @@ class GymRemoteDataSource(
         page: Int, size: Int = DEFAULT_PAGE_SIZE
     ) = handleApiRequest { it.getCurrentUserFavorites(page, size) }
 
-    suspend fun postCurrentUserFavorites(routineId: Int) = handleApiRequest { it.postCurrentUserFavorites(routineId) }
-    suspend fun deleteCurrentUserFavorites(routineId: Int) = handleApiRequest { it.deleteCurrentUserFavorites(routineId) }
+    suspend fun postCurrentUserFavorites(routineId: Int) = handleVoidApiRequest { it.postCurrentUserFavorites(routineId) }
+    suspend fun deleteCurrentUserFavorites(routineId: Int) = handleVoidApiRequest { it.deleteCurrentUserFavorites(routineId) }
 
     // ↑ FAVORITES ↑
     // ↓ CATEGORIES ↓
@@ -74,7 +83,7 @@ class GymRemoteDataSource(
     suspend fun postCategories(category: Category) = handleApiRequest { it.postCategories(category) }
     suspend fun fetchCategory(categoryId: Int) = handleApiRequest { it.getCategory(categoryId) }
     suspend fun putCategory(category: Category) = handleApiRequest { it.putCategory(category.id!!, category) }
-    suspend fun deleteCategory(categoryId: Int) = handleApiRequest { it.deleteCategory(categoryId) }
+    suspend fun deleteCategory(categoryId: Int) = handleVoidApiRequest { it.deleteCategory(categoryId) }
 
     // ↑ CATEGORIES ↑
     // ↓ ROUTINES ↓
