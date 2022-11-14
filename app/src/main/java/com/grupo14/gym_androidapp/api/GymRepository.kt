@@ -14,7 +14,7 @@ class GymRepository(
         gymRemoteDataSource.setAuthToken(authToken);
     }
 
-    fun getAuthtoken() : Boolean{
+    fun getAuthtoken(): String? {
         return gymRemoteDataSource.getAuthToken();
     }
 

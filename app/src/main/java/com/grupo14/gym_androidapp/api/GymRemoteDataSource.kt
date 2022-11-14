@@ -26,8 +26,8 @@ class GymRemoteDataSource(
         gymApiManager.setAuthToken(authToken);
     }
 
-    fun getAuthToken() : Boolean {
-        return gymApiManager.getAuthToken() != "null"
+    fun getAuthToken(): String? {
+        return gymApiManager.getAuthToken()
     }
 
     private suspend fun <T> handleApiRequest(requestGetter: (GymApi) -> Call<T>) =

@@ -17,6 +17,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val gymRepository = GymRepository()
+
+        if (AppConfig.INITIAL_AUTH_TOKEN != null)
+            gymRepository.setAuthtoken(AppConfig.INITIAL_AUTH_TOKEN);
+
         setContent {
             GYMAndroidAppTheme {
                 Activities(gymRepository = gymRepository)
