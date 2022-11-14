@@ -142,7 +142,7 @@ interface GymApi {
     // ↑ ROUTILES CYCLES ↑
     // ↓ CYCLES EXERCISES ↓
 
-    @GET("cycles/{cyclesId}/exercises")
+    @GET("cycles/{cycleId}/exercises")
     fun getCycleExercises(
         @Path("cycleId") cycleId: Int,
         @Query("page") page: Int,
@@ -151,7 +151,7 @@ interface GymApi {
         @Query("direction") direction: String?
     ): Call<ApiModelListPageOf<CycleExerciseApiModel>>
 
-    @GET("cycles/{cyclesId}/exercises/{exerciseId}")
+    @GET("cycles/{cycleId}/exercises/{exerciseId}")
     fun getCycleExercise(
         @Path("cycleId") cycleId: Int,
         @Path("exerciseId") exerciseId: Int

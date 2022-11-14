@@ -8,7 +8,7 @@ data class CycleApiModel (
     @JsonProperty("id") val id: Int?,
     @JsonProperty("name") val name: String?,
     @JsonProperty("detail") val detail: String?,
-    @JsonProperty("type") val type: String?,
+    @JsonProperty("type") val type: CycleType?,
     @JsonProperty("order") val order: Int?,
     @JsonProperty("repetitions") val repetitions: Int?,
 )

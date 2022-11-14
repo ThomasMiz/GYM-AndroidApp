@@ -30,6 +30,10 @@
     <string name="advanced">Advanced</string>
     <string name="expert">Expert</string>
 
+    <string name="warmup">Warmup</string>
+    <string name="exercise">Exercise</string>
+    <string name="cooldown">Cooldown</string>
+
     <string name="fetchRoutineFailed">We couldn\'t fetch the routine\'s data.</string>
     <string name="by">by %1$s</string>
     <string name="toggleFavoriteFailed">We couldn\'t update your favorites</string>
@@ -38,6 +42,16 @@
     <string name="confirmReviewDialogMessage">Are you sure you want to submit a review of %1$d stars to this routine?</string>
     <string name="actionCantBeUndone">This action can\'t be undone!</string>
     <string name="submitReviewFailed">We couldn\'t submit your review.</string>
+    <string name="submitReviewSuccess">Your review has been submitted!</string>
     <string name="viewDetails">View details</string>
     <string name="startRoutine">Start routine</string>
+    <string name="fetchCyclesFailed">We couldn\'t fetch this routine\'s cycles</string>
+    <string name="fetchExerciseFailed">We couldn\'t fetch this exercise</string>
+    <string name="categoryDisplay">Category: %1$s</string>
+    <string name="repetitionsDispaly">%1$d repetitions</string>
+    <string name="repetitionDispaly">%1$d repetition</string>
+    <string name="secondsDispaly">%1$d seconds</string>
+    <string name="secondDispaly">%1$d second</string>
+    <string name="cycleHasNoExercises">This cycle has no exercises</string>
+    <string name="routineHasNoCycles">This routine has no cycles</string>
 </resources>

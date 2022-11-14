@@ -6,5 +6,6 @@ object AppConfig {
 
     val INITIAL_AUTH_TOKEN: String? = null
 
-    val API_NETWORK_DELAY_MILLIS: Int? = null
+    val API_NETWORK_DELAY_MILLIS: Int? = null //800
+    val API_NETWORK_DELAY_DELTA: Int = 700
 }

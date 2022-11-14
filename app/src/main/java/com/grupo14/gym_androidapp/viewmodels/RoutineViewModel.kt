@@ -7,10 +7,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
-import com.grupo14.gym_androidapp.api.models.ReviewApiModel
+import com.grupo14.gym_androidapp.api.models.CycleApiModel
+import com.grupo14.gym_androidapp.api.models.CycleExerciseApiModel
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+
+data class CycleUiState(
+    val cycle: CycleApiModel,
+    val exercises: List<CycleExerciseApiModel> = listOf(),
+    val isFetchingExercises: Boolean = false,
+    val fetchExercisesErrorStringId: Int? = null,
+)
 
 data class RoutineUiState(
     val routine: RoutineApiModel? = null,
@@ -23,10 +31,15 @@ data class RoutineUiState(
 
     val currentRating: Float = 0f,
     val isFetchingRating: Boolean = false,
+
+    val isViewingDetails: Boolean = false,
+    val cycleStates: List<CycleUiState> = listOf(),
+    val isFetchingCycles: Boolean = false,
+    val fetchCyclesErrorStringId: Int? = null,
 )
 
 class RoutineViewModel(
-    val gymRepository: GymRepository
+    private val gymRepository: GymRepository
 ) : ViewModel() {
     var uiState by mutableStateOf(RoutineUiState())
         private set
@@ -34,11 +47,23 @@ class RoutineViewModel(
     private var currentFetchRoutineJob: Job? = null
     private var currentFetchFavoriteJob: Job? = null
     private var currentFetchRatingJob: Job? = null
+    private var currentFetchCycleJob: Job? = null
+
+    fun start(routineId: Int) {
+        if (uiState.fetchingRoutineId != routineId) {
+            currentFetchRoutineJob?.cancel()
+            currentFetchFavoriteJob?.cancel()
+            currentFetchRatingJob?.cancel()
+            currentFetchCycleJob?.cancel()
+            uiState = RoutineUiState(fetchingRoutineId = routineId)
+            fetchRoutine(routineId)
+        }
+    }
 
     fun fetchRoutine(routineId: Int) {
         if (currentFetchRoutineJob != null) {
             if (currentFetchRoutineJob!!.isActive && uiState.fetchingRoutineId == routineId)
-                return;
+                return
 
             currentFetchRoutineJob?.cancel()
             currentFetchFavoriteJob?.cancel()
@@ -75,10 +100,10 @@ class RoutineViewModel(
         }
     }
 
-    fun fetchIsFavorite(routineId: Int) {
+    private fun fetchIsFavorite(routineId: Int) {
         if (currentFetchFavoriteJob != null) {
             if (currentFetchFavoriteJob!!.isActive && uiState.fetchingRoutineId == routineId)
-                return;
+                return
 
             currentFetchFavoriteJob?.cancel()
         }
@@ -89,18 +114,18 @@ class RoutineViewModel(
                     isFavorited = false
                 )
 
-                var isFavorite = false;
-                var i = 0;
+                var isFavorite = false
+                var i = 0
                 while (true) {
                     val favs = gymRepository.fetchCurrentUserFavorites(i++)
 
                     if (favs.content!!.any { it.id == routineId }) {
-                        isFavorite = true;
-                        break;
+                        isFavorite = true
+                        break
                     }
 
                     if (favs.isLastPage!!)
-                        break;
+                        break
                 }
 
                 if (uiState.fetchingRoutineId == routineId) {
@@ -123,7 +148,7 @@ class RoutineViewModel(
     fun toggleFavorite(routineId: Int, onFailure: () -> Unit) {
         if (currentFetchFavoriteJob != null) {
             if (currentFetchFavoriteJob!!.isActive && uiState.fetchingRoutineId == routineId)
-                return;
+                return
 
             currentFetchFavoriteJob?.cancel()
         }
@@ -157,10 +182,10 @@ class RoutineViewModel(
         }
     }
 
-    fun fetchRating(routineId: Int) {
+    private fun fetchRating(routineId: Int) {
         if (currentFetchRatingJob != null) {
             if (currentFetchRatingJob!!.isActive && uiState.fetchingRoutineId == routineId)
-                return;
+                return
 
             currentFetchRatingJob?.cancel()
         }
@@ -171,8 +196,8 @@ class RoutineViewModel(
                     currentRating = 0f
                 )
 
-                var rating = 0;
-                var i = 0;
+                var rating = 0
+                var i = 0
                 while (true) {
                     val revs = gymRepository.fetchCurrentUserReviews(
                         page = i++,
@@ -183,11 +208,11 @@ class RoutineViewModel(
                     val rat = revs.content!!.find { it.routine!!.id == routineId } // 🐀
                     if (rat != null) {
                         rating = rat.score!!
-                        break;
+                        break
                     }
 
                     if (revs.isLastPage!!)
-                        break;
+                        break
                 }
 
                 if (uiState.fetchingRoutineId == routineId) {
@@ -210,7 +235,7 @@ class RoutineViewModel(
     fun setRating(routineId: Int, newRating: Float, onSuccess: () -> Unit, onFailure: () -> Unit) {
         if (currentFetchRatingJob != null) {
             if (currentFetchRatingJob!!.isActive && uiState.fetchingRoutineId == routineId)
-                return;
+                return
 
             currentFetchRatingJob?.cancel()
         }
@@ -240,4 +265,123 @@ class RoutineViewModel(
         }
     }
 
+    private fun fetchCycles(routineId: Int) {
+        if (currentFetchCycleJob != null) {
+            if (currentFetchCycleJob!!.isActive && uiState.fetchingRoutineId == routineId)
+                return
+
+            currentFetchCycleJob?.cancel()
+        }
+        currentFetchCycleJob = viewModelScope.launch {
+            try {
+                uiState = uiState.copy(
+                    isFetchingCycles = true,
+                    cycleStates = mutableListOf(),
+                    fetchCyclesErrorStringId = null
+                )
+
+                var i = 0
+                while (true) {
+                    val cys = gymRepository.fetchRoutineCycles(
+                        routineId = routineId,
+                        page = i++,
+                        orderBy = "order",
+                        direction = "asc"
+                    )
+
+                    if (uiState.fetchingRoutineId != routineId)
+                        break
+
+                    val newCycleStates: MutableList<CycleUiState> = mutableListOf()
+                    newCycleStates.addAll(uiState.cycleStates)
+
+                    cys.content!!.forEach { cycle ->
+                        val cycleIndex = uiState.cycleStates.size
+                        val cycleState = CycleUiState(
+                            cycle = cycle,
+                            isFetchingExercises = true
+                        )
+                        newCycleStates.add(cycleState)
+                        uiState = uiState.copy(
+                            cycleStates = newCycleStates
+                        )
+                        fetchCycleExercises(cycleState) { newCycleState ->
+                            val ncs: MutableList<CycleUiState> = mutableListOf()
+                            ncs.addAll(uiState.cycleStates)
+                            ncs[cycleIndex] = newCycleState
+                            uiState = uiState.copy(
+                                cycleStates = ncs
+                            )
+                        }
+                    }
+
+                    if (cys.isLastPage!!)
+                        break;
+                }
+
+                if (uiState.fetchingRoutineId == routineId) {
+                    uiState = uiState.copy(
+                        isFetchingCycles = false,
+                    )
+                }
+            } catch (e: Exception) {
+                if (uiState.fetchingRoutineId == routineId) {
+                    uiState = uiState.copy(
+                        isFetchingCycles = false,
+                        fetchCyclesErrorStringId = R.string.fetchCyclesFailed
+                    )
+                }
+            }
+        }
+    }
+
+    private fun fetchCycleExercises(cycleState: CycleUiState, onReassign: (CycleUiState) -> Unit) {
+        viewModelScope.launch {
+            var cs = cycleState.copy(isFetchingExercises = true)
+            onReassign(cs)
+            try {
+                var i = 0
+                while (true) {
+                    val exs = gymRepository.fetchCycleExercises(
+                        cycleId = cs.cycle.id!!,
+                        page = i++,
+                        orderBy = "order",
+                        direction = "asc"
+                    )
+
+                    val newList: MutableList<CycleExerciseApiModel> = mutableListOf()
+                    newList.addAll(cs.exercises)
+                    exs.content!!.forEach { exercise ->
+                        newList.add(exercise)
+                    }
+
+                    cs = cs.copy(exercises = newList)
+                    onReassign(cs)
+
+                    if (exs.isLastPage!!)
+                        break
+                }
+
+                cs = cs.copy(isFetchingExercises = false)
+                onReassign(cs)
+            } catch (e: Exception) {
+                cs = cs.copy(
+                    isFetchingExercises = false,
+                    fetchExercisesErrorStringId = R.string.fetchExerciseFailed
+                )
+                onReassign(cs)
+            }
+        }
+    }
+
+    fun switchToDetailView(routineId: Int) {
+        fetchCycles(routineId)
+        uiState = uiState.copy(
+            isViewingDetails = true
+        )
+    }
+
+    fun switchToStartRoutine(routineId: Int) {
+        // TODO
+    }
 }

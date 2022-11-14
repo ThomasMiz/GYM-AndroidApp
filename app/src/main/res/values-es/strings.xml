@@ -30,6 +30,10 @@
     <string name="advanced">Avanzado</string>
     <string name="expert">Experto</string>
 
+    <string name="warmup">Entrada en calor</string>
+    <string name="exercise">Ejercitación</string>
+    <string name="cooldown">Enfriamiento</string>
+
     <string name="fetchRoutineFailed">No pudimos cargar la información de la rutina.</string>
     <string name="by">por %1$s</string>
     <string name="toggleFavoriteFailed">No pudimos actualizar tus favoritas</string>
@@ -38,6 +42,16 @@
     <string name="confirmReviewDialogMessage">Estas seguro de que queres calificar esta rutina con %1$d estrellas?</string>
     <string name="actionCantBeUndone">Esta acción no se puede deshacer!</string>
     <string name="submitReviewFailed">No pudimos enviar su calificación.</string>
+    <string name="submitReviewSuccess">Tu calificación ha sido enviada!</string>
     <string name="viewDetails">Ver detalles</string>
     <string name="startRoutine">Empezar rutina</string>
+    <string name="fetchCyclesFailed">No pudimos cargar los ciclos de esta rutina</string>
+    <string name="fetchExerciseFailed">No pudimos cargar este ejercicio</string>
+    <string name="categoryDisplay">Categoría: %1$s</string>
+    <string name="repetitionsDispaly">%1$d repeticiones</string>
+    <string name="repetitionDispaly">%1$d repetición</string>
+    <string name="secondsDispaly">%1$d segundos</string>
+    <string name="secondDispaly">%1$d segundo</string>
+    <string name="cycleHasNoExercises">Este ciclo no tiene ningún ejercicio</string>
+    <string name="routineHasNoCycles">Esta rutina no tiene ningún ciclo</string>
 </resources>

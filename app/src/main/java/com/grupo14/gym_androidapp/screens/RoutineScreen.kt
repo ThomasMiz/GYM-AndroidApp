@@ -3,8 +3,11 @@ package com.grupo14.gym_androidapp.screens
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -23,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,8 +37,12 @@ import com.gowtham.ratingbar.RatingBarStyle
 import com.grupo14.gym_androidapp.AppConfig
 import com.grupo14.gym_androidapp.FullLoadingScreen
 import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.api.models.CycleExerciseApiModel
+import com.grupo14.gym_androidapp.ui.theme.ErrorRed
 import com.grupo14.gym_androidapp.ui.theme.FavoritePink
+import com.grupo14.gym_androidapp.ui.theme.GoldenBrown
 import com.grupo14.gym_androidapp.ui.theme.StarYellow
+import com.grupo14.gym_androidapp.viewmodels.CycleUiState
 import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
@@ -48,16 +56,19 @@ fun RoutineScreen(
 ) {
     if (viewModel.uiState.fetchingRoutineId != routineId) {
         // This should only run once, on the first compose of this screen
-        viewModel.fetchRoutine(routineId)
+        viewModel.start(routineId)
     } else if (viewModel.uiState.isFetchingRoutine) {
         FullLoadingScreen()
     } else if (viewModel.uiState.routine != null) {
-        RoutineScreenLoaded(viewModel, routineId)
+        if (viewModel.uiState.isViewingDetails)
+            RoutineDetailScreen(viewModel, routineId)
+        else
+            RoutineScreenLoaded(viewModel, routineId)
     } else if (viewModel.uiState.fetchRoutineErrorStringId != null) {
         RoutineScreenError(viewModel, routineId)
     } else {
         // This should only run once, on the first compose of this screen
-        viewModel.fetchRoutine(routineId)
+        viewModel.start(routineId)
     }
 }
 
@@ -110,7 +121,8 @@ private fun RoutineScreenLoaded(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 30.dp, end = 30.dp, top = 20.dp),
+            .padding(start = 30.dp, end = 30.dp, top = 20.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -300,6 +312,7 @@ private fun RoutineScreenLoaded(
                 )
 
                 val reviewFailMessage = stringResource(id = R.string.submitReviewFailed)
+                val reviewSuccessMessage = stringResource(id = R.string.submitReviewSuccess)
 
                 // Confirmation dialog for submit review
                 MaterialDialog(
@@ -311,6 +324,12 @@ private fun RoutineScreenLoaded(
                                 newRating = rating,
                                 onSuccess = {
                                     rating = viewModel.uiState.currentRating
+                                    Toast.makeText(
+                                        context,
+                                        reviewSuccessMessage,
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
                                 },
                                 onFailure = {
                                     rating = viewModel.uiState.currentRating
@@ -338,9 +357,9 @@ private fun RoutineScreenLoaded(
 
 
         Column(
-           verticalArrangement = Arrangement.Bottom,
-           horizontalAlignment = Alignment.CenterHorizontally,
-           modifier = Modifier.padding(start = 60.dp, end = 60.dp, top = 20.dp)
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(start = 60.dp, end = 60.dp, top = 20.dp)
         ) {
             // Button for view details
             Button(
@@ -348,8 +367,10 @@ private fun RoutineScreenLoaded(
                     backgroundColor = Color.LightGray,
                     contentColor = Color.Black
                 ),
-                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
-                onClick = {}
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                onClick = { viewModel.switchToDetailView(routineId) }
             ) {
                 Text(
                     text = stringResource(id = R.string.viewDetails),
@@ -364,12 +385,197 @@ private fun RoutineScreenLoaded(
                     contentColor = Color.Black
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {}
+                onClick = { viewModel.switchToStartRoutine(routineId) }
             ) {
                 Text(
                     text = stringResource(id = R.string.startRoutine),
                     modifier = Modifier.padding(vertical = 5.dp)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RoutineDetailScreen(
+    viewModel: RoutineViewModel,
+    routineId: Int
+) {
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.DarkGray)
+        ) {
+            Text(
+                text = stringResource(
+                    id = R.string.categoryDisplay,
+                    viewModel.uiState.routine!!.category!!.name!!
+                ), // TODO: Category name translation?
+                modifier = Modifier.padding(vertical = 18.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+
+        viewModel.uiState.cycleStates.forEach { cycle -> CycleView(cycle) }
+
+        if (viewModel.uiState.fetchCyclesErrorStringId != null) {
+            Text(
+                text = stringResource(id = viewModel.uiState.fetchCyclesErrorStringId!!),
+                color = ErrorRed
+            )
+        }
+
+        if (viewModel.uiState.isFetchingCycles) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.secondaryVariant,
+                modifier = Modifier.padding(top = 10.dp)
+            )
+        } else if (viewModel.uiState.cycleStates.isEmpty() && viewModel.uiState.fetchCyclesErrorStringId == null) {
+            Text(
+                text = stringResource(id = R.string.routineHasNoCycles),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun CycleView(cycle: CycleUiState) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(MaterialTheme.colors.primary)
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxHeight()
+        ) {
+            Text(
+                text = cycle.cycle.name!!,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(10.dp)
+            )
+        }
+
+        val reps = cycle.cycle.repetitions!!
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(Color.DarkGray)
+        ) {
+            Text(
+                text = stringResource(
+                    id = if (reps == 1) R.string.repetitionDispaly else R.string.repetitionsDispaly,
+                    reps
+                ),
+                color = Color.White,
+                modifier = Modifier.padding(10.dp)
+            )
+        }
+    }
+
+    cycle.exercises.forEachIndexed { index, exercise ->
+        ExerciseView(exercise)
+
+        if (index < cycle.exercises.size - 1)
+            Divider(color = Color.DarkGray)
+    }
+
+    if (cycle.fetchExercisesErrorStringId != null) {
+        Text(
+            text = stringResource(id = cycle.fetchExercisesErrorStringId),
+            color = ErrorRed
+        )
+    }
+
+    if (cycle.isFetchingExercises) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colors.secondaryVariant,
+            modifier = Modifier.padding(top = 10.dp)
+        )
+    } else if (cycle.exercises.isEmpty() && cycle.fetchExercisesErrorStringId == null) {
+        Text(
+            text = stringResource(id = R.string.cycleHasNoExercises),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+        )
+    }
+}
+
+@Composable
+private fun ExerciseView(exercise: CycleExerciseApiModel) {
+    Row(
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.rutina),
+            contentDescription = "exercise",
+            alignment = Alignment.TopCenter,
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier
+                .size(width = 140.dp, height = 100.dp)
+                .padding(end = 10.dp)
+        )
+
+        Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Text(
+                text = exercise.exercise!!.name!!,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (exercise.duration != null && exercise.duration > 0) {
+                    Text(
+                        text = stringResource(
+                            if (exercise.duration == 1) R.string.secondDispaly else R.string.secondsDispaly,
+                            exercise.duration
+                        ),
+                        color = GoldenBrown
+                    )
+                }
+
+                if (exercise.repetitions != null && exercise.repetitions > 0) {
+                    if (exercise.duration != null && exercise.duration > 0) {
+                        Text(
+                            text = " - ",
+                            color = GoldenBrown
+                        )
+                    }
+
+                    Text(
+                        text = stringResource(
+                            if (exercise.repetitions == 1) R.string.repetitionDispaly else R.string.repetitionsDispaly,
+                            exercise.repetitions
+                        ),
+                        color = GoldenBrown
+                    )
+                }
             }
         }
     }
