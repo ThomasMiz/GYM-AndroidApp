@@ -3,6 +3,7 @@ package com.grupo14.gym_androidapp.screens
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +35,7 @@ import com.gowtham.ratingbar.RatingBarStyle
 import com.grupo14.gym_androidapp.AppConfig
 import com.grupo14.gym_androidapp.FullLoadingScreen
 import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.ui.theme.ErrorRed
 import com.grupo14.gym_androidapp.ui.theme.FavoritePink
 import com.grupo14.gym_androidapp.ui.theme.StarYellow
 import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
@@ -52,7 +55,10 @@ fun RoutineScreen(
     } else if (viewModel.uiState.isFetchingRoutine) {
         FullLoadingScreen()
     } else if (viewModel.uiState.routine != null) {
-        RoutineScreenLoaded(viewModel, routineId)
+        if (viewModel.uiState.isViewingDetails)
+            RoutineDetailScreen(viewModel, routineId)
+        else
+            RoutineScreenLoaded(viewModel, routineId)
     } else if (viewModel.uiState.fetchRoutineErrorStringId != null) {
         RoutineScreenError(viewModel, routineId)
     } else {
@@ -312,7 +318,11 @@ private fun RoutineScreenLoaded(
                                 newRating = rating,
                                 onSuccess = {
                                     rating = viewModel.uiState.currentRating
-                                    Toast.makeText(context, reviewSuccessMessage, Toast.LENGTH_SHORT)
+                                    Toast.makeText(
+                                        context,
+                                        reviewSuccessMessage,
+                                        Toast.LENGTH_SHORT
+                                    )
                                         .show()
                                 },
                                 onFailure = {
@@ -341,9 +351,9 @@ private fun RoutineScreenLoaded(
 
 
         Column(
-           verticalArrangement = Arrangement.Bottom,
-           horizontalAlignment = Alignment.CenterHorizontally,
-           modifier = Modifier.padding(start = 60.dp, end = 60.dp, top = 20.dp)
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(start = 60.dp, end = 60.dp, top = 20.dp)
         ) {
             // Button for view details
             Button(
@@ -351,8 +361,10 @@ private fun RoutineScreenLoaded(
                     backgroundColor = Color.LightGray,
                     contentColor = Color.Black
                 ),
-                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
-                onClick = {}
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                onClick = { viewModel.switchToDetailView(routineId) }
             ) {
                 Text(
                     text = stringResource(id = R.string.viewDetails),
@@ -367,7 +379,7 @@ private fun RoutineScreenLoaded(
                     contentColor = Color.Black
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {}
+                onClick = { viewModel.switchToStartRoutine(routineId) }
             ) {
                 Text(
                     text = stringResource(id = R.string.startRoutine),
@@ -388,6 +400,79 @@ private fun RoutineDetailScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.DarkGray)
+        ) {
+            Text(
+                text = stringResource(
+                    id = R.string.categoryDisplay,
+                    viewModel.uiState.routine!!.category!!.name!!
+                ), // TODO: Category name translation?
+                modifier = Modifier.padding(vertical = 18.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
 
+        viewModel.uiState.cycleStates.forEach { cycle ->
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(MaterialTheme.colors.primary)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                ) {
+                    Text(
+                        text = cycle.cycle.name!!,
+                        color = Color.Black,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
+
+                val reps = cycle.cycle.repetitions!!
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .background(Color.DarkGray)
+                ) {
+                    Text(
+                        text = stringResource(
+                            id = if (reps == 1) R.string.repetitionDispaly else R.string.repetitionsDispaly,
+                            reps
+                        ),
+                        color = Color.White,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
+            }
+
+            cycle.exercises.forEach { exercise ->
+                Text(
+                    text = exercise.toString()
+                )
+            }
+
+            if (cycle.fetchExercisesErrorStringId != null) {
+                Text(
+                    text = stringResource(id = cycle.fetchExercisesErrorStringId!!),
+                    color = ErrorRed
+                )
+            }
+
+            if (cycle.isFetchingExercises) {
+                CircularProgressIndicator()
+            }
+        }
     }
 }

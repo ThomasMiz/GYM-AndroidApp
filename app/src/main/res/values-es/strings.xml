@@ -48,4 +48,6 @@
     <string name="fetchCyclesFailed">No pudimos cargar los ciclos de esta rutina</string>
     <string name="fetchExerciseFailed">No pudimos cargar este ejercicio</string>
     <string name="categoryDisplay">Categoría: %1$s</string>
+    <string name="repetitionsDispaly">%1$d repeticiones</string>
+    <string name="repetitionDispaly">%1$d repetición</string>
 </resources>
