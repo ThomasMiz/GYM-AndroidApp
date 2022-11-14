@@ -50,4 +50,5 @@
     <string name="categoryDisplay">Categoría: %1$s</string>
     <string name="repetitionsDispaly">%1$d repeticiones</string>
     <string name="repetitionDispaly">%1$d repetición</string>
+    <string name="cycleHasNoExercises">Este ciclo no tiene ningún ejercicio</string>
 </resources>

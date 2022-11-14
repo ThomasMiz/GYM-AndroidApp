@@ -457,22 +457,40 @@ private fun RoutineDetailScreen(
                 }
             }
 
-            cycle.exercises.forEach { exercise ->
+            if (cycle.exercises.isEmpty() && !cycle.isFetchingExercises) {
                 Text(
-                    text = exercise.toString()
+                    text = stringResource(id = R.string.cycleHasNoExercises),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
                 )
+            } else {
+                cycle.exercises.forEach { exercise ->
+                    Text(
+                        text = exercise.toString()
+                    )
+                }
             }
 
             if (cycle.fetchExercisesErrorStringId != null) {
                 Text(
-                    text = stringResource(id = cycle.fetchExercisesErrorStringId!!),
+                    text = stringResource(id = cycle.fetchExercisesErrorStringId),
                     color = ErrorRed
                 )
             }
 
             if (cycle.isFetchingExercises) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    color = MaterialTheme.colors.secondaryVariant,
+                    modifier = Modifier.padding(top = 10.dp)
+                )
             }
+        }
+
+        if (viewModel.uiState.isFetchingCycles) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.secondaryVariant,
+                modifier = Modifier.padding(top = 10.dp)
+            )
         }
     }
 }

@@ -297,7 +297,10 @@ class RoutineViewModel(
 
                     cys.content!!.forEach { cycle ->
                         val cycleIndex = uiState.cycleStates.size
-                        val cycleState = CycleUiState(cycle)
+                        val cycleState = CycleUiState(
+                            cycle = cycle,
+                            isFetchingExercises = true
+                        )
                         newCycleStates.add(cycleState)
                         uiState = uiState.copy(
                             cycleStates = newCycleStates
@@ -312,6 +315,8 @@ class RoutineViewModel(
                         }
                     }
 
+                    if (cys.isLastPage!!)
+                        break;
                 }
 
                 if (uiState.fetchingRoutineId == routineId) {
@@ -331,27 +336,22 @@ class RoutineViewModel(
     }
 
     private fun fetchCycleExercises(cycleState: CycleUiState, onReassign: (CycleUiState) -> Unit) {
-        println("PEDRO ESTÁ AQUÍ")
         viewModelScope.launch {
-            println("PEDRO ESTÁ ALLÍ")
             var cs = cycleState.copy(isFetchingExercises = true)
+            onReassign(cs)
             try {
-                onReassign(cs)
-
                 var i = 0
                 while (true) {
-                    println("PEDRO ESTÁ BUSCANDO")
                     val exs = gymRepository.fetchCycleExercises(
                         cycleId = cs.cycle.id!!,
                         page = i++,
                         orderBy = "order",
                         direction = "asc"
                     )
-                    println("PEDRO ESTÁ REVISANDO ${exs.content!!.size}")
 
                     val newList: MutableList<CycleExerciseApiModel> = mutableListOf()
                     newList.addAll(cs.exercises)
-                    exs.content.forEach { exercise ->
+                    exs.content!!.forEach { exercise ->
                         newList.add(exercise)
                     }
 
@@ -364,9 +364,7 @@ class RoutineViewModel(
 
                 cs = cs.copy(isFetchingExercises = false)
                 onReassign(cs)
-                println("PEDRO ESTÁ TERMINANDO ${cycleState.exercises.size}")
             } catch (e: Exception) {
-                println("PEDRO SE MURIÓ")
                 cs = cs.copy(
                     isFetchingExercises = false,
                     fetchExercisesErrorStringId = R.string.fetchExerciseFailed
