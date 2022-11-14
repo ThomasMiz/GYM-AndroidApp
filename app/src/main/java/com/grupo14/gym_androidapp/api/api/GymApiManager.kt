@@ -16,8 +16,8 @@ class GymApiManager(private val baseUrl: String = MainActivity.BASE_URL) {
         authRequestInterceptor.setAuthToken(authToken);
     }
 
-    fun getAuthToken(): String? {
-        return authToken
+    fun getAuthToken(): Boolean {
+        return authToken != null
     }
 
     private val okHttpClient = OkHttpClient()
