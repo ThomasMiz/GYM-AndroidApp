@@ -5,7 +5,9 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -116,7 +118,8 @@ private fun RoutineScreenLoaded(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 30.dp, end = 30.dp, top = 20.dp),
+            .padding(start = 30.dp, end = 30.dp, top = 20.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -398,7 +401,9 @@ private fun RoutineDetailScreen(
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -457,18 +462,10 @@ private fun RoutineDetailScreen(
                 }
             }
 
-            if (cycle.exercises.isEmpty() && !cycle.isFetchingExercises) {
+            cycle.exercises.forEach { exercise ->
                 Text(
-                    text = stringResource(id = R.string.cycleHasNoExercises),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+                    text = exercise.toString()
                 )
-            } else {
-                cycle.exercises.forEach { exercise ->
-                    Text(
-                        text = exercise.toString()
-                    )
-                }
             }
 
             if (cycle.fetchExercisesErrorStringId != null) {
@@ -483,13 +480,33 @@ private fun RoutineDetailScreen(
                     color = MaterialTheme.colors.secondaryVariant,
                     modifier = Modifier.padding(top = 10.dp)
                 )
+            } else if (cycle.exercises.isEmpty() && cycle.fetchExercisesErrorStringId == null) {
+                Text(
+                    text = stringResource(id = R.string.cycleHasNoExercises),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+                )
             }
+        }
+
+
+        if (viewModel.uiState.fetchCyclesErrorStringId != null) {
+            Text(
+                text = stringResource(id = viewModel.uiState.fetchCyclesErrorStringId!!),
+                color = ErrorRed
+            )
         }
 
         if (viewModel.uiState.isFetchingCycles) {
             CircularProgressIndicator(
                 color = MaterialTheme.colors.secondaryVariant,
                 modifier = Modifier.padding(top = 10.dp)
+            )
+        } else if (viewModel.uiState.cycleStates.isEmpty() && viewModel.uiState.fetchCyclesErrorStringId == null) {
+            Text(
+                text = stringResource(id = R.string.routineHasNoCycles),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
             )
         }
     }

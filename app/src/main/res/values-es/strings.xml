@@ -51,4 +51,5 @@
     <string name="repetitionsDispaly">%1$d repeticiones</string>
     <string name="repetitionDispaly">%1$d repetición</string>
     <string name="cycleHasNoExercises">Este ciclo no tiene ningún ejercicio</string>
+    <string name="routineHasNoCycles">Esta rutina no tiene ningún ciclo</string>
 </resources>
