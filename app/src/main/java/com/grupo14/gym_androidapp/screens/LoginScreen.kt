@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -26,9 +27,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    navController: NavHostController,
+    viewModel: SessionViewModel
+) {
+    if (viewModel.sessionUiState.isLogginIn) {
+        LoginScreenLoading(viewModel)
+    } else if(viewModel.sessionUiState.errorString != null) {
+        LoginScreenError(navController, viewModel)
+    } else {
+        LoginScreenLoaded(navController, viewModel)
+    }
+}
+
+@Composable
+fun LoginScreenLoaded(
+    navController: NavHostController,
+    viewModel: SessionViewModel
+) {
     val context = LocalContext.current
 
     val userVal = remember { mutableStateOf("") }
@@ -111,9 +130,10 @@ fun LoginScreen(navController: NavHostController) {
                 } else if (passwordVal.value.isEmpty()) {
                     Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
                 } else {
+                    viewModel.loginUser(userVal.value, passwordVal.value)
                     navController.navigate("home")
                 }
-          },
+            },
             modifier = Modifier.fillMaxWidth(0.8f),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
@@ -149,6 +169,58 @@ fun LoginScreen(navController: NavHostController) {
                 )
             }
         }
+    }
+}
 
+@Composable
+fun LoginScreenError(
+    navController : NavHostController,
+    viewModel: SessionViewModel
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+    ) {
+        Text(
+            text = stringResource(id = R.string.oops),
+            fontSize = 50.sp,
+            modifier = Modifier.padding(bottom = 40.dp)
+        )
+
+        if (viewModel.sessionUiState.errorString != null) {
+            Text(
+                text = viewModel.sessionUiState.errorString!!
+            )
+        }
+
+        Text(
+            text = stringResource(id = R.string.tryAgainLater),
+        )
+
+        Button(
+            onClick = { navController.navigate("login") },
+            modifier = Modifier.padding(top = 40.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.tryAgain),
+                color = Color.Black
+            )
+        }
+    }
+}
+
+@Composable
+fun LoginScreenLoading(
+    viewModel: SessionViewModel
+) {
+    Box(
+        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colors.secondaryVariant
+        )
     }
 }

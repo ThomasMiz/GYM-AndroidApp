@@ -26,6 +26,7 @@ import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
+import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -36,12 +37,13 @@ fun Activities(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "home",
+        startDestination = if(gymRepository.getAuthtoken()) "login" else "home",
 
         ) {
 
         composable(route = "login") {
-            LoginScreen(navController)
+            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            LoginScreen(navController, viewModel)
         }
 
         composable(route = "register") {
