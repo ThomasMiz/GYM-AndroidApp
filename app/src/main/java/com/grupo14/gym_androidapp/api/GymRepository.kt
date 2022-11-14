@@ -14,6 +14,10 @@ class GymRepository(
         gymRemoteDataSource.setAuthToken(authToken);
     }
 
+    fun getAuthtoken() : Boolean{
+        return gymRemoteDataSource.getAuthToken();
+    }
+
     // ↓ USERS ↓
 
     suspend fun registerNewUser(user: LoginUserApiModel) = gymRemoteDataSource.registerNewUser(user)
