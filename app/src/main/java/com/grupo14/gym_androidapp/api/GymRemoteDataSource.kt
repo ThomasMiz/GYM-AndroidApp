@@ -136,7 +136,7 @@ class GymRemoteDataSource(
         routineId: Int, page: Int, size: Int = DEFAULT_PAGE_SIZE, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest{ it.getRoutineReviews(routineId, page, size, orderBy, direction) }
 
-    suspend fun postRoutineReview(routineId: Int, review: ReviewApiModel) = handleApiRequest { it.postRoutineReview(routineId, review) }
+    suspend fun postRoutineReview(routineId: Int, review: SubmitReviewApiModel) = handleApiRequest { it.postRoutineReview(routineId, review) }
 
     // ↑ REVIEWS ↑
 }

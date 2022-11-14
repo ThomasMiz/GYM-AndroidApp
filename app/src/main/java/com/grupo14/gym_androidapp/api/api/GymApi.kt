@@ -55,13 +55,13 @@ interface GymApi {
         @Query("direction") direction: String?
     ): Call<ApiModelListPageOf<RoutineApiModel>>
 
-    @GET("users/current/routines")
+    @GET("users/current/reviews")
     fun getCurrentUserReviews(
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("orderBy") orderBy: String?,
         @Query("direction") direction: String?
-    ): Call<ApiModelListPageOf<RoutineApiModel>>
+    ): Call<ApiModelListPageOf<ReviewApiModel>>
 
     // ↑ USERS ↑
     // ↓ FAVORITES ↓
@@ -192,11 +192,11 @@ interface GymApi {
         @Query("direction") direction: String?
     ): Call<ApiModelListPageOf<ReviewApiModel>>
 
-    @GET("reviews/{routineId}")
+    @POST("reviews/{routineId}")
     fun postRoutineReview(
         @Path("routineId") routineId: Int,
-        @Body review: ReviewApiModel
-    ): Call<ReviewApiModel>
+        @Body review: SubmitReviewApiModel
+    ): Call<SubmitReviewApiModel>
 
     // ↑ REVIEWS ↑
 }
