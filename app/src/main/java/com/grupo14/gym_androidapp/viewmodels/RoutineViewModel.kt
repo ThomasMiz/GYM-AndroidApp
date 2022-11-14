@@ -316,7 +316,7 @@ class RoutineViewModel(
                     }
 
                     if (cys.isLastPage!!)
-                        break;
+                        break
                 }
 
                 if (uiState.fetchingRoutineId == routineId) {

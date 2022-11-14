@@ -126,7 +126,7 @@ private fun RoutineScreenLoaded(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        val routine = viewModel.uiState.routine!!;
+        val routine = viewModel.uiState.routine!!
 
         Text(
             text = routine.name!!,
@@ -178,7 +178,6 @@ private fun RoutineScreenLoaded(
                     }
                 }
 
-                val context = LocalContext.current
                 IconButton(onClick = {
                     val link = "${AppConfig.BASE_URL}routine/${routineId}/"
                     val intent = Intent(Intent.ACTION_SEND)
@@ -379,19 +378,7 @@ private fun RoutineScreenLoaded(
             }
 
             // Button for start
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    contentColor = Color.Black
-                ),
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { viewModel.switchToStartRoutine(routineId) }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.startRoutine),
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
-            }
+            StartRoutineButton(viewModel, routineId)
         }
     }
 }
@@ -446,6 +433,14 @@ private fun RoutineDetailScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
             )
+        }
+
+        if (!viewModel.uiState.isFetchingCycles && viewModel.uiState.fetchCyclesErrorStringId == null) {
+            Column(
+                modifier = Modifier.padding(horizontal = 60.dp, vertical = 15.dp)
+            ) {
+                StartRoutineButton(viewModel, routineId)
+            }
         }
     }
 }
@@ -578,5 +573,25 @@ private fun ExerciseView(exercise: CycleExerciseApiModel) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun StartRoutineButton(
+    viewModel: RoutineViewModel,
+    routineId: Int
+) {
+    Button(
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = Color.Black
+        ),
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { viewModel.switchToStartRoutine(routineId) }
+    ) {
+        Text(
+            text = stringResource(id = R.string.startRoutine),
+            modifier = Modifier.padding(vertical = 5.dp)
+        )
     }
 }
