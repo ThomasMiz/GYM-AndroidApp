@@ -11,6 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.http.Query
+import kotlin.random.Random
 
 class GymRemoteDataSource(
     private val gymApiManager: GymApiManager = GymApiManager(),
@@ -30,10 +31,16 @@ class GymRemoteDataSource(
         return gymApiManager.getAuthToken()
     }
 
+    private suspend fun delayIfConfigured() {
+        if (AppConfig.API_NETWORK_DELAY_MILLIS != null) {
+            val amount = AppConfig.API_NETWORK_DELAY_MILLIS + Random.nextInt(AppConfig.API_NETWORK_DELAY_DELTA + 1)
+            delay(amount.toLong())
+        }
+    }
+
     private suspend fun <T> handleApiRequest(requestGetter: (GymApi) -> Call<T>) =
         withContext(ioDispatcher) {
-            if (AppConfig.API_NETWORK_DELAY_MILLIS != null)
-                delay(AppConfig.API_NETWORK_DELAY_MILLIS.toLong())
+            delayIfConfigured()
             val response = requestGetter(gymApi).execute()
             if (!response.isSuccessful)
                 throw ApiException(response)
@@ -42,8 +49,7 @@ class GymRemoteDataSource(
 
     private suspend fun handleVoidApiRequest(requestGetter: (GymApi) -> Call<Void>) =
         withContext(ioDispatcher) {
-            if (AppConfig.API_NETWORK_DELAY_MILLIS != null)
-                delay(AppConfig.API_NETWORK_DELAY_MILLIS.toLong())
+            delayIfConfigured()
             val response = requestGetter(gymApi).execute()
             if (!response.isSuccessful)
                 throw ApiException(response)
