@@ -11,7 +11,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun FullLoadingScreen() {
     Box(
-        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
     ) {
         CircularProgressIndicator(
             color = MaterialTheme.colors.secondaryVariant

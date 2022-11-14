@@ -16,6 +16,9 @@ data class RoutineUiState(
     val isFetchingRoutine: Boolean = false,
     val fetchingRoutineId: Int? = null,
     val fetchRoutineErrorStringId: Int? = null,
+
+    val isFavorited: Boolean = false,
+    val isFetchinigFavorite: Boolean = false,
 )
 
 class RoutineViewModel(
@@ -25,13 +28,15 @@ class RoutineViewModel(
         private set
 
     private var currentFetchRoutineJob: Job? = null
+    private var currentFetchFavoriteJob: Job? = null
 
     fun fetchRoutine(routineId: Int) {
         if (currentFetchRoutineJob != null) {
-            if (uiState.fetchingRoutineId == routineId)
+            if (currentFetchRoutineJob!!.isActive && uiState.fetchingRoutineId == routineId)
                 return;
 
-            currentFetchRoutineJob!!.cancel()
+            currentFetchRoutineJob?.cancel()
+            currentFetchFavoriteJob?.cancel()
         }
         currentFetchRoutineJob = viewModelScope.launch {
             try {
@@ -41,8 +46,10 @@ class RoutineViewModel(
                     fetchingRoutineId = routineId,
                     fetchRoutineErrorStringId = null,
                 )
+
                 val routineResult: RoutineApiModel = gymRepository.fetchRoutine(routineId)
-                println("Got routine: ${routineResult}") // TODO: Remove
+                fetchIsFavorite(routineId)
+
                 uiState = uiState.copy(
                     routine = routineResult,
                     isFetchingRoutine = false,
@@ -53,6 +60,90 @@ class RoutineViewModel(
                     isFetchingRoutine = false,
                     fetchRoutineErrorStringId = R.string.fetchRoutineFailed,
                 )
+            }
+        }
+    }
+
+    fun fetchIsFavorite(routineId: Int) {
+        if (currentFetchFavoriteJob != null) {
+            if (currentFetchFavoriteJob!!.isActive && uiState.fetchingRoutineId == routineId)
+                return;
+
+            currentFetchFavoriteJob?.cancel()
+        }
+        currentFetchFavoriteJob = viewModelScope.launch {
+            try {
+                uiState = uiState.copy(
+                    isFetchinigFavorite = true,
+                    isFavorited = false
+                )
+
+                var isFavorite = false;
+                var i = 0;
+                while (true) {
+                    val favs = gymRepository.fetchCurrentUserFavorites(i++)
+
+                    if (favs.content!!.any { it.id == routineId }) {
+                        isFavorite = true;
+                        break;
+                    }
+
+                    if (favs.isLastPage!!)
+                        break;
+                }
+
+                if (uiState.fetchingRoutineId == routineId) {
+                    uiState = uiState.copy(
+                        isFetchinigFavorite = false,
+                        isFavorited = isFavorite
+                    )
+                }
+            } catch (e: Exception) {
+                if (uiState.fetchingRoutineId == routineId) {
+                    uiState = uiState.copy(
+                        isFetchinigFavorite = false,
+                        isFavorited = false
+                    )
+                }
+            }
+        }
+    }
+
+    fun toggleFavorite(routineId: Int, onFailure: () -> Unit) {
+        if (currentFetchFavoriteJob != null) {
+            if (currentFetchFavoriteJob!!.isActive && uiState.fetchingRoutineId == routineId)
+                return;
+
+            currentFetchFavoriteJob?.cancel()
+        }
+        currentFetchFavoriteJob = viewModelScope.launch {
+            try {
+                uiState = uiState.copy(
+                    isFetchinigFavorite = true
+                )
+
+                val newIsFavorite = !uiState.isFavorited
+
+                if (newIsFavorite)
+                    gymRepository.postCurrentUserFavorites(routineId)
+                else
+                    gymRepository.deleteCurrentUserFavorites(routineId)
+
+                if (uiState.fetchingRoutineId == routineId) {
+                    uiState = uiState.copy(
+                        isFetchinigFavorite = false,
+                        isFavorited = newIsFavorite
+                    )
+                }
+            } catch (e: Exception) {
+                if (uiState.fetchingRoutineId == routineId) {
+                    uiState = uiState.copy(
+                        isFetchinigFavorite = false
+                    )
+                    e.stackTrace.forEach { println(it) }
+                    println(e)
+                    onFailure()
+                }
             }
         }
     }

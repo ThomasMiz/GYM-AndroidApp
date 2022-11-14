@@ -31,4 +31,6 @@
     <string name="expert">Experto</string>
 
     <string name="fetchRoutineFailed">No pudimos cargar la información de la rutina.</string>
+    <string name="by">por %1$s</string>
+    <string name="toggleFavoriteFailed">No pudimos actualizar tus favoritas</string>
 </resources>
