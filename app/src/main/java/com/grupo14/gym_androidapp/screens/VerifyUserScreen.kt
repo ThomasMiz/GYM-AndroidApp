@@ -19,16 +19,41 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
-
+import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
-fun VerifyUser(navController: NavHostController) {
+fun VerifyUserScreen(
+    navController: NavHostController,
+    viewModel: SessionViewModel
+) {
+
+    val context = LocalContext.current
+    if (viewModel.sessionUiState.isVerifying || viewModel.sessionUiState.sendingCode) {
+        VerifiyUserScreenLoading(viewModel)
+    } else if (viewModel.sessionUiState.userVerified) {
+        viewModel.readyToLogin()
+        Toast.makeText(context, "¡Usuario verificado con éxito!", Toast.LENGTH_SHORT).show()
+        navController.navigate("login")
+    } else if(viewModel.sessionUiState.codeSent){
+        viewModel.readyToVerify()
+        Toast.makeText(context, "¡Código reenviado con éxito!", Toast.LENGTH_SHORT).show()
+        navController.navigate("verify")
+    }else if(viewModel.sessionUiState.errorString != null) {
+        VerifyUserScreenError(navController, viewModel)
+    } else {
+        VerifyUserScreenLoaded(navController, viewModel)
+    }
+}
+
+@Composable
+fun VerifyUserScreenLoaded(navController: NavHostController, viewModel: SessionViewModel) {
 
     val context = LocalContext.current
 
@@ -124,15 +149,14 @@ fun VerifyUser(navController: NavHostController) {
                     } else if(codeVal.value.isEmpty()){
                         Toast.makeText(context, "Ingrese un código de verificación", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(context, "Usuario verificado con éxito", Toast.LENGTH_SHORT).show()
-                        navController.navigate("login")
+                        viewModel.verifyUser(emailVal.value, codeVal.value)
                     }
                 } else {
                     if(emailVal.value.isEmpty()) {
                         Toast.makeText(context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        Toast.makeText(context, "Código reenviado con éxito", Toast.LENGTH_SHORT).show()
+                        viewModel.resendVerification(emailVal.value)
                     }
                 }
             },
@@ -172,5 +196,58 @@ fun VerifyUser(navController: NavHostController) {
             }
         }
 
+    }
+}
+
+@Composable
+fun VerifyUserScreenError(
+    navController : NavHostController,
+    viewModel: SessionViewModel
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+    ) {
+        Text(
+            text = stringResource(id = R.string.oops),
+            fontSize = 50.sp,
+            modifier = Modifier.padding(bottom = 40.dp)
+        )
+
+        if (viewModel.sessionUiState.errorString != null) {
+            Text(
+                text = viewModel.sessionUiState.errorString!!
+            )
+        }
+
+        Text(
+            text = stringResource(id = R.string.tryAgainLater),
+        )
+
+        Button(
+            onClick = { navController.navigate("verify") },
+            modifier = Modifier.padding(top = 40.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.tryAgain),
+                color = Color.Black
+            )
+        }
+    }
+}
+
+@Composable
+fun VerifiyUserScreenLoading(
+    viewModel: SessionViewModel
+) {
+    Box(
+        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colors.secondaryVariant
+        )
     }
 }

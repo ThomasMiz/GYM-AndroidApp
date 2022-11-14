@@ -48,11 +48,13 @@ fun Activities(
         }
 
         composable(route = "register") {
-            RegisterScreen(navController)
+            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            RegisterScreen(navController, viewModel)
         }
 
         composable(route = "verify") {
-            VerifyUser(navController)
+            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            VerifyUserScreen(navController, viewModel)
         }
 
         composable(route = "home") {
