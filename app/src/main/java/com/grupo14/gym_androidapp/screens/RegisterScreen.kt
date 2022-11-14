@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -27,10 +28,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.viewmodels.*
+
+@Composable
+fun RegisterScreen(
+    navController: NavHostController,
+    viewModel: SessionViewModel
+) {
+    val context = LocalContext.current
+    if (viewModel.sessionUiState.isRegistering) {
+        RegisterScreenLoading(viewModel)
+    } else if (viewModel.sessionUiState.isRegistered) {
+        viewModel.readyToVerify()
+        Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
+        navController.navigate("verify")
+    } else if(viewModel.sessionUiState.errorString != null) {
+        RegisterScreenError(navController, viewModel)
+    } else {
+        RegisterScreenLoaded(navController, viewModel)
+    }
+}
 
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
+fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionViewModel) {
     val context = LocalContext.current
 
     val emailVal = remember { mutableStateOf("") }
@@ -172,8 +193,7 @@ fun RegisterScreen(navController: NavHostController) {
                 } else if(!passwordVal.value.equals(repPasswordVal.value)) {
                     Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Usuario registrado con éxito", Toast.LENGTH_SHORT).show()
-                    navController.navigate("verify")
+                    viewModel.registerNewUser(emailVal.value, userVal.value, passwordVal.value)
                 }
             },
             modifier = Modifier.fillMaxWidth(0.8f),
@@ -212,5 +232,58 @@ fun RegisterScreen(navController: NavHostController) {
             }
         }
 
+    }
+}
+
+@Composable
+fun RegisterScreenError(
+    navController : NavHostController,
+    viewModel: SessionViewModel
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+    ) {
+        Text(
+            text = stringResource(id = R.string.oops),
+            fontSize = 50.sp,
+            modifier = Modifier.padding(bottom = 40.dp)
+        )
+
+        if (viewModel.sessionUiState.errorString != null) {
+            Text(
+                text = viewModel.sessionUiState.errorString!!
+            )
+        }
+
+        Text(
+            text = stringResource(id = R.string.tryAgainLater),
+        )
+
+        Button(
+            onClick = { navController.navigate("register") },
+            modifier = Modifier.padding(top = 40.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.tryAgain),
+                color = Color.Black
+            )
+        }
+    }
+}
+
+@Composable
+fun RegisterScreenLoading(
+    viewModel: SessionViewModel
+) {
+    Box(
+        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colors.secondaryVariant
+        )
     }
 }

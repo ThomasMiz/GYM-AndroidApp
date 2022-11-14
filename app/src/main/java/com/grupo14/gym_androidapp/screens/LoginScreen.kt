@@ -34,8 +34,11 @@ fun LoginScreen(
     navController: NavHostController,
     viewModel: SessionViewModel
 ) {
-    if (viewModel.sessionUiState.isLogginIn) {
+    if (viewModel.sessionUiState.isLoggingIn) {
         LoginScreenLoading(viewModel)
+    } else if(viewModel.sessionUiState.isLoggedIn) {
+        viewModel.userReadyToLogin()
+        navController.navigate("home")
     } else if(viewModel.sessionUiState.errorString != null) {
         LoginScreenError(navController, viewModel)
     } else {
@@ -131,7 +134,6 @@ fun LoginScreenLoaded(
                     Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
                 } else {
                     viewModel.loginUser(userVal.value, passwordVal.value)
-                    navController.navigate("home")
                 }
             },
             modifier = Modifier.fillMaxWidth(0.8f),
