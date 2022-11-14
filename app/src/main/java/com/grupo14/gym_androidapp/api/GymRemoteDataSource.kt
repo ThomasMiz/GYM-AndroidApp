@@ -1,11 +1,13 @@
 package com.grupo14.gym_androidapp.api
 
+import com.grupo14.gym_androidapp.AppConfig
 import com.grupo14.gym_androidapp.api.api.ApiException
 import com.grupo14.gym_androidapp.api.api.GymApi
 import com.grupo14.gym_androidapp.api.api.GymApiManager
 import com.grupo14.gym_androidapp.api.models.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.http.Query
@@ -26,6 +28,8 @@ class GymRemoteDataSource(
 
     private suspend fun <T> handleApiRequest(requestGetter: (GymApi) -> Call<T>) =
         withContext(ioDispatcher) {
+            if (AppConfig.API_NETWORK_DELAY_MILLIS != null)
+                delay(AppConfig.API_NETWORK_DELAY_MILLIS.toLong())
             val response = requestGetter(gymApi).execute()
             if (!response.isSuccessful)
                 throw ApiException(response)
@@ -34,6 +38,8 @@ class GymRemoteDataSource(
 
     private suspend fun handleVoidApiRequest(requestGetter: (GymApi) -> Call<Void>) =
         withContext(ioDispatcher) {
+            if (AppConfig.API_NETWORK_DELAY_MILLIS != null)
+                delay(AppConfig.API_NETWORK_DELAY_MILLIS.toLong())
             val response = requestGetter(gymApi).execute()
             if (!response.isSuccessful)
                 throw ApiException(response)
