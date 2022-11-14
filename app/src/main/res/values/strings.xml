@@ -29,4 +29,6 @@
     <string name="intermediate">Intermediate</string>
     <string name="advanced">Advanced</string>
     <string name="expert">Expert</string>
+
+    <string name="fetchRoutineFailed">We couldn\'t fetch the routine\'s data.</string>
 </resources>

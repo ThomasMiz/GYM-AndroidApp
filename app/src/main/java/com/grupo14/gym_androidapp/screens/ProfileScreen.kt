@@ -25,7 +25,6 @@ import com.grupo14.gym_androidapp.api.models.Gender
 import com.grupo14.gym_androidapp.api.models.UserApiModel
 import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.DatePickerColors
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.listItemsSingleChoice
@@ -33,7 +32,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ProfileViewModel
 ) {
     Column(
         modifier = Modifier
@@ -43,11 +42,11 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        if (viewModel.loginUiState.isFetchingUser) {
-            ProfileScreenLoading(viewModel)
-        } else if (viewModel.loginUiState.user != null) {
+        if (viewModel.uiState.isFetchingUser) {
+            FullLoadingScreen()
+        } else if (viewModel.uiState.user != null) {
             ProfileScreenLoaded(viewModel)
-        } else if (viewModel.loginUiState.fetchUserErrorStringId != null) {
+        } else if (viewModel.uiState.fetchUserErrorStringId != null) {
             ProfileScreenError(viewModel)
         } else {
             // This should only run once, on the first compose of this screen
@@ -57,20 +56,7 @@ fun ProfileScreen(
 }
 
 @Composable
-fun ProfileScreenLoading(
-    viewModel: ProfileViewModel
-) {
-    Box(
-        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colors.secondaryVariant
-        )
-    }
-}
-
-@Composable
-fun ProfileScreenError(
+private fun ProfileScreenError(
     viewModel: ProfileViewModel
 ) {
     Column(
@@ -84,9 +70,9 @@ fun ProfileScreenError(
             modifier = Modifier.padding(bottom = 40.dp)
         )
 
-        if (viewModel.loginUiState.fetchUserErrorStringId != null) {
+        if (viewModel.uiState.fetchUserErrorStringId != null) {
             Text(
-                text = stringResource(viewModel.loginUiState.fetchUserErrorStringId!!)
+                text = stringResource(viewModel.uiState.fetchUserErrorStringId!!)
             )
         }
 
@@ -107,10 +93,10 @@ fun ProfileScreenError(
 }
 
 @Composable
-fun ProfileScreenLoaded(
+private fun ProfileScreenLoaded(
     viewModel: ProfileViewModel
 ) {
-    val user: UserApiModel = viewModel.loginUiState.user!!
+    val user: UserApiModel = viewModel.uiState.user!!
     val fullName = "${user.firstName} ${user.lastName}"
 
     var fullnameEditing by remember { mutableStateOf(fullName) }
@@ -137,7 +123,7 @@ fun ProfileScreenLoaded(
         )
     }
 
-    if (!viewModel.loginUiState.isEditingUser) {
+    if (!viewModel.uiState.isEditingUser) {
         Text(
             text = fullName,
             fontSize = 40.sp,
@@ -192,13 +178,13 @@ fun ProfileScreenLoaded(
                 modifier = Modifier
                     .padding(horizontal = 0.dp, vertical = 10.dp)
                     .fillMaxWidth(),
-                enabled = !viewModel.loginUiState.isPuttingUser
+                enabled = !viewModel.uiState.isPuttingUser
             )
 
             Button(
                 onClick = { seggsDialogState.show() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-                enabled = !viewModel.loginUiState.isPuttingUser
+                enabled = !viewModel.uiState.isPuttingUser
             ) {
                 Text(
                     text = stringResource(
@@ -210,7 +196,7 @@ fun ProfileScreenLoaded(
             Button(
                 onClick = { datepickerDialogState.show() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-                enabled = !viewModel.loginUiState.isPuttingUser
+                enabled = !viewModel.uiState.isPuttingUser
             ) {
 
                 Text(
@@ -261,7 +247,7 @@ fun ProfileScreenLoaded(
                 .fillMaxWidth()
                 .padding(top = 20.dp)
         ) {
-            if (viewModel.loginUiState.isPuttingUser) {
+            if (viewModel.uiState.isPuttingUser) {
                 CircularProgressIndicator(
                     color = MaterialTheme.colors.secondaryVariant
                 )
