@@ -30,10 +30,9 @@ class GymRepository(
         setAuthtoken(result.token)
         return result;
     }
-    suspend fun logoutUser(): ErrorApiModel {
-        val result = gymRemoteDataSource.logoutUser()
+    suspend fun logoutUser() {
+        gymRemoteDataSource.logoutUser()
         setAuthtoken(null)
-        return result;
     }
 
     suspend fun fetchCurrentUser() = gymRemoteDataSource.fetchCurrentUser()
@@ -125,7 +124,7 @@ class GymRepository(
         routineId: Int, page: Int, size: Int = DEFAULT_PAGE_SIZE, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = gymRemoteDataSource.fetchRoutineReviews(routineId, page, size, orderBy, direction)
 
-    suspend fun postRoutineReview(routineId: Int, review: ReviewApiModel) = gymRemoteDataSource.postRoutineReview(routineId, review)
+    suspend fun postRoutineReview(routineId: Int, score: Int, review: String = "") = gymRemoteDataSource.postRoutineReview(routineId, SubmitReviewApiModel(score, review))
 
     // ↑ REVIEWS ↑
 }

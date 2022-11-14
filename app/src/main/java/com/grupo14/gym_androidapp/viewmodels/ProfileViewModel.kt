@@ -20,9 +20,9 @@ data class GymProfileUiState(
 )
 
 class ProfileViewModel(
-    val gymRepository: GymRepository = GymRepository()
+    val gymRepository: GymRepository
 ) : ViewModel() {
-    var loginUiState by mutableStateOf(GymProfileUiState())
+    var uiState by mutableStateOf(GymProfileUiState())
         private set
 
     private var currentUserJob: Job? = null
@@ -31,16 +31,15 @@ class ProfileViewModel(
         currentUserJob?.cancel()
         currentUserJob = viewModelScope.launch {
             try {
-                loginUiState = loginUiState.copy(isFetchingUser = true)
+                uiState = uiState.copy(isFetchingUser = true)
                 val userResult: UserApiModel = gymRepository.fetchCurrentUser()
-                println("Got user: ${userResult}")
-                loginUiState = loginUiState.copy(
+                uiState = uiState.copy(
                     user = userResult,
                     fetchUserErrorStringId = null,
                     isFetchingUser = false,
                 )
             } catch (e: Exception) {
-                loginUiState = loginUiState.copy(
+                uiState = uiState.copy(
                     user = null,
                     fetchUserErrorStringId = R.string.fetchUserFailed,
                     isFetchingUser = false,
@@ -53,17 +52,16 @@ class ProfileViewModel(
         currentUserJob?.cancel()
         currentUserJob = viewModelScope.launch {
             try {
-                loginUiState = loginUiState.copy(isPuttingUser = true)
+                uiState = uiState.copy(isPuttingUser = true)
                 val userResult: UserApiModel = gymRepository.putCurrentUser(user)
-                println("Put user: ${userResult}")
-                loginUiState = loginUiState.copy(
+                uiState = uiState.copy(
                     user = userResult,
                     fetchUserErrorStringId = null,
                     isPuttingUser = false,
                     isEditingUser = false
                 )
             } catch (e: Exception) {
-                loginUiState = loginUiState.copy(
+                uiState = uiState.copy(
                     fetchUserErrorStringId = R.string.putUserFailed,
                     isPuttingUser = false,
                 )
@@ -72,13 +70,13 @@ class ProfileViewModel(
     }
 
     fun startEditUser() {
-        loginUiState = loginUiState.copy(
+        uiState = uiState.copy(
             isEditingUser = true
         )
     }
 
     fun cancelEditUser() {
-        loginUiState = loginUiState.copy(
+        uiState = uiState.copy(
             isEditingUser = false
         )
     }

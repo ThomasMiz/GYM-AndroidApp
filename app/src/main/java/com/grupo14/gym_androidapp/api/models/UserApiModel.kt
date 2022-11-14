@@ -6,7 +6,7 @@ import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class UserApiModel(
-    @JsonProperty("id") val id: Long? = null,
+    @JsonProperty("id") val id: Int? = null,
     @JsonProperty("username") val username: String? = null,
     @JsonProperty("firstName") val firstName: String? = null,
     @JsonProperty("lastName") val lastName: String? = null,

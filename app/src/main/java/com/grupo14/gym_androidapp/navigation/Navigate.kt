@@ -26,6 +26,7 @@ import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
+import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 
@@ -59,7 +60,7 @@ fun Activities(
                 topBar = { MyTopAppBar { navController.popBackStack() } },
                 bottomBar = { MyBottomAppBar(navController) }) {
                 HomeScreen(
-                    onNavigateToOtherScreen = { id -> navController.navigate("other/$id") }
+                    onNavigateToOtherScreen = { id -> navController.navigate("routine/$id") }
                 )
             }
         }
@@ -90,6 +91,18 @@ fun Activities(
                 topBar = { MyTopAppBar { navController.popBackStack() } },
                 bottomBar = { MyBottomAppBar(navController) }) {
                 ProfileScreen(viewModel = viewModel)
+            }
+        }
+
+        composable(
+            route = "routine/{routineId}",
+            arguments = listOf(navArgument("routineId") { type = NavType.IntType })
+        ) { navBarStackEntry ->
+            val viewModel by remember { mutableStateOf(RoutineViewModel(gymRepository)) }
+            Scaffold(
+                topBar = { MyTopAppBar { navController.popBackStack() } },
+                bottomBar = { MyBottomAppBar(navController) }) {
+                RoutineScreen(viewModel, navBarStackEntry.arguments?.getInt("routineId") ?: 0)
             }
         }
     }

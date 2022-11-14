@@ -6,7 +6,7 @@ import java.util.Date
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RoutineApiModel (
-    @JsonProperty("id") val id: Long?,
+    @JsonProperty("id") val id: Int?,
     @JsonProperty("name") val name: String?,
     @JsonProperty("detail") val detail: String?,
     @JsonProperty("date") val date: Date?,

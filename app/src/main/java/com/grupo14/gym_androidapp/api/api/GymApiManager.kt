@@ -1,13 +1,13 @@
 package com.grupo14.gym_androidapp.api.api
 
-import com.grupo14.gym_androidapp.MainActivity
+import com.grupo14.gym_androidapp.AppConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 
-class GymApiManager(private val baseUrl: String = MainActivity.BASE_URL) {
+class GymApiManager(private val baseUrl: String = AppConfig.API_BASE_URL) {
     private var authToken: String? = null
     private val authRequestInterceptor = AuthorizationInterceptor()
 
@@ -60,7 +60,7 @@ class GymApiManager(private val baseUrl: String = MainActivity.BASE_URL) {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request();
 
-            println("Outgoing request to ${request.url} with authorization \"${request.headers["Authorization"]}\"");
+            println("Outgoing ${request.method} request to ${request.url} with authorization \"${request.headers["Authorization"]}\"");
             return chain.proceed(request);
         }
     }

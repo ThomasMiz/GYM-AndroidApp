@@ -20,7 +20,7 @@ import com.grupo14.gym_androidapp.R
 fun HomeScreen(
     onNavigateToOtherScreen: (id: Int) -> Unit
 ) {
-    var id by remember { mutableStateOf(1234) }
+    var id by remember { mutableStateOf(1) }
 
     Surface {
         Column(

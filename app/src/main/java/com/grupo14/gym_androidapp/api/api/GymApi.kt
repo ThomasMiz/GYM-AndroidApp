@@ -14,16 +14,16 @@ interface GymApi {
     fun getUser(@Path("userId") userId: Int): Call<UserApiModel>
 
     @POST("users/resend_verification")
-    fun resendUserVerification(@Body user: UserApiModel): Call<ErrorApiModel>
+    fun resendUserVerification(@Body user: UserApiModel): Call<Void>
 
     @POST("users/verify_email")
-    fun verifyUserEmail(@Body user: VerifyUserApiModel): Call<ErrorApiModel>
+    fun verifyUserEmail(@Body user: VerifyUserApiModel): Call<Void>
 
     @POST("users/login")
     fun loginUser(@Body user: LoginUserApiModel): Call<TokenApiModel>
 
     @POST("users/logout")
-    fun logoutUser(): Call<ErrorApiModel>
+    fun logoutUser(): Call<Void>
 
     @GET("users/current")
     fun getCurrentUser(): Call<UserApiModel>
@@ -32,7 +32,7 @@ interface GymApi {
     fun putCurrentUser(@Body user: UserApiModel): Call<UserApiModel>
 
     @DELETE("users/current")
-    fun deleteCurrentUser(): Call<ErrorApiModel>
+    fun deleteCurrentUser(): Call<Void>
 
     @GET("users/current/routines")
     fun getCurrentUserRoutines(
@@ -55,13 +55,13 @@ interface GymApi {
         @Query("direction") direction: String?
     ): Call<ApiModelListPageOf<RoutineApiModel>>
 
-    @GET("users/current/routines")
+    @GET("users/current/reviews")
     fun getCurrentUserReviews(
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("orderBy") orderBy: String?,
         @Query("direction") direction: String?
-    ): Call<ApiModelListPageOf<RoutineApiModel>>
+    ): Call<ApiModelListPageOf<ReviewApiModel>>
 
     // ↑ USERS ↑
     // ↓ FAVORITES ↓
@@ -73,10 +73,10 @@ interface GymApi {
     ): Call<ApiModelListPageOf<RoutineApiModel>>
 
     @POST("favourites/{routineId}")
-    fun postCurrentUserFavorites(@Path("routineId") routineId: Int): Call<ErrorApiModel>
+    fun postCurrentUserFavorites(@Path("routineId") routineId: Int): Call<Void>
 
     @DELETE("favourites/{routineId}")
-    fun deleteCurrentUserFavorites(@Path("routineId") routineId: Int): Call<ErrorApiModel>
+    fun deleteCurrentUserFavorites(@Path("routineId") routineId: Int): Call<Void>
 
     // ↑ FAVORITES ↑
     // ↓ CATEGORIES ↓
@@ -100,7 +100,7 @@ interface GymApi {
     fun putCategory(@Path("categoryId") categoryId: Int, @Body category: Category): Call<Category>
 
     @DELETE("categories/{categoryId}")
-    fun deleteCategory(@Path("categoryId") categoryId: Int): Call<ErrorApiModel>
+    fun deleteCategory(@Path("categoryId") categoryId: Int): Call<Void>
 
     // ↑ CATEGORIES ↑
     // ↓ ROUTINES ↓
@@ -192,11 +192,11 @@ interface GymApi {
         @Query("direction") direction: String?
     ): Call<ApiModelListPageOf<ReviewApiModel>>
 
-    @GET("reviews/{routineId}")
+    @POST("reviews/{routineId}")
     fun postRoutineReview(
         @Path("routineId") routineId: Int,
-        @Body review: ReviewApiModel
-    ): Call<ReviewApiModel>
+        @Body review: SubmitReviewApiModel
+    ): Call<SubmitReviewApiModel>
 
     // ↑ REVIEWS ↑
 }
