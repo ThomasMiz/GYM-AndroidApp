@@ -12,6 +12,7 @@ val Light = Color(0xFFFFFFFF)
 val FavoritePink = Color(0xFFFFA8A8)
 val Error = Color(0xFFFF4949)
 val StarYellow = Color(0xFFFDD835)
+val GoldenBrown = Color(0xFFD68629)
 val ErrorRed = Color(0xFFFF4949)
 
 val Purple200 = Color(0xFFBB86FC)

@@ -37,9 +37,12 @@ import com.gowtham.ratingbar.RatingBarStyle
 import com.grupo14.gym_androidapp.AppConfig
 import com.grupo14.gym_androidapp.FullLoadingScreen
 import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.api.models.CycleExerciseApiModel
 import com.grupo14.gym_androidapp.ui.theme.ErrorRed
 import com.grupo14.gym_androidapp.ui.theme.FavoritePink
+import com.grupo14.gym_androidapp.ui.theme.GoldenBrown
 import com.grupo14.gym_androidapp.ui.theme.StarYellow
+import com.grupo14.gym_androidapp.viewmodels.CycleUiState
 import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
@@ -423,72 +426,7 @@ private fun RoutineDetailScreen(
             )
         }
 
-        viewModel.uiState.cycleStates.forEach { cycle ->
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .background(MaterialTheme.colors.primary)
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                ) {
-                    Text(
-                        text = cycle.cycle.name!!,
-                        color = Color.Black,
-                        modifier = Modifier.padding(10.dp)
-                    )
-                }
-
-                val reps = cycle.cycle.repetitions!!
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .background(Color.DarkGray)
-                ) {
-                    Text(
-                        text = stringResource(
-                            id = if (reps == 1) R.string.repetitionDispaly else R.string.repetitionsDispaly,
-                            reps
-                        ),
-                        color = Color.White,
-                        modifier = Modifier.padding(10.dp)
-                    )
-                }
-            }
-
-            cycle.exercises.forEach { exercise ->
-                Text(
-                    text = exercise.toString()
-                )
-            }
-
-            if (cycle.fetchExercisesErrorStringId != null) {
-                Text(
-                    text = stringResource(id = cycle.fetchExercisesErrorStringId),
-                    color = ErrorRed
-                )
-            }
-
-            if (cycle.isFetchingExercises) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.secondaryVariant,
-                    modifier = Modifier.padding(top = 10.dp)
-                )
-            } else if (cycle.exercises.isEmpty() && cycle.fetchExercisesErrorStringId == null) {
-                Text(
-                    text = stringResource(id = R.string.cycleHasNoExercises),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
-                )
-            }
-        }
-
+        viewModel.uiState.cycleStates.forEach { cycle -> CycleView(cycle) }
 
         if (viewModel.uiState.fetchCyclesErrorStringId != null) {
             Text(
@@ -508,6 +446,137 @@ private fun RoutineDetailScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
             )
+        }
+    }
+}
+
+@Composable
+private fun CycleView(cycle: CycleUiState) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(MaterialTheme.colors.primary)
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxHeight()
+        ) {
+            Text(
+                text = cycle.cycle.name!!,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(10.dp)
+            )
+        }
+
+        val reps = cycle.cycle.repetitions!!
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(Color.DarkGray)
+        ) {
+            Text(
+                text = stringResource(
+                    id = if (reps == 1) R.string.repetitionDispaly else R.string.repetitionsDispaly,
+                    reps
+                ),
+                color = Color.White,
+                modifier = Modifier.padding(10.dp)
+            )
+        }
+    }
+
+    cycle.exercises.forEachIndexed { index, exercise ->
+        ExerciseView(exercise)
+
+        if (index < cycle.exercises.size - 1)
+            Divider(color = Color.DarkGray)
+    }
+
+    if (cycle.fetchExercisesErrorStringId != null) {
+        Text(
+            text = stringResource(id = cycle.fetchExercisesErrorStringId),
+            color = ErrorRed
+        )
+    }
+
+    if (cycle.isFetchingExercises) {
+        CircularProgressIndicator(
+            color = MaterialTheme.colors.secondaryVariant,
+            modifier = Modifier.padding(top = 10.dp)
+        )
+    } else if (cycle.exercises.isEmpty() && cycle.fetchExercisesErrorStringId == null) {
+        Text(
+            text = stringResource(id = R.string.cycleHasNoExercises),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+        )
+    }
+}
+
+@Composable
+private fun ExerciseView(exercise: CycleExerciseApiModel) {
+    Row(
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.rutina),
+            contentDescription = "exercise",
+            alignment = Alignment.TopCenter,
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier
+                .size(width = 140.dp, height = 100.dp)
+                .padding(end = 10.dp)
+        )
+
+        Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Text(
+                text = exercise.exercise!!.name!!,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (exercise.duration != null && exercise.duration > 0) {
+                    Text(
+                        text = stringResource(
+                            if (exercise.duration == 1) R.string.secondDispaly else R.string.secondsDispaly,
+                            exercise.duration
+                        ),
+                        color = GoldenBrown
+                    )
+                }
+
+                if (exercise.repetitions != null && exercise.repetitions > 0) {
+                    if (exercise.duration != null && exercise.duration > 0) {
+                        Text(
+                            text = " - ",
+                            color = GoldenBrown
+                        )
+                    }
+
+                    Text(
+                        text = stringResource(
+                            if (exercise.repetitions == 1) R.string.repetitionDispaly else R.string.repetitionsDispaly,
+                            exercise.repetitions
+                        ),
+                        color = GoldenBrown
+                    )
+                }
+            }
         }
     }
 }
