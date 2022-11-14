@@ -300,6 +300,7 @@ private fun RoutineScreenLoaded(
                 )
 
                 val reviewFailMessage = stringResource(id = R.string.submitReviewFailed)
+                val reviewSuccessMessage = stringResource(id = R.string.submitReviewSuccess)
 
                 // Confirmation dialog for submit review
                 MaterialDialog(
@@ -311,6 +312,8 @@ private fun RoutineScreenLoaded(
                                 newRating = rating,
                                 onSuccess = {
                                     rating = viewModel.uiState.currentRating
+                                    Toast.makeText(context, reviewSuccessMessage, Toast.LENGTH_SHORT)
+                                        .show()
                                 },
                                 onFailure = {
                                     rating = viewModel.uiState.currentRating
