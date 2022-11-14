@@ -38,4 +38,6 @@
     <string name="confirmReviewDialogMessage">Are you sure you want to submit a review of %1$d stars to this routine?</string>
     <string name="actionCantBeUndone">This action can\'t be undone!</string>
     <string name="submitReviewFailed">We couldn\'t submit your review.</string>
+    <string name="viewDetails">View details</string>
+    <string name="startRoutine">Start routine</string>
 </resources>

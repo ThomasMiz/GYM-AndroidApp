@@ -110,7 +110,7 @@ private fun RoutineScreenLoaded(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 30.dp, end = 30.dp, top = 30.dp),
+            .padding(start = 30.dp, end = 30.dp, top = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -269,7 +269,9 @@ private fun RoutineScreenLoaded(
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth().requiredHeight(60.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .requiredHeight(60.dp)
         ) {
             // "Review this routine"
             Text(
@@ -334,12 +336,41 @@ private fun RoutineScreenLoaded(
             }
         }
 
-        Divider(
-            color = MaterialTheme.colors.secondaryVariant,
-            modifier = Modifier.padding(vertical = 10.dp)
-        )
 
-        // Buttons for start and details
-        Text("Pedro")
+        Column(
+           verticalArrangement = Arrangement.Bottom,
+           horizontalAlignment = Alignment.CenterHorizontally,
+           modifier = Modifier.padding(start = 60.dp, end = 60.dp, top = 20.dp)
+        ) {
+            // Button for view details
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.LightGray,
+                    contentColor = Color.Black
+                ),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+                onClick = {}
+            ) {
+                Text(
+                    text = stringResource(id = R.string.viewDetails),
+                    modifier = Modifier.padding(vertical = 5.dp)
+                )
+            }
+
+            // Button for start
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = Color.Black
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {}
+            ) {
+                Text(
+                    text = stringResource(id = R.string.startRoutine),
+                    modifier = Modifier.padding(vertical = 5.dp)
+                )
+            }
+        }
     }
 }

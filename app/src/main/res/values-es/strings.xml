@@ -38,4 +38,6 @@
     <string name="confirmReviewDialogMessage">Estas seguro de que queres calificar esta rutina con %1$d estrellas?</string>
     <string name="actionCantBeUndone">Esta acción no se puede deshacer!</string>
     <string name="submitReviewFailed">No pudimos enviar su calificación.</string>
+    <string name="viewDetails">Ver detalles</string>
+    <string name="startRoutine">Empezar rutina</string>
 </resources>
