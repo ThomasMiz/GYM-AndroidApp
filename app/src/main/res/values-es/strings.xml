@@ -30,6 +30,10 @@
     <string name="advanced">Avanzado</string>
     <string name="expert">Experto</string>
 
+    <string name="warmup">Entrada en calor</string>
+    <string name="exercise">Ejercitación</string>
+    <string name="cooldown">Enfriamiento</string>
+
     <string name="fetchRoutineFailed">No pudimos cargar la información de la rutina.</string>
     <string name="by">por %1$s</string>
     <string name="toggleFavoriteFailed">No pudimos actualizar tus favoritas</string>
@@ -43,4 +47,5 @@
     <string name="startRoutine">Empezar rutina</string>
     <string name="fetchCyclesFailed">No pudimos cargar los ciclos de esta rutina</string>
     <string name="fetchExerciseFailed">No pudimos cargar este ejercicio</string>
+    <string name="categoryDisplay">Categoría: %1$s</string>
 </resources>

@@ -30,6 +30,10 @@
     <string name="advanced">Advanced</string>
     <string name="expert">Expert</string>
 
+    <string name="warmup">Warmup</string>
+    <string name="exercise">Exercise</string>
+    <string name="cooldown">Cooldown</string>
+
     <string name="fetchRoutineFailed">We couldn\'t fetch the routine\'s data.</string>
     <string name="by">by %1$s</string>
     <string name="toggleFavoriteFailed">We couldn\'t update your favorites</string>
@@ -43,4 +47,5 @@
     <string name="startRoutine">Start routine</string>
     <string name="fetchCyclesFailed">We couldn\'t fetch this routine\'s cycles</string>
     <string name="fetchExerciseFailed">We couldn\'t fetch this exercise</string>
+    <string name="categoryDisplay">Category: %1$s</string>
 </resources>
