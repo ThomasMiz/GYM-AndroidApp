@@ -40,4 +40,6 @@
     <string name="submitReviewFailed">No pudimos enviar su calificación.</string>
     <string name="viewDetails">Ver detalles</string>
     <string name="startRoutine">Empezar rutina</string>
+    <string name="fetchCyclesFailed">No pudimos cargar los ciclos de esta rutina</string>
+    <string name="fetchExerciseFailed">No pudimos cargar este ejercicio</string>
 </resources>

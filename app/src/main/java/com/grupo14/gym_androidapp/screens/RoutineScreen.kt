@@ -48,7 +48,7 @@ fun RoutineScreen(
 ) {
     if (viewModel.uiState.fetchingRoutineId != routineId) {
         // This should only run once, on the first compose of this screen
-        viewModel.fetchRoutine(routineId)
+        viewModel.start(routineId)
     } else if (viewModel.uiState.isFetchingRoutine) {
         FullLoadingScreen()
     } else if (viewModel.uiState.routine != null) {
@@ -57,7 +57,7 @@ fun RoutineScreen(
         RoutineScreenError(viewModel, routineId)
     } else {
         // This should only run once, on the first compose of this screen
-        viewModel.fetchRoutine(routineId)
+        viewModel.start(routineId)
     }
 }
 
@@ -372,5 +372,19 @@ private fun RoutineScreenLoaded(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun RoutineDetailScreen(
+    viewModel: RoutineViewModel,
+    routineId: Int
+) {
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
     }
 }

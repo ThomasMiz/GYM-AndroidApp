@@ -40,4 +40,6 @@
     <string name="submitReviewFailed">We couldn\'t submit your review.</string>
     <string name="viewDetails">View details</string>
     <string name="startRoutine">Start routine</string>
+    <string name="fetchCyclesFailed">We couldn\'t fetch this routine\'s cycles</string>
+    <string name="fetchExerciseFailed">We couldn\'t fetch this exercise</string>
 </resources>
