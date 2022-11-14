@@ -37,7 +37,7 @@ fun Activities(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "login",
+        startDestination = if(gymRepository.getAuthtoken()) "login" else "home",
 
         ) {
 
