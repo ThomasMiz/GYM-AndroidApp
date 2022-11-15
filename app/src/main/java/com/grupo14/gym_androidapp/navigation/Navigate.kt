@@ -66,7 +66,7 @@ fun Activities(
                 bottomBar = { MyBottomAppBar(navController) }) {
                 HomeScreen(
                     viewModel = viewModel,
-                    onNavigateToOtherScreen = { id -> navController.navigate("routine/$id") }
+                    onNavigateToRoutineRequested = { id -> navController.navigate("routine/$id") }
                 )
             }
         }

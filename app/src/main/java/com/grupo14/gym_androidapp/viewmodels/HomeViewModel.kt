@@ -133,8 +133,4 @@ class HomeViewModel(
     fun isUnfavoritingAny(): Boolean {
         return currentUnfavJob != null && currentUnfavJob!!.isActive
     }
-
-    fun onRoutineTapped(routineId: Int) {
-        println("TODO: Go to routine $routineId") // TODO
-    }
 }

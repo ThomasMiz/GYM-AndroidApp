@@ -37,7 +37,7 @@ import com.vanpra.composematerialdialogs.title
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    onNavigateToOtherScreen: (id: Int) -> Unit
+    onNavigateToRoutineRequested: (id: Int) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
@@ -92,7 +92,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(viewModel.uiState.favorites) { routineState ->
-                    FavoriteRoutineCard(viewModel, routineState) {
+                    FavoriteRoutineCard(onNavigateToRoutineRequested, routineState) {
                         if (unfavRoutineId < 0 && !viewModel.isUnfavoritingAny()) {
                             unfavRoutineId = it
                             confirmUnfavDialogState.show()
@@ -125,35 +125,12 @@ fun HomeScreen(
                 }
             }
         }
-
-        var id by remember { mutableStateOf(1) }
-
-        Surface {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Button(onClick = { onNavigateToOtherScreen(id) }) {
-                    Text(
-                        text = stringResource(R.string.pedro),
-                        fontSize = 30.sp
-                    )
-                }
-
-                TextField(
-                    value = id.toString(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    onValueChange = { newValue -> id = newValue.toIntOrNull() ?: 0 },
-                )
-            }
-        }
     }
 }
 
 @Composable
 private fun FavoriteRoutineCard(
-    viewModel: HomeViewModel,
+    onNavigateToRoutineRequested: (id: Int) -> Unit,
     routineState: HomeRoutineUiState,
     onUnfavorited: (Int) -> Unit
 ) {
@@ -163,7 +140,7 @@ private fun FavoriteRoutineCard(
         elevation = 5.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { viewModel.onRoutineTapped(routineState.routine.id!!) }
+            .clickable { onNavigateToRoutineRequested(routineState.routine.id!!) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
