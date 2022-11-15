@@ -14,6 +14,7 @@ val Error = Color(0xFFFF4949)
 val StarYellow = Color(0xFFFDD835)
 val GoldenBrown = Color(0xFFD68629)
 val ErrorRed = Color(0xFFFF4949)
+val DifficultyRed = Color(0xFFF44336)
 
 val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)

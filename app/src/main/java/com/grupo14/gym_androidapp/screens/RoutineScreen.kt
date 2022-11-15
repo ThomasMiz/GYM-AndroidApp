@@ -38,10 +38,7 @@ import com.grupo14.gym_androidapp.AppConfig
 import com.grupo14.gym_androidapp.FullLoadingScreen
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.models.CycleExerciseApiModel
-import com.grupo14.gym_androidapp.ui.theme.ErrorRed
-import com.grupo14.gym_androidapp.ui.theme.FavoritePink
-import com.grupo14.gym_androidapp.ui.theme.GoldenBrown
-import com.grupo14.gym_androidapp.ui.theme.StarYellow
+import com.grupo14.gym_androidapp.ui.theme.*
 import com.grupo14.gym_androidapp.viewmodels.CycleUiState
 import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -233,7 +230,7 @@ private fun RoutineScreenLoaded(
                     modifier = Modifier.padding(5.dp)
                 ) {
                     Text(
-                        text = routine.score.toString(),
+                        text = if (routine.score == null || routine.score == 0f) " - " else routine.score.toString(),
                         modifier = Modifier.padding(horizontal = 5.dp)
                     )
 
@@ -264,8 +261,8 @@ private fun RoutineScreenLoaded(
 
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.dumbbell),
-                        contentDescription = "routineScore",
-                        tint = Color.Black,
+                        contentDescription = "routineDifficulty",
+                        tint = DifficultyRed,
                         modifier = Modifier.padding(end = 3.dp)
                     )
                 }
