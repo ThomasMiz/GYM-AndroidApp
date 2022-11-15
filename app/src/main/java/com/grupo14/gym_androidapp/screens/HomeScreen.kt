@@ -1,6 +1,7 @@
 package com.grupo14.gym_androidapp.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -77,7 +78,10 @@ fun HomeScreen(
             ) {
                 title(res = R.string.confirmUnfavoriteDialogTitle)
                 message(res = R.string.confirmUnfavoriteDialogMessage)
-                message(text = viewModel.uiState.favorites.find { it.routine.id == unfavRoutineId }?.routine?.name ?: "")
+                message(
+                    text = viewModel.uiState.favorites.find { it.routine.id == unfavRoutineId }?.routine?.name
+                        ?: ""
+                )
             }
 
             LazyColumn(
@@ -88,7 +92,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 items(viewModel.uiState.favorites) { routineState ->
-                    FavoriteRoutineCard(routineState) {
+                    FavoriteRoutineCard(viewModel, routineState) {
                         if (unfavRoutineId < 0 && !viewModel.isUnfavoritingAny()) {
                             unfavRoutineId = it
                             confirmUnfavDialogState.show()
@@ -149,6 +153,7 @@ fun HomeScreen(
 
 @Composable
 private fun FavoriteRoutineCard(
+    viewModel: HomeViewModel,
     routineState: HomeRoutineUiState,
     onUnfavorited: (Int) -> Unit
 ) {
@@ -158,6 +163,7 @@ private fun FavoriteRoutineCard(
         elevation = 5.dp,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { viewModel.onRoutineTapped(routineState.routine.id!!) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
