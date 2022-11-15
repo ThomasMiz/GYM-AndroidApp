@@ -230,7 +230,7 @@ private fun RoutineScreenLoaded(
                     modifier = Modifier.padding(5.dp)
                 ) {
                     Text(
-                        text = routine.score.toString(),
+                        text = if (routine.score == null || routine.score == 0f) " - " else routine.score.toString(),
                         modifier = Modifier.padding(horizontal = 5.dp)
                     )
 
