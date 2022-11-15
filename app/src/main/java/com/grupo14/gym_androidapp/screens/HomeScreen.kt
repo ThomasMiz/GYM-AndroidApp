@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,10 +24,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.grupo14.gym_androidapp.R
-import com.grupo14.gym_androidapp.api.models.RoutineApiModel
 import com.grupo14.gym_androidapp.ui.theme.ErrorRed
 import com.grupo14.gym_androidapp.ui.theme.FavoritePink
+import com.grupo14.gym_androidapp.viewmodels.HomeRoutineUiState
 import com.grupo14.gym_androidapp.viewmodels.HomeViewModel
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.title
 
 @Composable
 fun HomeScreen(
@@ -54,6 +59,27 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
 
+            val confirmUnfavDialogState = rememberMaterialDialogState()
+            var unfavRoutineId by remember { mutableStateOf(-1) }
+
+            // Confirmation dialog for unfavoriting a routine
+            MaterialDialog(
+                dialogState = confirmUnfavDialogState,
+                buttons = {
+                    positiveButton(stringResource(id = R.string.ok)) {
+                        viewModel.unfavoriteRoutine(unfavRoutineId)
+                        unfavRoutineId = -1
+                    }
+                    negativeButton(stringResource(id = R.string.cancel)) {
+                        unfavRoutineId = -1
+                    }
+                }
+            ) {
+                title(res = R.string.confirmUnfavoriteDialogTitle)
+                message(res = R.string.confirmUnfavoriteDialogMessage)
+                message(text = viewModel.uiState.favorites.find { it.routine.id == unfavRoutineId }?.routine?.name ?: "")
+            }
+
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -61,9 +87,12 @@ fun HomeScreen(
                 state = rememberLazyListState(),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(viewModel.uiState.favorites) { routine ->
-                    FavoriteRoutineCard(routine) {
-                        // TODO: On unfavorite button tapped
+                items(viewModel.uiState.favorites) { routineState ->
+                    FavoriteRoutineCard(routineState) {
+                        if (unfavRoutineId < 0 && !viewModel.isUnfavoritingAny()) {
+                            unfavRoutineId = it
+                            confirmUnfavDialogState.show()
+                        }
                     }
                 }
             }
@@ -119,7 +148,12 @@ fun HomeScreen(
 }
 
 @Composable
-private fun FavoriteRoutineCard(routine: RoutineApiModel, onUnfavorited: () -> Unit) {
+private fun FavoriteRoutineCard(
+    routineState: HomeRoutineUiState,
+    onUnfavorited: (Int) -> Unit
+) {
+    val routine = routineState.routine
+
     Card(
         elevation = 5.dp,
         modifier = Modifier
@@ -167,12 +201,19 @@ private fun FavoriteRoutineCard(routine: RoutineApiModel, onUnfavorited: () -> U
                 verticalArrangement = Arrangement.Top,
                 modifier = Modifier.fillMaxHeight()
             ) {
-                IconButton(onClick = { onUnfavorited() }) {
-                    Icon(
-                        imageVector = Icons.Filled.Favorite,
-                        contentDescription = "toggleFavorite",
-                        tint = FavoritePink
+                if (routineState.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.scale(0.5f),
+                        color = FavoritePink
                     )
+                } else {
+                    IconButton(onClick = { onUnfavorited(routine.id!!) }) {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = "toggleFavorite",
+                            tint = FavoritePink
+                        )
+                    }
                 }
             }
         }

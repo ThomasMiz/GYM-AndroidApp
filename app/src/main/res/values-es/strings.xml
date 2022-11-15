@@ -58,4 +58,7 @@
     <string name="fetchFavoritesFailed">No pudimos buscar tus rutinas favoritas</string>
     <string name="yourFavoriteRoutines">Tus rutinas favoritas</string>
     <string name="noFavoritesYet">Todavía no haz marcado ninguna rutina como favorita</string>
+
+    <string name="confirmUnfavoriteDialogTitle">Sacar de favoritas</string>
+    <string name="confirmUnfavoriteDialogMessage">Estas seguro que queres sacar esta rutina de tus favoritas?</string>
 </resources>

@@ -58,4 +58,7 @@
     <string name="fetchFavoritesFailed">We couldn\'t fetch your favorite routines</string>
     <string name="yourFavoriteRoutines">Your favorite routines</string>
     <string name="noFavoritesYet">You have not marked any routine as favorite yet</string>
+
+    <string name="confirmUnfavoriteDialogTitle">Remove from favorites</string>
+    <string name="confirmUnfavoriteDialogMessage">Are you sure you want to remove this routine from your favorites?</string>
 </resources>
