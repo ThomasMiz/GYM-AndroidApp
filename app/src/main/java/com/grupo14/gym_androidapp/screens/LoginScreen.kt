@@ -1,6 +1,5 @@
 package com.grupo14.gym_androidapp.screens
 
-import android.os.CountDownTimer
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
