@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grupo14.gym_androidapp.api.GymRepository
+import com.grupo14.gym_androidapp.api.api.ApiException
 import com.grupo14.gym_androidapp.api.models.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -34,12 +35,13 @@ class SessionViewModel(
 
     fun loginUser(username : String, password : String){
         currentUserJob?.cancel()
-        var token: TokenApiModel? = null
+        var token: TokenApiModel?
+        var errorMessage: String? = "Unexpected error"
         sessionUiState = sessionUiState.copy(isLoggingIn = true, errorString = null)
+        
         currentUserJob = viewModelScope.launch {
-            runCatching {
+            try {
                 token = gymRepository.loginUser(username, password)
-            }.onSuccess {
                 sessionUiState = sessionUiState.copy(
                     isLoggedIn = true,
                     isLoggingIn = false,
@@ -47,11 +49,21 @@ class SessionViewModel(
                 )
                 println("Got user's token: ${token}")
 
-            }.onFailure {e->
+            } catch (e : ApiException) {
+
+                e.response?.code()?.let {
+                    errorMessage = when(e.response.code()) {
+                        400 -> "Bad request: Request or data is invalid or has a constraint"
+                        401 -> "Usuario y/o contraseña incorrectos"
+                        500 -> "Internal server error"
+                        else -> "Unexpected error"
+                    }
+                }
+
                 sessionUiState = sessionUiState.copy(
                     isLoggedIn = false,
                     isLoggingIn = false,
-                    errorString = e.message,
+                    errorString = errorMessage
                 )
             }
         }
@@ -64,9 +76,11 @@ class SessionViewModel(
     fun registerNewUser(email : String, username : String, password : String){
         currentUserJob?.cancel()
         var data: UserApiModel? = null
+        var errorMessage: String? = "Unexpected error"
         sessionUiState = sessionUiState.copy(isRegistering = true, errorString = null)
+
         currentUserJob = viewModelScope.launch {
-            runCatching {
+            try {
                 data = gymRepository.registerNewUser(
                     LoginUserApiModel(
                         username,  // Username
@@ -81,7 +95,6 @@ class SessionViewModel(
 
                     )
                 )
-            }.onSuccess {
                 sessionUiState = sessionUiState.copy(
                     isRegistered = true,
                     isRegistering = false,
@@ -89,11 +102,20 @@ class SessionViewModel(
                 )
                 println("Got user's data: ${data}")
 
-            }.onFailure {e->
+            } catch(e : ApiException) {
+
+                e.response?.code()?.let {
+                    errorMessage = when(e.response.code()) {
+                        400 -> "Bad request: Request or data is invalid or has a constraint"
+                        500 -> "Internal server error"
+                        else -> "Unexpected error"
+                    }
+                }
+
                 sessionUiState = sessionUiState.copy(
                     isRegistered = false,
                     isRegistering = false,
-                    errorString = e.message,
+                    errorString = errorMessage,
                 )
             }
         }
@@ -105,11 +127,12 @@ class SessionViewModel(
 
     fun verifyUser(email : String, code : String){
         currentUserJob?.cancel()
+        var errorMessage: String? = "Unexpected error"
         sessionUiState = sessionUiState.copy(isVerifying = true, errorString = null)
+
         currentUserJob = viewModelScope.launch {
-            runCatching {
+            try {
                 gymRepository.verifyUserEmail(email, code)
-            }.onSuccess {
                 sessionUiState = sessionUiState.copy(
                     userVerified = true,
                     isVerifying = false,
@@ -117,12 +140,23 @@ class SessionViewModel(
                 )
                 println("User verified!")
 
-            }.onFailure {e->
+            } catch(e : ApiException) {
+
+                e.response?.code()?.let {
+                    errorMessage = when(e.response.code()) {
+                        400 -> "Bad request: Request or data is invalid or has a constraint"
+                        401 -> "Authorization information is missing or invalid"
+                        500 -> "Internal server error"
+                        else -> "Unexpected error"
+                    }
+                }
+
                 sessionUiState = sessionUiState.copy(
                     userVerified = false,
                     isVerifying = false,
-                    errorString = e.message
+                    errorString = errorMessage
                 )
+
             }
         }
     }
