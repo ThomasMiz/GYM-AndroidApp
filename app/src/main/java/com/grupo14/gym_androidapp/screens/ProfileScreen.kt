@@ -24,11 +24,9 @@ import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.models.Gender
 import com.grupo14.gym_androidapp.api.models.UserApiModel
 import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
-import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.*
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.listItemsSingleChoice
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun ProfileScreen(
@@ -81,12 +79,10 @@ private fun ProfileScreenError(
         )
 
         Button(
-            onClick = { viewModel.fetchCurrentUser() },
-            modifier = Modifier.padding(top = 40.dp)
+            onClick = { viewModel.fetchCurrentUser() }, modifier = Modifier.padding(top = 40.dp)
         ) {
             Text(
-                text = stringResource(R.string.tryAgain),
-                color = Color.Black
+                text = stringResource(R.string.tryAgain), color = Color.Black
             )
         }
     }
@@ -105,6 +101,7 @@ private fun ProfileScreenLoaded(
 
     val seggsDialogState = rememberMaterialDialogState()
     val datepickerDialogState = rememberMaterialDialogState()
+    val discardDialogState = rememberMaterialDialogState()
 
     val genderOptionsList = createGendersList()
 
@@ -125,22 +122,16 @@ private fun ProfileScreenLoaded(
 
     if (!viewModel.uiState.isEditingUser) {
         Text(
-            text = fullName,
-            fontSize = 40.sp,
-            modifier = Modifier.padding(top = 10.dp)
+            text = fullName, fontSize = 40.sp, modifier = Modifier.padding(top = 10.dp)
         )
         Text(
-            text = "@" + user.username,
-            modifier = Modifier.padding(bottom = 10.dp)
+            text = "@" + user.username, modifier = Modifier.padding(bottom = 10.dp)
         )
 
         Text(
             text = stringResource(
-                R.string.profileSeggsLabel,
-                stringResource(id = user.gender!!.stringResourceId)
-            ),
-            fontSize = 24.sp,
-            modifier = Modifier.padding(vertical = 10.dp)
+                R.string.profileSeggsLabel, stringResource(id = user.gender!!.stringResourceId)
+            ), fontSize = 24.sp, modifier = Modifier.padding(vertical = 10.dp)
         )
 
         Text(
@@ -173,7 +164,8 @@ private fun ProfileScreenLoaded(
             modifier = Modifier.padding(top = 10.dp, start = 50.dp, end = 50.dp)
         ) {
             TextField(
-                value = fullnameEditing, onValueChange = { newValue -> fullnameEditing = newValue },
+                value = fullnameEditing,
+                onValueChange = { newValue -> fullnameEditing = newValue },
                 //fontSize = 40.sp,
                 modifier = Modifier
                     .padding(horizontal = 0.dp, vertical = 10.dp)
@@ -215,8 +207,7 @@ private fun ProfileScreenLoaded(
             },
         ) {
             datepicker(
-                initialDate = birthdateEditing,
-                colors = DatePickerDefaults.colors(
+                initialDate = birthdateEditing, colors = DatePickerDefaults.colors(
                     headerBackgroundColor = MaterialTheme.colors.secondaryVariant,
                     calendarHeaderTextColor = MaterialTheme.colors.secondaryVariant,
                     dateActiveBackgroundColor = MaterialTheme.colors.secondaryVariant
@@ -238,6 +229,16 @@ private fun ProfileScreenLoaded(
                 },
                 waitForPositiveButton = false
             )
+        }
+
+        MaterialDialog(dialogState = discardDialogState, buttons = {
+            positiveButton(res = R.string.yes) {
+                viewModel.cancelEditUser()
+            }
+            negativeButton(res = R.string.no)
+        }) {
+            title(res = R.string.confirmDiscardProfileDialogTitle)
+            message(res = R.string.confirmDiscardProfileDialogMessage)
         }
 
         Row(
@@ -275,7 +276,7 @@ private fun ProfileScreenLoaded(
                     )
                 }
                 IconButton(
-                    onClick = { viewModel.cancelEditUser() },
+                    onClick = { discardDialogState.show() },
                     modifier = Modifier.padding(start = 10.dp)
                 ) {
                     Icon(

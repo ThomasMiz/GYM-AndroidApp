@@ -4,6 +4,8 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="pedro">Peter</string>
     <string name="message_id">Received id %1$d</string>
@@ -16,6 +18,8 @@
     <string name="putUserFailed">We couldn\'t update your user data</string>
     <string name="tryAgainLater">Please try again later</string>
     <string name="tryAgain">Try again</string>
+    <string name="confirmDiscardProfileDialogTitle">Discard edited changes</string>
+    <string name="confirmDiscardProfileDialogMessage">Are you sure you want to discard your changes? Your profile will not be updated</string>
 
     <string name="profileSeggsLabel">Sex: %1$s</string>
     <string name="profileBithdateLabel">Birthdate: %1$s</string>

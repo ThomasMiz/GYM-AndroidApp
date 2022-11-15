@@ -4,6 +4,8 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancelar</string>
     <string name="accept">Aceptar</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
 
     <string name="pedro">Pedro</string>
     <string name="message_id">Se recibió el id %1$d</string>
@@ -16,6 +18,8 @@
     <string name="putUserFailed">No pudimos actualizar su usuario</string>
     <string name="tryAgainLater">Por favor vuelva a intentar más tarde</string>
     <string name="tryAgain">Volver a intentar</string>
+    <string name="confirmDiscardProfileDialogTitle">Descartar cambios</string>
+    <string name="confirmDiscardProfileDialogMessage">Estas seguro que queres descartar estos cambios? Su perfil no será actualizado</string>
 
     <string name="profileSeggsLabel">Sexo: %1$s</string>
     <string name="profileBithdateLabel">Nacimiento: %1$s</string>

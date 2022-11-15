@@ -51,7 +51,7 @@ fun RegisterScreen(
 
 
 @Composable
-fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionViewModel, loading : Boolean) {
+private fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionViewModel, loading : Boolean) {
     val context = LocalContext.current
 
     val emailVal = remember { mutableStateOf("") }
@@ -242,7 +242,7 @@ fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionVie
 }
 
 @Composable
-fun RegisterScreenError(
+private fun RegisterScreenError(
     navController : NavHostController,
     viewModel: SessionViewModel
 ) {
