@@ -1,6 +1,7 @@
 package com.grupo14.gym_androidapp.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,10 +9,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
 import com.grupo14.gym_androidapp.ui.theme.ErrorRed
+import com.grupo14.gym_androidapp.ui.theme.FavoritePink
 import com.grupo14.gym_androidapp.viewmodels.HomeViewModel
 
 @Composable
@@ -123,9 +128,10 @@ private fun FavoriteRoutineCard(routine: RoutineApiModel, onUnfavorited: () -> U
             .fillMaxWidth()
     ) {
         Row(
-            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
         ) {
             // Routine image
             Image(
@@ -141,8 +147,11 @@ private fun FavoriteRoutineCard(routine: RoutineApiModel, onUnfavorited: () -> U
 
             Column(
                 horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.padding(start = 10.dp)
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .fillMaxHeight()
+                    .weight(1.0f)
             ) {
                 Text(
                     text = routine.name!!,
@@ -153,6 +162,20 @@ private fun FavoriteRoutineCard(routine: RoutineApiModel, onUnfavorited: () -> U
                 Text(
                     text = stringResource(id = R.string.by, "@${routine.user!!.username!!}")
                 )
+            }
+
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                IconButton(onClick = { onUnfavorited() }) {
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = "toggleFavorite",
+                        tint = FavoritePink
+                    )
+                }
             }
         }
     }
