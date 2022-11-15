@@ -12,9 +12,9 @@
     <string name="profile">Profile</string>
     <string name="editProfile">Edit Profile</string>
     <string name="oops">Oops!</string>
-    <string name="fetchUserFailed">We couldn\'t fetch your user data.</string>
-    <string name="putUserFailed">We couldn\'t update your user data.</string>
-    <string name="tryAgainLater">Please try again later.</string>
+    <string name="fetchUserFailed">We couldn\'t fetch your user data</string>
+    <string name="putUserFailed">We couldn\'t update your user data</string>
+    <string name="tryAgainLater">Please try again later</string>
     <string name="tryAgain">Try again</string>
 
     <string name="profileSeggsLabel">Sex: %1$s</string>
@@ -34,14 +34,14 @@
     <string name="exercise">Exercise</string>
     <string name="cooldown">Cooldown</string>
 
-    <string name="fetchRoutineFailed">We couldn\'t fetch the routine\'s data.</string>
+    <string name="fetchRoutineFailed">We couldn\'t fetch the routine\'s data</string>
     <string name="by">by %1$s</string>
     <string name="toggleFavoriteFailed">We couldn\'t update your favorites</string>
     <string name="reviewThisRoutine">Review this routine</string>
     <string name="confirmReviewDialogTitle">Submit review?</string>
     <string name="confirmReviewDialogMessage">Are you sure you want to submit a review of %1$d stars to this routine?</string>
     <string name="actionCantBeUndone">This action can\'t be undone!</string>
-    <string name="submitReviewFailed">We couldn\'t submit your review.</string>
+    <string name="submitReviewFailed">We couldn\'t submit your review</string>
     <string name="submitReviewSuccess">Your review has been submitted!</string>
     <string name="viewDetails">View details</string>
     <string name="startRoutine">Start routine</string>
@@ -54,4 +54,8 @@
     <string name="secondDispaly">%1$d second</string>
     <string name="cycleHasNoExercises">This cycle has no exercises</string>
     <string name="routineHasNoCycles">This routine has no cycles</string>
+
+    <string name="fetchFavoritesFailed">We couldn\'t fetch your favorite routines</string>
+    <string name="yourFavoriteRoutines">Your favorite routines</string>
+    <string name="noFavoritesYet">You have not marked any routine as favorite yet</string>
 </resources>

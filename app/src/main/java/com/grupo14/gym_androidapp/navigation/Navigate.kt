@@ -26,6 +26,7 @@ import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
+import com.grupo14.gym_androidapp.viewmodels.HomeViewModel
 import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
@@ -58,10 +59,13 @@ fun Activities(
         }
 
         composable(route = "home") {
+            val viewModel by remember { mutableStateOf(HomeViewModel(gymRepository)) }
+
             Scaffold(
                 topBar = { MyTopAppBar { navController.popBackStack() } },
                 bottomBar = { MyBottomAppBar(navController) }) {
                 HomeScreen(
+                    viewModel = viewModel,
                     onNavigateToOtherScreen = { id -> navController.navigate("routine/$id") }
                 )
             }
