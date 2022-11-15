@@ -8,6 +8,7 @@
     <string name="no">No</string>
 
     <string name="pedro">Pedro</string>
+    <string name="signOut">Cerrar Sesión</string>
     <string name="message_id">Se recibió el id %1$d</string>
     <string name="search">Buscar</string>
     <string name="home">Inicio</string>
@@ -20,6 +21,8 @@
     <string name="tryAgain">Volver a intentar</string>
     <string name="confirmDiscardProfileDialogTitle">Descartar cambios</string>
     <string name="confirmDiscardProfileDialogMessage">Estas seguro que queres descartar estos cambios? Su perfil no será actualizado</string>
+    <string name="confirmSignoutProfileDialogTitle">Cerrar sesión</string>
+    <string name="confirmSignoutProfileDialogMessage">Estás seguro de que queres cerrar sesión en este dispositivo?</string>
 
     <string name="profileSeggsLabel">Sexo: %1$s</string>
     <string name="profileBithdateLabel">Nacimiento: %1$s</string>

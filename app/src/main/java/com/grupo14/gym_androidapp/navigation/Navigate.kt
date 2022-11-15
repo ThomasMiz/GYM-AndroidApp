@@ -96,7 +96,10 @@ fun Activities(
             Scaffold(
                 topBar = { MyTopAppBar { navController.popBackStack() } },
                 bottomBar = { MyBottomAppBar(navController) }) {
-                ProfileScreen(viewModel = viewModel)
+                ProfileScreen(
+                    viewModel = viewModel,
+                    onSignedOut = { navController.navigate("login") }
+                )
             }
         }
 

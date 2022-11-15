@@ -11,18 +11,19 @@ import com.grupo14.gym_androidapp.api.models.UserApiModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-data class GymProfileUiState(
+data class ProfileUiState(
     val user: UserApiModel? = null,
     val fetchUserErrorStringId: Int? = null,
     val isEditingUser: Boolean = false,
     val isFetchingUser: Boolean = false,
     val isPuttingUser: Boolean = false,
+    val isSigningOut: Boolean = false,
 )
 
 class ProfileViewModel(
     val gymRepository: GymRepository
 ) : ViewModel() {
-    var uiState by mutableStateOf(GymProfileUiState())
+    var uiState by mutableStateOf(ProfileUiState())
         private set
 
     private var currentUserJob: Job? = null
@@ -79,5 +80,21 @@ class ProfileViewModel(
         uiState = uiState.copy(
             isEditingUser = false
         )
+    }
+
+    fun signOut(onDone: () -> Unit) {
+        currentUserJob?.cancel()
+        currentUserJob = viewModelScope.launch {
+            try {
+                uiState = uiState.copy(isSigningOut = true)
+                gymRepository.logoutUser()
+            } catch (e: Exception) {
+                // Nada. Si falla hacemos de cuenta q ta tudu bom bom :)
+            } finally {
+                gymRepository.setAuthtoken(null)
+                uiState = ProfileUiState()
+                onDone()
+            }
+        }
     }
 }

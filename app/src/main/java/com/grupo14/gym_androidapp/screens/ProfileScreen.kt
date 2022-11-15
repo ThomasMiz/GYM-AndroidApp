@@ -1,5 +1,6 @@
 package com.grupo14.gym_androidapp.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -30,7 +32,8 @@ import com.vanpra.composematerialdialogs.datetime.date.datepicker
 
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel
+    viewModel: ProfileViewModel,
+    onSignedOut: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -43,7 +46,7 @@ fun ProfileScreen(
         if (viewModel.uiState.isFetchingUser) {
             FullLoadingScreen()
         } else if (viewModel.uiState.user != null) {
-            ProfileScreenLoaded(viewModel)
+            ProfileScreenLoaded(viewModel, onSignedOut)
         } else if (viewModel.uiState.fetchUserErrorStringId != null) {
             ProfileScreenError(viewModel)
         } else {
@@ -90,7 +93,8 @@ private fun ProfileScreenError(
 
 @Composable
 private fun ProfileScreenLoaded(
-    viewModel: ProfileViewModel
+    viewModel: ProfileViewModel,
+    onSignedOut: () -> Unit
 ) {
     val user: UserApiModel = viewModel.uiState.user!!
     val fullName = "${user.firstName} ${user.lastName}"
@@ -102,8 +106,11 @@ private fun ProfileScreenLoaded(
     val seggsDialogState = rememberMaterialDialogState()
     val datepickerDialogState = rememberMaterialDialogState()
     val discardDialogState = rememberMaterialDialogState()
+    val signoutDialogState = rememberMaterialDialogState()
 
     val genderOptionsList = createGendersList()
+
+    var isSigningOut by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.padding(horizontal = 75.dp, vertical = 20.dp)
@@ -159,6 +166,39 @@ private fun ProfileScreenLoaded(
                 color = Color.Black
             )
         }
+
+        OutlinedButton(
+            onClick = { signoutDialogState.show() },
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colors.secondaryVariant,
+            ),
+            border = BorderStroke(1.dp, MaterialTheme.colors.secondaryVariant)
+        ) {
+            if (viewModel.uiState.isSigningOut) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colors.secondaryVariant,
+                    modifier = Modifier.scale(0.5f)
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.signOut),
+                    color = Color.Black
+                )
+            }
+        }
+
+        MaterialDialog(dialogState = signoutDialogState, buttons = {
+            positiveButton(res = R.string.ok) {
+                viewModel.signOut() {
+                    onSignedOut()
+                }
+            }
+            negativeButton(res = R.string.cancel)
+        }) {
+            title(res = R.string.confirmSignoutProfileDialogTitle)
+            message(res = R.string.confirmSignoutProfileDialogMessage)
+        }
+
     } else { // if (isEditing)
         Column(
             modifier = Modifier.padding(top = 10.dp, start = 50.dp, end = 50.dp)
