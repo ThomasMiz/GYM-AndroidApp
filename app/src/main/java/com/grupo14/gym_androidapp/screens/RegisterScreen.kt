@@ -37,7 +37,7 @@ fun RegisterScreen(
 ) {
     val context = LocalContext.current
     if (viewModel.sessionUiState.isRegistering) {
-        RegisterScreenLoading(viewModel)
+        RegisterScreenLoaded(navController, viewModel, true)
     } else if (viewModel.sessionUiState.isRegistered) {
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
@@ -45,13 +45,13 @@ fun RegisterScreen(
     } else if(viewModel.sessionUiState.errorString != null) {
         RegisterScreenError(navController, viewModel)
     } else {
-        RegisterScreenLoaded(navController, viewModel)
+        RegisterScreenLoaded(navController, viewModel, false)
     }
 }
 
 
 @Composable
-fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionViewModel) {
+fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionViewModel, loading : Boolean) {
     val context = LocalContext.current
 
     val emailVal = remember { mutableStateOf("") }
@@ -80,7 +80,7 @@ fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionVie
 
         OutlinedTextField(
             value = emailVal.value,
-            onValueChange = { emailVal.value = it },
+            onValueChange = { if(!loading) emailVal.value = it },
             label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
@@ -99,7 +99,7 @@ fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionVie
 
         OutlinedTextField(
             value = userVal.value,
-            onValueChange = { userVal.value = it },
+            onValueChange = { if(!loading) userVal.value = it },
             label = { Text(text = "Nombre de usuario", color = Color.Gray) },
             placeholder = { Text(text = "Nombre de usuario") },
             singleLine = true,
@@ -118,7 +118,7 @@ fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionVie
 
         OutlinedTextField(
             value = passwordVal.value,
-            onValueChange = { passwordVal.value = it},
+            onValueChange = { if(!loading) passwordVal.value = it},
             trailingIcon = {
                 IconButton(onClick = {
                     passwordVisibility.value = !passwordVisibility.value
@@ -150,7 +150,7 @@ fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionVie
 
         OutlinedTextField(
             value = repPasswordVal.value,
-            onValueChange = { repPasswordVal.value = it},
+            onValueChange = { if(!loading) repPasswordVal.value = it},
             trailingIcon = {
                 IconButton(onClick = {
                     repPasswordVisibility.value = !repPasswordVisibility.value
@@ -184,29 +184,35 @@ fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionVie
         Button(
             // Basic checks, improve them.
             onClick = {
-                if (emailVal.value.isEmpty()) {
-                    Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
-                } else if(userVal.value.isEmpty()) {
-                    Toast.makeText(context, "Por favor, ingrese un nombre de usuario", Toast.LENGTH_SHORT).show()
-                } else if (passwordVal.value.isEmpty()) {
-                    Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
-                } else if(!passwordVal.value.equals(repPasswordVal.value)) {
-                    Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
-                } else {
-                    viewModel.registerNewUser(emailVal.value, userVal.value, passwordVal.value)
+                if(!loading){
+                    if (emailVal.value.isEmpty()) {
+                        Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
+                    } else if(userVal.value.isEmpty()) {
+                        Toast.makeText(context, "Por favor, ingrese un nombre de usuario", Toast.LENGTH_SHORT).show()
+                    } else if (passwordVal.value.isEmpty()) {
+                        Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
+                    } else if(!passwordVal.value.equals(repPasswordVal.value)) {
+                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+                    } else {
+                        viewModel.registerNewUser(emailVal.value, userVal.value, passwordVal.value)
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth(0.8f),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
         ) {
-            Text(
-                "Continuar",
-                Modifier
-                    .padding(vertical = 8.dp),
-                color = MaterialTheme.colors.secondary,
-                fontSize = 25.sp
-            )
+            if(!loading){
+                Text(
+                    "Continuar",
+                    Modifier
+                        .padding(vertical = 8.dp),
+                    color = MaterialTheme.colors.secondary,
+                    fontSize = 25.sp
+                )
+            } else {
+                CircularProgressIndicator(color = MaterialTheme.colors.secondaryVariant)
+            }
         }
 
         Divider(
@@ -223,7 +229,7 @@ fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionVie
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(
-                onClick = { navController.navigate("login") }
+                onClick = { if(!loading) navController.navigate("login") }
             ) {
                 Text(
                     "¡Ingresa ahora!",
@@ -272,18 +278,5 @@ fun RegisterScreenError(
                 color = Color.Black
             )
         }
-    }
-}
-
-@Composable
-fun RegisterScreenLoading(
-    viewModel: SessionViewModel
-) {
-    Box(
-        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colors.secondaryVariant
-        )
     }
 }

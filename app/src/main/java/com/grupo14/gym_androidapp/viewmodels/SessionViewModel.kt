@@ -38,7 +38,6 @@ class SessionViewModel(
         var token: TokenApiModel?
         var errorMessage: String? = "Unexpected error"
         sessionUiState = sessionUiState.copy(isLoggingIn = true, errorString = null)
-        
         currentUserJob = viewModelScope.launch {
             try {
                 token = gymRepository.loginUser(username, password)

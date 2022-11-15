@@ -1,5 +1,6 @@
 package com.grupo14.gym_androidapp.screens
 
+import android.os.CountDownTimer
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,27 +30,29 @@ import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
+
 @Composable
 fun LoginScreen(
     navController: NavHostController,
     viewModel: SessionViewModel
 ) {
     if (viewModel.sessionUiState.isLoggingIn) {
-        LoginScreenLoading(viewModel)
+        LoginScreenLoaded(navController, viewModel, true)
     } else if(viewModel.sessionUiState.isLoggedIn) {
         viewModel.userReadyToLogin()
         navController.navigate("home")
     } else if(viewModel.sessionUiState.errorString != null) {
         LoginScreenError(navController, viewModel)
     } else {
-        LoginScreenLoaded(navController, viewModel)
+        LoginScreenLoaded(navController, viewModel, false)
     }
 }
 
 @Composable
 fun LoginScreenLoaded(
     navController: NavHostController,
-    viewModel: SessionViewModel
+    viewModel: SessionViewModel,
+    loading : Boolean
 ) {
     val context = LocalContext.current
 
@@ -76,7 +79,7 @@ fun LoginScreenLoaded(
 
         OutlinedTextField(
             value = userVal.value,
-            onValueChange = { userVal.value = it },
+            onValueChange = { if(!loading) userVal.value = it else userVal.value = userVal.value },
             label = { Text(text = "Usuario", color = Color.Gray) },
             placeholder = { Text(text = "Usuario") },
             singleLine = true,
@@ -95,7 +98,7 @@ fun LoginScreenLoaded(
 
         OutlinedTextField(
             value = passwordVal.value,
-            onValueChange = { passwordVal.value = it},
+            onValueChange = { if(!loading) passwordVal.value = it else passwordVal.value = passwordVal.value },
             trailingIcon = {
                 IconButton(onClick = {
                     passwordVisibility.value = !passwordVisibility.value
@@ -128,25 +131,31 @@ fun LoginScreenLoaded(
 
         Button(
             onClick = {
-                if (userVal.value.isEmpty()) {
-                    Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
-                } else if (passwordVal.value.isEmpty()) {
-                    Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
-                } else {
-                    viewModel.loginUser(userVal.value, passwordVal.value)
+                if(!loading){
+                    if (userVal.value.isEmpty()) {
+                        Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
+                    } else if (passwordVal.value.isEmpty()) {
+                        Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
+                    } else {
+                        viewModel.loginUser(userVal.value, passwordVal.value)
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth(0.8f),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
         ) {
-            Text(
-                "Ingresar",
-                Modifier
-                    .padding(vertical = 8.dp),
-                color = MaterialTheme.colors.secondary,
-                fontSize = 25.sp
-            )
+            if(!loading){
+                Text(
+                    "Ingresar",
+                    Modifier
+                        .padding(vertical = 8.dp),
+                    color = MaterialTheme.colors.secondary,
+                    fontSize = 25.sp
+                )
+            } else {
+                CircularProgressIndicator(color = MaterialTheme.colors.secondaryVariant)
+            }
         }
 
         Divider(
@@ -163,7 +172,7 @@ fun LoginScreenLoaded(
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(
-                onClick = { navController.navigate("register") }
+                onClick = { if(!loading) navController.navigate("register") }
             ) {
                 Text(
                     "¡Registrate!",
@@ -211,18 +220,5 @@ fun LoginScreenError(
                 color = Color.Black
             )
         }
-    }
-}
-
-@Composable
-fun LoginScreenLoading(
-    viewModel: SessionViewModel
-) {
-    Box(
-        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colors.secondaryVariant
-        )
     }
 }

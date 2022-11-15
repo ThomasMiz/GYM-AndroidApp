@@ -36,7 +36,7 @@ fun VerifyUserScreen(
 
     val context = LocalContext.current
     if (viewModel.sessionUiState.isVerifying || viewModel.sessionUiState.sendingCode) {
-        VerifiyUserScreenLoading(viewModel)
+        VerifyUserScreenLoaded(navController, viewModel, true)
     } else if (viewModel.sessionUiState.userVerified) {
         viewModel.readyToLogin()
         Toast.makeText(context, "¡Usuario verificado con éxito!", Toast.LENGTH_SHORT).show()
@@ -48,12 +48,12 @@ fun VerifyUserScreen(
     }else if(viewModel.sessionUiState.errorString != null) {
         VerifyUserScreenError(navController, viewModel)
     } else {
-        VerifyUserScreenLoaded(navController, viewModel)
+        VerifyUserScreenLoaded(navController, viewModel, false)
     }
 }
 
 @Composable
-fun VerifyUserScreenLoaded(navController: NavHostController, viewModel: SessionViewModel) {
+fun VerifyUserScreenLoaded(navController: NavHostController, viewModel: SessionViewModel, loading: Boolean) {
 
     val context = LocalContext.current
 
@@ -101,7 +101,7 @@ fun VerifyUserScreenLoaded(navController: NavHostController, viewModel: SessionV
 
         OutlinedTextField(
             value = emailVal.value,
-            onValueChange = { emailVal.value = it },
+            onValueChange = { if(!loading) emailVal.value = it },
             label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
@@ -121,7 +121,7 @@ fun VerifyUserScreenLoaded(navController: NavHostController, viewModel: SessionV
         if(!resend.value) {
             OutlinedTextField(
                 value = codeVal.value,
-                onValueChange = { codeVal.value = it },
+                onValueChange = { if(!loading) codeVal.value = it },
                 label = { Text(text = "Código", color = Color.Gray) },
                 placeholder = { Text(text = "Código") },
                 singleLine = true,
@@ -143,20 +143,22 @@ fun VerifyUserScreenLoaded(navController: NavHostController, viewModel: SessionV
         Button(
             // Basic checks, improve them.
             onClick = {
-                if(!resend.value) {
-                    if(emailVal.value.isEmpty()){
-                        Toast.makeText(context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
-                    } else if(codeVal.value.isEmpty()){
-                        Toast.makeText(context, "Ingrese un código de verificación", Toast.LENGTH_SHORT).show()
+                if(!loading){
+                    if(!resend.value) {
+                        if(emailVal.value.isEmpty()){
+                            Toast.makeText(context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
+                        } else if(codeVal.value.isEmpty()){
+                            Toast.makeText(context, "Ingrese un código de verificación", Toast.LENGTH_SHORT).show()
+                        } else {
+                            viewModel.verifyUser(emailVal.value, codeVal.value)
+                        }
                     } else {
-                        viewModel.verifyUser(emailVal.value, codeVal.value)
-                    }
-                } else {
-                    if(emailVal.value.isEmpty()) {
-                        Toast.makeText(context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT)
-                            .show()
-                    } else {
-                        viewModel.resendVerification(emailVal.value)
+                        if(emailVal.value.isEmpty()) {
+                            Toast.makeText(context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            viewModel.resendVerification(emailVal.value)
+                        }
                     }
                 }
             },
@@ -164,13 +166,17 @@ fun VerifyUserScreenLoaded(navController: NavHostController, viewModel: SessionV
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
         ) {
-            Text(
-                buttonText,
-                Modifier
-                    .padding(vertical = 8.dp),
-                color = MaterialTheme.colors.secondary,
-                fontSize = 25.sp
-            )
+            if(!loading){
+                Text(
+                    buttonText,
+                    Modifier
+                        .padding(vertical = 8.dp),
+                    color = MaterialTheme.colors.secondary,
+                    fontSize = 25.sp
+                )
+            } else {
+                CircularProgressIndicator(color = MaterialTheme.colors.secondaryVariant)
+            }
         }
 
         Divider(
@@ -187,7 +193,7 @@ fun VerifyUserScreenLoaded(navController: NavHostController, viewModel: SessionV
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(
-                onClick = { resend.value = !resend.value }
+                onClick = { if(!loading) resend.value = !resend.value }
             ) {
                 Text(
                     footerLink,
@@ -236,18 +242,5 @@ fun VerifyUserScreenError(
                 color = Color.Black
             )
         }
-    }
-}
-
-@Composable
-fun VerifiyUserScreenLoading(
-    viewModel: SessionViewModel
-) {
-    Box(
-        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-    ) {
-        CircularProgressIndicator(
-            color = MaterialTheme.colors.secondaryVariant
-        )
     }
 }
