@@ -37,8 +37,8 @@ fun formatDate(date: LocalDate): String {
     return formatDate(ConvertLocalDateToDate(date))
 }
 
-fun NavHostController.navigateAndReplaceStartRoute(newHomeRoute: String) {
+fun NavHostController.navigateAndReplaceStartRoute(route: String) {
     popBackStack(graph.startDestinationId, true)
-    graph.setStartDestination(newHomeRoute)
-    navigate(newHomeRoute)
+    graph.setStartDestination(route)
+    navigate(route)
 }

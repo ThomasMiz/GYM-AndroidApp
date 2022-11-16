@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.*
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -30,7 +29,16 @@ import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 private fun handleSessionNav(navController: NavHostController, route: String) {
-    navController.navigateAndReplaceStartRoute(route)
+    if (route == "verify") {
+        navController.popBackStack(navController.graph.startDestinationId, false)
+        navController.graph.setStartDestination("login")
+        navController.navigate("verify")
+    } else if (route == "register") {
+        navController.popBackStack(navController.graph.startDestinationId, false)
+        navController.graph.setStartDestination("login")
+        navController.navigate("register")
+    } else
+        navController.navigateAndReplaceStartRoute(route)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -50,12 +58,18 @@ fun Activities(
 
         composable(route = "register") {
             val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
-            RegisterScreen(onNavigate = { route -> handleSessionNav(navController, route) }, viewModel)
+            RegisterScreen(
+                onNavigate = { route -> handleSessionNav(navController, route) },
+                viewModel
+            )
         }
 
         composable(route = "verify") {
             val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
-            VerifyUserScreen(onNavigate = { route -> handleSessionNav(navController, route) }, viewModel)
+            VerifyUserScreen(
+                onNavigate = { route -> handleSessionNav(navController, route) },
+                viewModel
+            )
         }
 
         composable(route = "home") {
