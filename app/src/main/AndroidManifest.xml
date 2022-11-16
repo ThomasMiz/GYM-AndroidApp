@@ -21,7 +21,7 @@
             android:theme="@style/Theme.GYMAndroidApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <data android:scheme="https" android:host="entrenagratis.es"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 

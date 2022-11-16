@@ -30,31 +30,31 @@ import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
 fun VerifyUserScreen(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
 
     val context = LocalContext.current
     if (viewModel.sessionUiState.isVerifying || viewModel.sessionUiState.sendingCode) {
-        VerifyUserScreenLoaded(navController, viewModel, true)
+        VerifyUserScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.userVerified) {
         viewModel.readyToLogin()
         Toast.makeText(context, "¡Usuario verificado con éxito!", Toast.LENGTH_SHORT).show()
-        navController.navigate("login")
+        onNavigate("login")
     } else if (viewModel.sessionUiState.codeSent) {
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Código reenviado con éxito!", Toast.LENGTH_SHORT).show()
-        navController.navigate("verify")
+        onNavigate("verify")
     } else if (viewModel.sessionUiState.errorString != null) {
-        VerifyUserScreenError(navController, viewModel)
+        VerifyUserScreenError(onNavigate, viewModel)
     } else {
-        VerifyUserScreenLoaded(navController, viewModel, false)
+        VerifyUserScreenLoaded(onNavigate, viewModel, false)
     }
 }
 
 @Composable
 fun VerifyUserScreenLoaded(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel,
     loading: Boolean
 ) {
@@ -228,7 +228,7 @@ fun VerifyUserScreenLoaded(
 
 @Composable
 fun VerifyUserScreenError(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     Column(
@@ -255,7 +255,7 @@ fun VerifyUserScreenError(
         )
 
         Button(
-            onClick = { navController.navigate("verify") },
+            onClick = { onNavigate("verify") },
             modifier = Modifier.padding(top = 40.dp)
         ) {
             Text(

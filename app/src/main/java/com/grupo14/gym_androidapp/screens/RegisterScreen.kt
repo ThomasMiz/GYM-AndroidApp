@@ -32,27 +32,27 @@ import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
 fun RegisterScreen(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     val context = LocalContext.current
     if (viewModel.sessionUiState.isRegistering) {
-        RegisterScreenLoaded(navController, viewModel, true)
+        RegisterScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.isRegistered) {
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
-        navController.navigate("verify")
+        onNavigate("verify")
     } else if (viewModel.sessionUiState.errorString != null) {
-        RegisterScreenError(navController, viewModel)
+        RegisterScreenError(onNavigate, viewModel)
     } else {
-        RegisterScreenLoaded(navController, viewModel, false)
+        RegisterScreenLoaded(onNavigate, viewModel, false)
     }
 }
 
 
 @Composable
 private fun RegisterScreenLoaded(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel,
     loading: Boolean
 ) {
@@ -252,7 +252,7 @@ private fun RegisterScreenLoaded(
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(
-                onClick = { if (!loading) navController.navigate("login") }
+                onClick = { if (!loading) onNavigate("login") }
             ) {
                 Text(
                     "¡Ingresa ahora!",
@@ -266,7 +266,7 @@ private fun RegisterScreenLoaded(
 
 @Composable
 private fun RegisterScreenError(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     Column(
@@ -293,7 +293,7 @@ private fun RegisterScreenError(
         )
 
         Button(
-            onClick = { navController.navigate("register") },
+            onClick = { onNavigate("register") },
             modifier = Modifier.padding(top = 40.dp)
         ) {
             Text(

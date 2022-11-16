@@ -32,24 +32,24 @@ import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     if (viewModel.sessionUiState.isLoggingIn) {
-        LoginScreenLoaded(navController, viewModel, true)
+        LoginScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.isLoggedIn) {
         viewModel.userReadyToLogin()
-        navController.navigate("home")
+        onNavigate("home")
     } else if (viewModel.sessionUiState.errorString != null) {
-        LoginScreenError(navController, viewModel)
+        LoginScreenError(onNavigate, viewModel)
     } else {
-        LoginScreenLoaded(navController, viewModel, false)
+        LoginScreenLoaded(onNavigate, viewModel, false)
     }
 }
 
 @Composable
 fun LoginScreenLoaded(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel,
     loading: Boolean
 ) {
@@ -184,7 +184,7 @@ fun LoginScreenLoaded(
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(
-                onClick = { if (!loading) navController.navigate("register") }
+                onClick = { if (!loading) onNavigate("register") }
             ) {
                 Text(
                     "¡Registrate!",
@@ -197,7 +197,7 @@ fun LoginScreenLoaded(
 
 @Composable
 fun LoginScreenError(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     Column(
@@ -224,7 +224,7 @@ fun LoginScreenError(
         )
 
         Button(
-            onClick = { navController.navigate("login") },
+            onClick = { onNavigate("login") },
             modifier = Modifier.padding(top = 40.dp)
         ) {
             Text(
