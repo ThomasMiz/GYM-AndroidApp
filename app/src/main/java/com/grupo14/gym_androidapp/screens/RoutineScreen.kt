@@ -120,7 +120,7 @@ private fun RoutineScreenLoaded(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(start = 30.dp, end = 30.dp, top = 20.dp)
+            .padding(start = 30.dp, end = 30.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -130,7 +130,7 @@ private fun RoutineScreenLoaded(
         Text(
             text = routine.name!!,
             fontSize = 40.sp,
-            modifier = Modifier.padding(top = 10.dp),
+            modifier = Modifier.padding(top = 20.dp),
             textAlign = TextAlign.Start
         )
 
@@ -357,7 +357,7 @@ private fun RoutineScreenLoaded(
         Column(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(start = 60.dp, end = 60.dp, top = 20.dp)
+            modifier = Modifier.padding(start = 60.dp, end = 60.dp, top = 20.dp, bottom = 20.dp)
         ) {
             // Button for view details
             Button(
