@@ -70,9 +70,9 @@ private fun RegisterScreenLoaded(
 
     Column(
         Modifier
-            .padding(24.dp)
+            .padding(30.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Bottom),
+        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
@@ -81,6 +81,14 @@ private fun RegisterScreenLoaded(
             Modifier.size(80.dp),
             tint = MaterialTheme.colors.secondary
         )
+    }
+    Column(
+        Modifier
+            .padding(24.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
         OutlinedTextField(
             value = emailVal.value,

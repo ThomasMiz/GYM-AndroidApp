@@ -1,6 +1,7 @@
 package com.grupo14.gym_androidapp.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -64,9 +65,9 @@ fun LoginScreenLoaded(
 
     Column(
         Modifier
-            .padding(24.dp)
+            .padding(70.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Bottom),
+        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
@@ -75,7 +76,14 @@ fun LoginScreenLoaded(
             Modifier.size(80.dp),
             tint = MaterialTheme.colors.secondary
         )
-
+    }
+    Column(
+        Modifier
+            .padding(24.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         OutlinedTextField(
             value = userVal.value,
             onValueChange = { if (!loading) userVal.value = it else userVal.value = userVal.value },

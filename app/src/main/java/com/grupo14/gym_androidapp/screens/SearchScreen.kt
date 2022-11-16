@@ -46,20 +46,10 @@ fun SearchScreen() {
         horizontalAlignment = CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(20.dp))
-        Icon(
-            painter = painterResource(id = R.drawable.icon),
-            null,
-            Modifier
-                .size(80.dp)
-                .fillMaxWidth()
-            ,
-            tint = MaterialTheme.colors.secondary
-        )
         Card(
             backgroundColor = Color.White,
             border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
             shape = RoundedCornerShape(8.dp),
-            elevation = 12.dp,
         ) {
             Column(
                 horizontalAlignment = CenterHorizontally
