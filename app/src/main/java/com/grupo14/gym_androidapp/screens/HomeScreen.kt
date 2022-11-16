@@ -43,14 +43,15 @@ fun HomeScreen(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
-            .padding(horizontal = 10.dp, vertical = 10.dp)
+            .padding(start = 10.dp, end = 10.dp, top = 10.dp)
             .fillMaxWidth()
         //.verticalScroll(rememberScrollState())
     ) {
         Text(
             text = stringResource(id = R.string.yourFavoriteRoutines),
             textAlign = TextAlign.Start,
-            fontSize = 24.sp
+            fontSize = 24.sp,
+            modifier = Modifier.padding(bottom = 10.dp)
         )
 
         Column(
@@ -86,7 +87,7 @@ fun HomeScreen(
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(vertical = 10.dp),
+                // contentPadding = PaddingValues(top = 0.dp),
                 state = rememberLazyListState(),
                 modifier = Modifier.fillMaxWidth()
             ) {
