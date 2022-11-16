@@ -182,5 +182,20 @@ fun LoginScreenLoaded(
                 )
             }
         }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "¿Te falta verificar tu usuario?",
+                color = MaterialTheme.colors.secondary,
+            )
+            TextButton(onClick = { if (!loading) onNavigate("verify") }) {
+                Text(
+                    "Hazlo aquí.",
+                    color = Color.Blue,
+                )
+            }
+        }
     }
 }

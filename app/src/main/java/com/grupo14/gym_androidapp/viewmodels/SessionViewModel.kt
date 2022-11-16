@@ -43,7 +43,7 @@ class SessionViewModel(
         sessionUiState = sessionUiState.copy(isLoggingIn = true)
         currentUserJob = viewModelScope.launch {
             try {
-                token = gymRepository.loginUser(username, password)
+                token = gymRepository.loginUser(username.trim(), password.trim())
                 sessionUiState = sessionUiState.copy(
                     isLoggedIn = true,
                     isLoggingIn = false
@@ -59,7 +59,8 @@ class SessionViewModel(
                 }
 
                 sessionUiState = sessionUiState.copy(
-                    isLoggedIn = false, isLoggingIn = false
+                    isLoggedIn = false,
+                    isLoggingIn = false
                 )
                 onFailure(errorMessage)
             } catch (e: Exception) {
@@ -90,16 +91,10 @@ class SessionViewModel(
             try {
                 data = gymRepository.registerNewUser(
                     LoginUserApiModel(
-                        username,  // Username
-                        password,  // Password
-                        "-",      // Default First Name
-                        "-",      // Default Last name
-                        Gender.OTHER,      // Default Gender
-                        Date(0),      // Default Birthdate
-                        email,     // Email
-                        "-",      // Default Phone
-                        "-"       // Default AvatarUrl
-
+                        username = username.trim(),
+                        password = password.trim(),
+                        gender = Gender.OTHER,
+                        email = email.trim()
                     )
                 )
                 sessionUiState = sessionUiState.copy(
@@ -121,8 +116,8 @@ class SessionViewModel(
                 onFailure(errorMessage)
             } catch (e: Exception) {
                 sessionUiState = sessionUiState.copy(
-                    isLoggedIn = false,
-                    isLoggingIn = false
+                    isRegistered = false,
+                    isRegistering = false,
                 )
                 onFailure("pero la PUCHA, qué _MIERDA_ le paso al server??") // TODO: cambiar
             }
@@ -139,7 +134,7 @@ class SessionViewModel(
 
         currentUserJob = viewModelScope.launch {
             try {
-                gymRepository.verifyUserEmail(email, code)
+                gymRepository.verifyUserEmail(email.trim(), code.trim())
                 sessionUiState = sessionUiState.copy(
                     userVerified = true,
                     isVerifying = false
@@ -155,13 +150,14 @@ class SessionViewModel(
                 }
 
                 sessionUiState = sessionUiState.copy(
-                    userVerified = false, isVerifying = false
+                    userVerified = false,
+                    isVerifying = false
                 )
                 onFailure(errorMessage)
             } catch (e: Exception) {
                 sessionUiState = sessionUiState.copy(
-                    isLoggedIn = false,
-                    isLoggingIn = false
+                    userVerified = false,
+                    isVerifying = false
                 )
                 onFailure("pero la PUCHA, qué _MIERDA_ le paso al server??") // TODO: cambiar
             }
@@ -173,7 +169,7 @@ class SessionViewModel(
         sessionUiState = sessionUiState.copy(sendingCode = true)
         currentUserJob = viewModelScope.launch {
             runCatching {
-                gymRepository.resendUserVerification(email)
+                gymRepository.resendUserVerification(email.trim())
             }.onSuccess {
                 sessionUiState = sessionUiState.copy(
                     sendingCode = false,
@@ -183,7 +179,8 @@ class SessionViewModel(
 
             }.onFailure { e ->
                 sessionUiState = sessionUiState.copy(
-                    sendingCode = false, codeSent = false
+                    sendingCode = false,
+                    codeSent = false
                 )
                 onFailure("NO TE MANDAMOS UNA MIERDA PORQUE SOS ALTO PELOTUDO ((y el srv se cayó))") // TODO: cambiar
             }
