@@ -22,12 +22,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
+import com.grupo14.gym_androidapp.navigateAndReplaceStartRoute
 import com.grupo14.gym_androidapp.screens.*
 import com.grupo14.gym_androidapp.viewmodels.HomeViewModel
 import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
+private fun handleSessionNav(navController: NavHostController, route: String) {
+    navController.navigateAndReplaceStartRoute(route)
+}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -41,41 +45,17 @@ fun Activities(
     ) {
         composable(route = "login") {
             val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
-            LoginScreen(onNavigate = { route ->
-                navController.navigate(route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }, viewModel)
+            LoginScreen(onNavigate = { route -> handleSessionNav(navController, route) }, viewModel)
         }
 
         composable(route = "register") {
             val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
-            RegisterScreen(onNavigate = { route ->
-                navController.navigate(route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }, viewModel)
+            RegisterScreen(onNavigate = { route -> handleSessionNav(navController, route) }, viewModel)
         }
 
         composable(route = "verify") {
             val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
-            VerifyUserScreen(onNavigate = { route ->
-                navController.navigate(route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }, viewModel)
+            VerifyUserScreen(onNavigate = { route -> handleSessionNav(navController, route) }, viewModel)
         }
 
         composable(route = "home") {
@@ -118,7 +98,7 @@ fun Activities(
                 bottomBar = { MyBottomAppBar(navController) }) {
                 ProfileScreen(
                     viewModel = viewModel,
-                    onSignedOut = { navController.navigate("login") }
+                    onSignedOut = { navController.navigateAndReplaceStartRoute("login") }
                 )
             }
         }

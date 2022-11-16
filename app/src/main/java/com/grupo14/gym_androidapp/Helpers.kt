@@ -2,6 +2,7 @@ package com.grupo14.gym_androidapp
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.api.models.Gender
 import java.time.Instant
 import java.time.LocalDate
@@ -34,4 +35,10 @@ fun formatDate(date: Date): String {
 
 fun formatDate(date: LocalDate): String {
     return formatDate(ConvertLocalDateToDate(date))
+}
+
+fun NavHostController.navigateAndReplaceStartRoute(newHomeRoute: String) {
+    popBackStack(graph.startDestinationId, true)
+    graph.setStartDestination(newHomeRoute)
+    navigate(newHomeRoute)
 }
