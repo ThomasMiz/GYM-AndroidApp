@@ -23,12 +23,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.LAUNCHER" />
                 <data android:scheme="https" android:host="www.entrenagratis.es"/>
-                <data android:scheme="http" android:host="www.entrenagratis.es"/>
             </intent-filter>
 
             <meta-data android:name="android.app.lib_name" android:value="" />
