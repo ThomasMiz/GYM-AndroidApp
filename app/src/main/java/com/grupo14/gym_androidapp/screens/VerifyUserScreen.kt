@@ -19,21 +19,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
 fun VerifyUserScreen(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel
+    onNavigate: (route: String) -> Unit, viewModel: SessionViewModel
 ) {
-
     val context = LocalContext.current
     if (viewModel.sessionUiState.isVerifying || viewModel.sessionUiState.sendingCode) {
         VerifyUserScreenLoaded(onNavigate, viewModel, true)
@@ -45,8 +41,6 @@ fun VerifyUserScreen(
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Código reenviado con éxito!", Toast.LENGTH_SHORT).show()
         onNavigate("verify")
-    } else if (viewModel.sessionUiState.errorString != null) {
-        VerifyUserScreenError(onNavigate, viewModel)
     } else {
         VerifyUserScreenLoaded(onNavigate, viewModel, false)
     }
@@ -54,11 +48,8 @@ fun VerifyUserScreen(
 
 @Composable
 fun VerifyUserScreenLoaded(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel,
-    loading: Boolean
+    onNavigate: (route: String) -> Unit, viewModel: SessionViewModel, loading: Boolean
 ) {
-
     val context = LocalContext.current
 
     val emailVal = remember { mutableStateOf("") }
@@ -103,8 +94,7 @@ fun VerifyUserScreenLoaded(
                 text = boxText,
                 color = Color.Gray,
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center)
             )
         }
 
@@ -114,8 +104,7 @@ fun VerifyUserScreenLoaded(
             label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Email, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
@@ -134,8 +123,7 @@ fun VerifyUserScreenLoaded(
                 label = { Text(text = "Código", color = Color.Gray) },
                 placeholder = { Text(text = "Código") },
                 singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f),
+                modifier = Modifier.fillMaxWidth(0.8f),
                 leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
                 shape = RoundedCornerShape(50),
                 colors = TextFieldDefaults.textFieldColors(
@@ -156,29 +144,26 @@ fun VerifyUserScreenLoaded(
                     if (!resend.value) {
                         if (emailVal.value.isEmpty()) {
                             Toast.makeText(
-                                context,
-                                "Ingrese un correo electrónico",
-                                Toast.LENGTH_SHORT
+                                context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT
                             ).show()
                         } else if (codeVal.value.isEmpty()) {
                             Toast.makeText(
-                                context,
-                                "Ingrese un código de verificación",
-                                Toast.LENGTH_SHORT
+                                context, "Ingrese un código de verificación", Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            viewModel.verifyUser(emailVal.value, codeVal.value)
+                            viewModel.verifyUser(emailVal.value, codeVal.value) { errorMessage ->
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         if (emailVal.value.isEmpty()) {
                             Toast.makeText(
-                                context,
-                                "Ingrese un correo electrónico",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                                context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT
+                            ).show()
                         } else {
-                            viewModel.resendVerification(emailVal.value)
+                            viewModel.resendVerification(emailVal.value) { errorMessage ->
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
@@ -190,8 +175,7 @@ fun VerifyUserScreenLoaded(
             if (!loading) {
                 Text(
                     buttonText,
-                    Modifier
-                        .padding(vertical = 8.dp),
+                    Modifier.padding(vertical = 8.dp),
                     color = MaterialTheme.colors.secondary,
                     fontSize = 25.sp
                 )
@@ -213,9 +197,7 @@ fun VerifyUserScreenLoaded(
                 footerText,
                 color = MaterialTheme.colors.secondary,
             )
-            TextButton(
-                onClick = { if (!loading) resend.value = !resend.value }
-            ) {
+            TextButton(onClick = { if (!loading) resend.value = !resend.value }) {
                 Text(
                     footerLink,
                     color = Color.Blue,
@@ -223,45 +205,5 @@ fun VerifyUserScreenLoaded(
             }
         }
 
-    }
-}
-
-@Composable
-fun VerifyUserScreenError(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-    ) {
-        Text(
-            text = stringResource(id = R.string.oops),
-            fontSize = 50.sp,
-            modifier = Modifier.padding(bottom = 40.dp)
-        )
-
-        if (viewModel.sessionUiState.errorString != null) {
-            Text(
-                text = viewModel.sessionUiState.errorString!!
-            )
-        }
-
-        Text(
-            text = stringResource(id = R.string.tryAgainLater),
-        )
-
-        Button(
-            onClick = { onNavigate("verify") },
-            modifier = Modifier.padding(top = 40.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.tryAgain),
-                color = Color.Black
-            )
-        }
     }
 }

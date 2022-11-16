@@ -19,21 +19,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
 fun RegisterScreen(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel
+    onNavigate: (route: String) -> Unit, viewModel: SessionViewModel
 ) {
     val context = LocalContext.current
     if (viewModel.sessionUiState.isRegistering) {
@@ -42,8 +39,6 @@ fun RegisterScreen(
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
         onNavigate("verify")
-    } else if (viewModel.sessionUiState.errorString != null) {
-        RegisterScreenError(onNavigate, viewModel)
     } else {
         RegisterScreenLoaded(onNavigate, viewModel, false)
     }
@@ -52,9 +47,7 @@ fun RegisterScreen(
 
 @Composable
 private fun RegisterScreenLoaded(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel,
-    loading: Boolean
+    onNavigate: (route: String) -> Unit, viewModel: SessionViewModel, loading: Boolean
 ) {
     val context = LocalContext.current
 
@@ -96,8 +89,7 @@ private fun RegisterScreenLoaded(
             label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Email, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
@@ -115,8 +107,7 @@ private fun RegisterScreenLoaded(
             label = { Text(text = "Nombre de usuario", color = Color.Gray) },
             placeholder = { Text(text = "Nombre de usuario") },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Person, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
@@ -145,10 +136,8 @@ private fun RegisterScreenLoaded(
             label = { Text(text = "Contraseña", color = Color.Gray) },
             placeholder = { Text(text = "Contraseña") },
             singleLine = true,
-            visualTransformation = if (passwordVisibility.value)
-                VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
@@ -158,8 +147,7 @@ private fun RegisterScreenLoaded(
                 disabledIndicatorColor = Color.Transparent
             ),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Password
+                imeAction = ImeAction.Next, keyboardType = KeyboardType.Password
             ),
         )
 
@@ -180,10 +168,8 @@ private fun RegisterScreenLoaded(
             label = { Text(text = "Repetir contraseña", color = Color.Gray) },
             placeholder = { Text(text = "Repetir contraseña") },
             singleLine = true,
-            visualTransformation = if (repPasswordVisibility.value)
-                VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            visualTransformation = if (repPasswordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
@@ -193,8 +179,7 @@ private fun RegisterScreenLoaded(
                 disabledIndicatorColor = Color.Transparent
             ),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Password
+                imeAction = ImeAction.Done, keyboardType = KeyboardType.Password
             ),
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
@@ -205,27 +190,25 @@ private fun RegisterScreenLoaded(
                 if (!loading) {
                     if (emailVal.value.isEmpty()) {
                         Toast.makeText(
-                            context,
-                            "Por favor, ingrese un correo electrónico",
-                            Toast.LENGTH_SHORT
+                            context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT
                         ).show()
                     } else if (userVal.value.isEmpty()) {
                         Toast.makeText(
-                            context,
-                            "Por favor, ingrese un nombre de usuario",
-                            Toast.LENGTH_SHORT
+                            context, "Por favor, ingrese un nombre de usuario", Toast.LENGTH_SHORT
                         ).show()
                     } else if (passwordVal.value.isEmpty()) {
                         Toast.makeText(
-                            context,
-                            "Por favor, ingrese una contraseña",
-                            Toast.LENGTH_SHORT
+                            context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT
                         ).show()
                     } else if (!passwordVal.value.equals(repPasswordVal.value)) {
                         Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
                             .show()
                     } else {
-                        viewModel.registerNewUser(emailVal.value, userVal.value, passwordVal.value)
+                        viewModel.registerNewUser(
+                            emailVal.value, userVal.value, passwordVal.value
+                        ) { errorMessage ->
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             },
@@ -236,8 +219,7 @@ private fun RegisterScreenLoaded(
             if (!loading) {
                 Text(
                     "Continuar",
-                    Modifier
-                        .padding(vertical = 8.dp),
+                    Modifier.padding(vertical = 8.dp),
                     color = MaterialTheme.colors.secondary,
                     fontSize = 25.sp
                 )
@@ -259,9 +241,7 @@ private fun RegisterScreenLoaded(
                 "¿Ya tienes una cuenta?",
                 color = MaterialTheme.colors.secondary,
             )
-            TextButton(
-                onClick = { if (!loading) onNavigate("login") }
-            ) {
+            TextButton(onClick = { if (!loading) onNavigate("login") }) {
                 Text(
                     "¡Ingresa ahora!",
                     color = Color.Blue,
@@ -269,45 +249,5 @@ private fun RegisterScreenLoaded(
             }
         }
 
-    }
-}
-
-@Composable
-private fun RegisterScreenError(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-    ) {
-        Text(
-            text = stringResource(id = R.string.oops),
-            fontSize = 50.sp,
-            modifier = Modifier.padding(bottom = 40.dp)
-        )
-
-        if (viewModel.sessionUiState.errorString != null) {
-            Text(
-                text = viewModel.sessionUiState.errorString!!
-            )
-        }
-
-        Text(
-            text = stringResource(id = R.string.tryAgainLater),
-        )
-
-        Button(
-            onClick = { onNavigate("register") },
-            modifier = Modifier.padding(top = 40.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.tryAgain),
-                color = Color.Black
-            )
-        }
     }
 }

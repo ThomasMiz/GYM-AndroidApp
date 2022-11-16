@@ -7,22 +7,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.api.api.ApiException
-import com.grupo14.gym_androidapp.api.models.*
+import com.grupo14.gym_androidapp.api.models.Gender
+import com.grupo14.gym_androidapp.api.models.LoginUserApiModel
+import com.grupo14.gym_androidapp.api.models.TokenApiModel
+import com.grupo14.gym_androidapp.api.models.UserApiModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
 
 data class SessionUiState(
-    val errorString: String? = null,
     val isLoggedIn: Boolean = false,
     val isLoggingIn: Boolean = false,
     val isRegistering: Boolean = false,
     val isRegistered: Boolean = false,
     val isVerifying: Boolean = false,
-    val userVerified : Boolean = false,
-    val codeSent : Boolean = false,
-    val sendingCode : Boolean = false
+    val userVerified: Boolean = false,
+    val codeSent: Boolean = false,
+    val sendingCode: Boolean = false
 )
+
+// TODO: sacar prints en todo este archivo
 
 class SessionViewModel(
     val gymRepository: GymRepository = GymRepository()
@@ -33,50 +37,54 @@ class SessionViewModel(
 
     private var currentUserJob: Job? = null
 
-    fun loginUser(username : String, password : String){
+    fun loginUser(username: String, password: String, onFailure: (errorMessage: String) -> Unit) {
         currentUserJob?.cancel()
         var token: TokenApiModel?
-        var errorMessage: String? = "Unexpected error"
-        sessionUiState = sessionUiState.copy(isLoggingIn = true, errorString = null)
+        sessionUiState = sessionUiState.copy(isLoggingIn = true)
         currentUserJob = viewModelScope.launch {
             try {
                 token = gymRepository.loginUser(username, password)
                 sessionUiState = sessionUiState.copy(
                     isLoggedIn = true,
-                    isLoggingIn = false,
-                    errorString = null,
+                    isLoggingIn = false
                 )
                 println("Got user's token: ${token}")
 
-            } catch (e : ApiException) {
-
-                e.response?.code()?.let {
-                    errorMessage = when(e.response.code()) {
-                        400 -> "Bad request: Request or data is invalid or has a constraint"
-                        401 -> "Usuario y/o contraseña incorrectos"
-                        500 -> "Internal server error"
-                        else -> "Unexpected error"
-                    }
+            } catch (e: ApiException) {
+                val errorMessage = when (e.response?.code()) {
+                    400 -> "Bad request: Request or data is invalid or has a constraint" // TODO ??? No le mostras este string al usuario porque nos reprueban
+                    401 -> "Usuario y/o contraseña incorrectos"
+                    500 -> "Internal server error"
+                    else -> "Unexpected error"
                 }
 
                 sessionUiState = sessionUiState.copy(
-                    isLoggedIn = false,
-                    isLoggingIn = false,
-                    errorString = errorMessage
+                    isLoggedIn = false, isLoggingIn = false
                 )
+                onFailure(errorMessage)
+            } catch (e: Exception) {
+                sessionUiState = sessionUiState.copy(
+                    isLoggedIn = false,
+                    isLoggingIn = false
+                )
+                onFailure("pero la PUCHA, qué _MIERDA_ le paso al server??") // TODO: cambiar
             }
         }
     }
 
-    fun userReadyToLogin(){
+    fun userReadyToLogin() {
         sessionUiState = sessionUiState.copy(isLoggedIn = false)
     }
 
-    fun registerNewUser(email : String, username : String, password : String){
+    fun registerNewUser(
+        email: String,
+        username: String,
+        password: String,
+        onFailure: (errorMessage: String) -> Unit
+    ) {
         currentUserJob?.cancel()
         var data: UserApiModel? = null
-        var errorMessage: String? = "Unexpected error"
-        sessionUiState = sessionUiState.copy(isRegistering = true, errorString = null)
+        sessionUiState = sessionUiState.copy(isRegistering = true)
 
         currentUserJob = viewModelScope.launch {
             try {
@@ -96,98 +104,93 @@ class SessionViewModel(
                 )
                 sessionUiState = sessionUiState.copy(
                     isRegistered = true,
-                    isRegistering = false,
-                    errorString = null,
+                    isRegistering = false
                 )
                 println("Got user's data: ${data}")
-
-            } catch(e : ApiException) {
-
-                e.response?.code()?.let {
-                    errorMessage = when(e.response.code()) {
-                        400 -> "Bad request: Request or data is invalid or has a constraint"
-                        500 -> "Internal server error"
-                        else -> "Unexpected error"
-                    }
+            } catch (e: ApiException) {
+                val errorMessage = when (e.response?.code()) {
+                    400 -> "Bad request: Request or data is invalid or has a constraint" // TODO: cambiar
+                    500 -> "Internal server error"
+                    else -> "Unexpected error"
                 }
 
                 sessionUiState = sessionUiState.copy(
                     isRegistered = false,
                     isRegistering = false,
-                    errorString = errorMessage,
                 )
+                onFailure(errorMessage)
+            } catch (e: Exception) {
+                sessionUiState = sessionUiState.copy(
+                    isLoggedIn = false,
+                    isLoggingIn = false
+                )
+                onFailure("pero la PUCHA, qué _MIERDA_ le paso al server??") // TODO: cambiar
             }
         }
     }
 
-    fun readyToVerify(){
+    fun readyToVerify() {
         sessionUiState = sessionUiState.copy(isRegistered = false, codeSent = false)
     }
 
-    fun verifyUser(email : String, code : String){
+    fun verifyUser(email: String, code: String, onFailure: (errorMessage: String) -> Unit) {
         currentUserJob?.cancel()
-        var errorMessage: String? = "Unexpected error"
-        sessionUiState = sessionUiState.copy(isVerifying = true, errorString = null)
+        sessionUiState = sessionUiState.copy(isVerifying = true)
 
         currentUserJob = viewModelScope.launch {
             try {
                 gymRepository.verifyUserEmail(email, code)
                 sessionUiState = sessionUiState.copy(
                     userVerified = true,
-                    isVerifying = false,
-                    errorString = null,
+                    isVerifying = false
                 )
                 println("User verified!")
 
-            } catch(e : ApiException) {
-
-                e.response?.code()?.let {
-                    errorMessage = when(e.response.code()) {
-                        400 -> "Bad request: Request or data is invalid or has a constraint"
-                        401 -> "Authorization information is missing or invalid"
-                        500 -> "Internal server error"
-                        else -> "Unexpected error"
-                    }
+            } catch (e: ApiException) {
+                val errorMessage = when (e.response?.code()) {
+                    400 -> "Bad request: Request or data is invalid or has a constraint" // TODO: cambiar
+                    401 -> "Authorization information is missing or invalid"
+                    500 -> "Internal server error"
+                    else -> "Unexpected error"
                 }
 
                 sessionUiState = sessionUiState.copy(
-                    userVerified = false,
-                    isVerifying = false,
-                    errorString = errorMessage
+                    userVerified = false, isVerifying = false
                 )
-
+                onFailure(errorMessage)
+            } catch (e: Exception) {
+                sessionUiState = sessionUiState.copy(
+                    isLoggedIn = false,
+                    isLoggingIn = false
+                )
+                onFailure("pero la PUCHA, qué _MIERDA_ le paso al server??") // TODO: cambiar
             }
         }
     }
 
-    fun resendVerification(email : String){
+    fun resendVerification(email: String, onFailure: (errorMessage: String) -> Unit) {
         currentUserJob?.cancel()
-        sessionUiState = sessionUiState.copy(sendingCode = true, errorString = null)
+        sessionUiState = sessionUiState.copy(sendingCode = true)
         currentUserJob = viewModelScope.launch {
             runCatching {
                 gymRepository.resendUserVerification(email)
             }.onSuccess {
                 sessionUiState = sessionUiState.copy(
                     sendingCode = false,
-                    codeSent = true,
-                    errorString = null,
+                    codeSent = true
                 )
                 println("Code sended!")
 
-            }.onFailure {e->
+            }.onFailure { e ->
                 sessionUiState = sessionUiState.copy(
-                    sendingCode = false,
-                    codeSent = false,
-                    errorString = e.message
+                    sendingCode = false, codeSent = false
                 )
+                onFailure("NO TE MANDAMOS UNA MIERDA PORQUE SOS ALTO PELOTUDO ((y el srv se cayó))") // TODO: cambiar
             }
         }
     }
 
-    fun readyToLogin(){
+    fun readyToLogin() {
         sessionUiState = sessionUiState.copy(userVerified = false)
     }
-
-
-
 }

@@ -1,7 +1,6 @@
 package com.grupo14.gym_androidapp.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,30 +18,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 
 @Composable
 fun LoginScreen(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel
+    onNavigate: (route: String) -> Unit, viewModel: SessionViewModel
 ) {
     if (viewModel.sessionUiState.isLoggingIn) {
         LoginScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.isLoggedIn) {
         viewModel.userReadyToLogin()
         onNavigate("home")
-    } else if (viewModel.sessionUiState.errorString != null) {
-        LoginScreenError(onNavigate, viewModel)
     } else {
         LoginScreenLoaded(onNavigate, viewModel, false)
     }
@@ -50,9 +44,7 @@ fun LoginScreen(
 
 @Composable
 fun LoginScreenLoaded(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel,
-    loading: Boolean
+    onNavigate: (route: String) -> Unit, viewModel: SessionViewModel, loading: Boolean
 ) {
     val context = LocalContext.current
 
@@ -90,8 +82,7 @@ fun LoginScreenLoaded(
             label = { Text(text = "Usuario", color = Color.Gray) },
             placeholder = { Text(text = "Usuario") },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Person, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
@@ -103,8 +94,7 @@ fun LoginScreenLoaded(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
 
-        OutlinedTextField(
-            value = passwordVal.value,
+        OutlinedTextField(value = passwordVal.value,
             onValueChange = {
                 if (!loading) passwordVal.value = it else passwordVal.value = passwordVal.value
             },
@@ -122,10 +112,8 @@ fun LoginScreenLoaded(
             label = { Text(text = "Contraseña", color = Color.Gray) },
             placeholder = { Text(text = "Contraseña") },
             singleLine = true,
-            visualTransformation = if (passwordVisibility.value)
-                VisualTransformation.None else PasswordVisualTransformation(),
-            modifier = Modifier
-                .fillMaxWidth(0.8f),
+            visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
             shape = RoundedCornerShape(50),
             colors = TextFieldDefaults.textFieldColors(
@@ -135,8 +123,7 @@ fun LoginScreenLoaded(
                 disabledIndicatorColor = Color.Transparent
             ),
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Password
+                imeAction = ImeAction.Done, keyboardType = KeyboardType.Password
             ),
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
@@ -146,18 +133,16 @@ fun LoginScreenLoaded(
                 if (!loading) {
                     if (userVal.value.isEmpty()) {
                         Toast.makeText(
-                            context,
-                            "Por favor, ingrese un correo electrónico",
-                            Toast.LENGTH_SHORT
+                            context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT
                         ).show()
                     } else if (passwordVal.value.isEmpty()) {
                         Toast.makeText(
-                            context,
-                            "Por favor, ingrese una contraseña",
-                            Toast.LENGTH_SHORT
+                            context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        viewModel.loginUser(userVal.value, passwordVal.value)
+                        viewModel.loginUser(userVal.value, passwordVal.value) { errorMessage ->
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             },
@@ -168,8 +153,7 @@ fun LoginScreenLoaded(
             if (!loading) {
                 Text(
                     "Ingresar",
-                    Modifier
-                        .padding(vertical = 8.dp),
+                    Modifier.padding(vertical = 8.dp),
                     color = MaterialTheme.colors.secondary,
                     fontSize = 25.sp
                 )
@@ -191,54 +175,12 @@ fun LoginScreenLoaded(
                 "¿No tienes una cuenta aún?",
                 color = MaterialTheme.colors.secondary,
             )
-            TextButton(
-                onClick = { if (!loading) onNavigate("register") }
-            ) {
+            TextButton(onClick = { if (!loading) onNavigate("register") }) {
                 Text(
                     "¡Registrate!",
                     color = Color.Blue,
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun LoginScreenError(
-    onNavigate: (route: String) -> Unit,
-    viewModel: SessionViewModel
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-    ) {
-        Text(
-            text = stringResource(id = R.string.oops),
-            fontSize = 50.sp,
-            modifier = Modifier.padding(bottom = 40.dp)
-        )
-
-        if (viewModel.sessionUiState.errorString != null) {
-            Text(
-                text = viewModel.sessionUiState.errorString!!
-            )
-        }
-
-        Text(
-            text = stringResource(id = R.string.tryAgainLater),
-        )
-
-        Button(
-            onClick = { onNavigate("login") },
-            modifier = Modifier.padding(top = 40.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.tryAgain),
-                color = Color.Black
-            )
         }
     }
 }
