@@ -376,9 +376,11 @@ class RoutineViewModel(
 
     fun switchToDetailView(routineId: Int) {
         fetchCycles(routineId)
-        uiState = uiState.copy(
-            isViewingDetails = true
-        )
+        uiState = uiState.copy(isViewingDetails = true)
+    }
+
+    fun switchToNormalView() {
+        uiState = uiState.copy(isViewingDetails = false)
     }
 
     fun switchToStartRoutine(routineId: Int) {

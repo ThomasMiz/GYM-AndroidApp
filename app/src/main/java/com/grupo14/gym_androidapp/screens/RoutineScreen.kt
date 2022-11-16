@@ -2,6 +2,7 @@ package com.grupo14.gym_androidapp.screens
 
 import android.content.Intent
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -386,6 +387,10 @@ private fun RoutineDetailScreen(
     viewModel: RoutineViewModel,
     routineId: Int
 ) {
+    BackHandler() {
+        viewModel.switchToNormalView()
+    }
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,

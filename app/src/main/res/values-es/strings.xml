@@ -7,12 +7,17 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
 
-    <string name="pedro">Pedro</string>
-    <string name="signOut">Cerrar Sesión</string>
-    <string name="message_id">Se recibió el id %1$d</string>
-    <string name="search">Buscar</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="register">Registrarse</string>
+    <string name="verifyUser">Verificar Usuario</string>
+    <string name="resendVerification">Reenviar Verificación</string>
     <string name="home">Inicio</string>
     <string name="profile">Perfil</string>
+    <string name="search">Buscar</string>
+    <string name="routine">Rutina</string>
+
+    <string name="pedro">Pedro</string>
+    <string name="signOut">Cerrar Sesión</string>
     <string name="editProfile">Editar Perfil</string>
     <string name="oops">Ups!</string>
     <string name="fetchUserFailed">No pudimos cargar su usuario</string>

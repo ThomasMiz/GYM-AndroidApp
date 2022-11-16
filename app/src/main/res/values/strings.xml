@@ -7,12 +7,17 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="pedro">Peter</string>
-    <string name="signOut">Sign out</string>
-    <string name="message_id">Received id %1$d</string>
-    <string name="search">Search</string>
+    <string name="login">Log in</string>
+    <string name="register">Register</string>
+    <string name="verifyUser">Verify User</string>
+    <string name="resendVerification">Resend Verification</string>
     <string name="home">Home</string>
     <string name="profile">Profile</string>
+    <string name="search">Search</string>
+    <string name="routine">Routine</string>
+
+    <string name="pedro">Peter</string>
+    <string name="signOut">Sign out</string>
     <string name="editProfile">Edit Profile</string>
     <string name="oops">Oops!</string>
     <string name="fetchUserFailed">We couldn\'t fetch your user data</string>
