@@ -82,10 +82,6 @@ fun Activities(
                     navController.popBackStack()
                 }
             }
-
-            Button(onClick = {  }) {
-                Text("pito")
-            }
         },
         bottomBar = {
             val currentScreen = viewModel.uiState.currentScreen
