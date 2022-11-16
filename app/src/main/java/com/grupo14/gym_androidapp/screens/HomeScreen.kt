@@ -50,8 +50,7 @@ fun HomeScreen(
         Text(
             text = stringResource(id = R.string.yourFavoriteRoutines),
             textAlign = TextAlign.Start,
-            fontSize = 24.sp,
-            modifier = Modifier.padding(bottom = 10.dp)
+            fontSize = 24.sp
         )
 
         Column(
@@ -87,7 +86,7 @@ fun HomeScreen(
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                //contentPadding = PaddingValues(5.dp),
+                contentPadding = PaddingValues(vertical = 10.dp),
                 state = rememberLazyListState(),
                 modifier = Modifier.fillMaxWidth()
             ) {
