@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
-import com.grupo14.gym_androidapp.viewmodels.*
+import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
 fun RegisterScreen(
@@ -42,7 +42,7 @@ fun RegisterScreen(
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
         navController.navigate("verify")
-    } else if(viewModel.sessionUiState.errorString != null) {
+    } else if (viewModel.sessionUiState.errorString != null) {
         RegisterScreenError(navController, viewModel)
     } else {
         RegisterScreenLoaded(navController, viewModel, false)
@@ -51,11 +51,15 @@ fun RegisterScreen(
 
 
 @Composable
-private fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionViewModel, loading : Boolean) {
+private fun RegisterScreenLoaded(
+    navController: NavHostController,
+    viewModel: SessionViewModel,
+    loading: Boolean
+) {
     val context = LocalContext.current
 
     val emailVal = remember { mutableStateOf("") }
-    val userVal = remember { mutableStateOf("")}
+    val userVal = remember { mutableStateOf("") }
     val passwordVal = remember { mutableStateOf("") }
     val repPasswordVal = remember { mutableStateOf("") }
 
@@ -80,7 +84,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
 
         OutlinedTextField(
             value = emailVal.value,
-            onValueChange = { if(!loading) emailVal.value = it },
+            onValueChange = { if (!loading) emailVal.value = it },
             label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
@@ -99,7 +103,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
 
         OutlinedTextField(
             value = userVal.value,
-            onValueChange = { if(!loading) userVal.value = it },
+            onValueChange = { if (!loading) userVal.value = it },
             label = { Text(text = "Nombre de usuario", color = Color.Gray) },
             placeholder = { Text(text = "Nombre de usuario") },
             singleLine = true,
@@ -118,7 +122,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
 
         OutlinedTextField(
             value = passwordVal.value,
-            onValueChange = { if(!loading) passwordVal.value = it},
+            onValueChange = { if (!loading) passwordVal.value = it },
             trailingIcon = {
                 IconButton(onClick = {
                     passwordVisibility.value = !passwordVisibility.value
@@ -145,12 +149,15 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
                 unfocusedIndicatorColor = MaterialTheme.colors.secondary,
                 disabledIndicatorColor = Color.Transparent
             ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
+            ),
         )
 
         OutlinedTextField(
             value = repPasswordVal.value,
-            onValueChange = { if(!loading) repPasswordVal.value = it},
+            onValueChange = { if (!loading) repPasswordVal.value = it },
             trailingIcon = {
                 IconButton(onClick = {
                     repPasswordVisibility.value = !repPasswordVisibility.value
@@ -177,22 +184,38 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
                 unfocusedIndicatorColor = MaterialTheme.colors.secondary,
                 disabledIndicatorColor = Color.Transparent
             ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Password),
-            keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()})
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
+            ),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
 
         Button(
             // Basic checks, improve them.
             onClick = {
-                if(!loading){
+                if (!loading) {
                     if (emailVal.value.isEmpty()) {
-                        Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
-                    } else if(userVal.value.isEmpty()) {
-                        Toast.makeText(context, "Por favor, ingrese un nombre de usuario", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Por favor, ingrese un correo electrónico",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (userVal.value.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Por favor, ingrese un nombre de usuario",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else if (passwordVal.value.isEmpty()) {
-                        Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
-                    } else if(!passwordVal.value.equals(repPasswordVal.value)) {
-                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Por favor, ingrese una contraseña",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (!passwordVal.value.equals(repPasswordVal.value)) {
+                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
+                            .show()
                     } else {
                         viewModel.registerNewUser(emailVal.value, userVal.value, passwordVal.value)
                     }
@@ -202,7 +225,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
         ) {
-            if(!loading){
+            if (!loading) {
                 Text(
                     "Continuar",
                     Modifier
@@ -229,7 +252,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(
-                onClick = { if(!loading) navController.navigate("login") }
+                onClick = { if (!loading) navController.navigate("login") }
             ) {
                 Text(
                     "¡Ingresa ahora!",
@@ -243,7 +266,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
 
 @Composable
 private fun RegisterScreenError(
-    navController : NavHostController,
+    navController: NavHostController,
     viewModel: SessionViewModel
 ) {
     Column(
