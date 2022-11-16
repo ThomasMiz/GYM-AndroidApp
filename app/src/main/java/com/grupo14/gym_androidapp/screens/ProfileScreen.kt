@@ -97,7 +97,7 @@ private fun ProfileScreenLoaded(
     onSignedOut: () -> Unit
 ) {
     val user: UserApiModel = viewModel.uiState.user!!
-    val fullName = "${user.firstName} ${user.lastName}"
+    val fullName = "${user.firstName?.trim() ?: ""} ${user.lastName?.trim() ?: ""}"
 
     var fullnameEditing by remember { mutableStateOf(fullName) }
     var seggsIndexEditing by remember { mutableStateOf(user.gender!!.ordinal) }
@@ -109,8 +109,6 @@ private fun ProfileScreenLoaded(
     val signoutDialogState = rememberMaterialDialogState()
 
     val genderOptionsList = createGendersList()
-
-    var isSigningOut by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.padding(horizontal = 75.dp, vertical = 20.dp)
