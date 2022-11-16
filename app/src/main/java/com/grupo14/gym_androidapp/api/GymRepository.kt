@@ -20,6 +20,7 @@ class GymRepository(
 
     // ↓ USERS ↓
 
+    suspend fun fetchAllUsers() = gymRemoteDataSource.fetchUsers()
     suspend fun registerNewUser(user: LoginUserApiModel) = gymRemoteDataSource.registerNewUser(user)
     suspend fun fetchUser(userId: Int) = gymRemoteDataSource.fetchUser(userId)
     suspend fun resendUserVerification(email: String) = gymRemoteDataSource.resendUserVerification(email)
