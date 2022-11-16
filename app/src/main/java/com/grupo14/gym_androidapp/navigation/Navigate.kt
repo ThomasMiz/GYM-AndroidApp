@@ -18,6 +18,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.grupo14.gym_androidapp.AppConfig
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
@@ -81,6 +82,10 @@ fun Activities(
                     navController.popBackStack()
                 }
             }
+
+            Button(onClick = {  }) {
+                Text("pito")
+            }
         },
         bottomBar = {
             val currentScreen = viewModel.uiState.currentScreen
@@ -100,7 +105,11 @@ fun Activities(
             ActiveScreens.forEach { screen ->
                 composable(
                     route = screen.route,
-                    arguments = screen.routeArgs ?: emptyList()
+                    arguments = screen.routeArgs ?: emptyList(),
+                    deepLinks = listOf(
+                        //navDeepLink { uriPattern = AppConfig.BASE_URL + screen.route }
+                    NavDeepLink(uri = AppConfig.BASE_URL + screen.route)
+                    )
                 ) { navBackStackEntry ->
                     screen.content(
                         gymRepository = gymRepository,
