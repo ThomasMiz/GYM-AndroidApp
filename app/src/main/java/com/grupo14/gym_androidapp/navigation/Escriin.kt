@@ -18,6 +18,7 @@ import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 data class Escriin(
     val titleResId: Int,
+    val showBackButton: Boolean = true,
     val route: String,
     val routeArgs: List<NamedNavArgument>? = null,
     val showTopAppBar: Boolean = true,
@@ -33,6 +34,7 @@ data class Escriin(
     companion object {
         val LoginEscriin = Escriin(
             titleResId = R.string.login,
+            showBackButton = false,
             route = "login",
             showTopAppBar = false,
             showBottomAppBar = false,
@@ -44,6 +46,7 @@ data class Escriin(
 
         val RegisterEscriin = Escriin(
             titleResId = R.string.register,
+            showBackButton = false,
             route = "register",
             showTopAppBar = false,
             showBottomAppBar = false,
@@ -73,6 +76,7 @@ data class Escriin(
 
         val HomeEscriin = Escriin(
             titleResId = R.string.home,
+            showBackButton = false,
             route = "home",
             onNavigatedNewStart = "home"
         ) { gymRepository, onNavigate, navBackStackEntry ->
@@ -86,6 +90,7 @@ data class Escriin(
 
         val SearchEscriin = Escriin(
             titleResId = R.string.search,
+            showBackButton = false,
             route = "search"
         ) { gymRepository, onNavigate, navBackStackEntry ->
             SearchScreen()
@@ -93,6 +98,7 @@ data class Escriin(
 
         val ProfileEscriin = Escriin(
             titleResId = R.string.profile,
+            showBackButton = false,
             route = "profile"
         ) { gymRepository, onNavigate, navBackStackEntry ->
             val viewModel by remember { mutableStateOf(ProfileViewModel(gymRepository)) }

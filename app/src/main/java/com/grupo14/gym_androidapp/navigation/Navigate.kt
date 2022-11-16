@@ -77,7 +77,7 @@ fun Activities(
         topBar = {
             val currentScreen = viewModel.uiState.currentScreen
             if (currentScreen != null && currentScreen.showTopAppBar) {
-                MyTopAppBar(currentScreen.titleResId, true) {
+                MyTopAppBar(currentScreen.titleResId, currentScreen.showBackButton) {
                     navController.popBackStack()
                 }
             }
@@ -117,13 +117,11 @@ fun Activities(
 fun MyTopAppBar(titleResId: Int, showBackButton: Boolean, onBackClicked: () -> Unit) {
     TopAppBar(
         title = { if (titleResId >= 0) Text(stringResource(titleResId)) },
-        navigationIcon = {
-            if (showBackButton) {
-                IconButton(onClick = onBackClicked) {
-                    Icon(Icons.Filled.ArrowBack, "backIcon")
-                }
+        navigationIcon = if (showBackButton) ({
+            IconButton(onClick = onBackClicked) {
+                Icon(Icons.Filled.ArrowBack, "backIcon")
             }
-        },
+        }) else null,
         backgroundColor = colorResource(R.color.dark),
         contentColor = colorResource(R.color.white)
     )
