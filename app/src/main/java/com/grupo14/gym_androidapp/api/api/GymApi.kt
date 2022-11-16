@@ -10,12 +10,12 @@ interface GymApi {
 
     @GET("users")
     fun fetchUsers(
-        @Query("id") id : Int,
-        @Query("username") username : String,
-        @Query("gender") gender : String,
-        @Query("date") date : Date,
-        @Query("lastActivity") lastActivity : String?
-    ) : Call<ApiModelListPageOfUser<SmallUserApiModel>>
+        @Query("search") search : String?,
+        @Query("page") page : Int,
+        @Query("size") size : Int,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction : String?
+    ) : Call<ApiModelListPageOf<SmallUserApiModel>>
 
     @POST("users")
     fun registerNewUser(@Body user: LoginUserApiModel): Call<UserApiModel>
