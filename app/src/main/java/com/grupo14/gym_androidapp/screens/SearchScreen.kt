@@ -38,8 +38,6 @@ fun SearchScreen() {
     Column(
         Modifier
             .padding(horizontal = 8.dp)
-            // Prevent BottomNavigationView overlap content
-            .padding(bottom = 60.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),

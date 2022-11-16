@@ -2,6 +2,7 @@ package com.grupo14.gym_androidapp.navigation
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -89,10 +91,11 @@ fun Activities(
                 )
             }
         }
-    ) {
+    ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = if (gymRepository.getAuthtoken() == null) Escriin.LoginEscriin.route else Escriin.HomeEscriin.route
+            startDestination = if (gymRepository.getAuthtoken() == null) Escriin.LoginEscriin.route else Escriin.HomeEscriin.route,
+            modifier = Modifier.padding(innerPadding)
         ) {
             ActiveScreens.forEach { screen ->
                 composable(
