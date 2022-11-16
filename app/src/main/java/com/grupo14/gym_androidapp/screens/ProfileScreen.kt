@@ -29,6 +29,7 @@ import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.vanpra.composematerialdialogs.*
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import java.time.LocalDate
 
 @Composable
 fun ProfileScreen(
@@ -97,11 +98,14 @@ private fun ProfileScreenLoaded(
     onSignedOut: () -> Unit
 ) {
     val user: UserApiModel = viewModel.uiState.user!!
-    val fullName = "${user.firstName?.trim() ?: ""} ${user.lastName?.trim() ?: ""}"
+
+    var fullName = "${user.firstName?.trim() ?: ""} ${user.lastName?.trim() ?: ""}"
+    if (fullName.isBlank())
+        fullName = user.username!!
 
     var fullnameEditing by remember { mutableStateOf(fullName) }
     var seggsIndexEditing by remember { mutableStateOf(user.gender!!.ordinal) }
-    var birthdateEditing by remember { mutableStateOf(ConvertDateToLocalDate(user.birthdate!!)) }
+    var birthdateEditing by remember { mutableStateOf(user.birthdate?.let { ConvertDateToLocalDate(it) }) }
 
     val seggsDialogState = rememberMaterialDialogState()
     val datepickerDialogState = rememberMaterialDialogState()
@@ -140,7 +144,9 @@ private fun ProfileScreenLoaded(
         )
 
         Text(
-            text = stringResource(R.string.profileBithdateLabel, formatDate(user.birthdate!!)),
+            text = stringResource(
+                R.string.profileBithdateLabel,
+                user.birthdate?.let { formatDate(it) } ?: stringResource(id = R.string.unspecified)),
             fontSize = 24.sp,
             modifier = Modifier.padding(vertical = 10.dp)
         )
@@ -149,7 +155,7 @@ private fun ProfileScreenLoaded(
             onClick = {
                 fullnameEditing = fullName
                 seggsIndexEditing = user.gender!!.ordinal
-                birthdateEditing = ConvertDateToLocalDate(user.birthdate)
+                birthdateEditing = user.birthdate?.let { ConvertDateToLocalDate(it) }
                 viewModel.startEditUser()
             }, modifier = Modifier.padding(10.dp)
         ) {
@@ -231,7 +237,8 @@ private fun ProfileScreenLoaded(
 
                 Text(
                     text = stringResource(
-                        R.string.profileBithdateLabel, formatDate(birthdateEditing)
+                        R.string.profileBithdateLabel,
+                        birthdateEditing?.let { formatDate(it) } ?: stringResource(id = R.string.unspecified)
                     ), color = Color.Black, modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -245,7 +252,7 @@ private fun ProfileScreenLoaded(
             },
         ) {
             datepicker(
-                initialDate = birthdateEditing, colors = DatePickerDefaults.colors(
+                initialDate = birthdateEditing ?: LocalDate.of(2000, 4, 20), colors = DatePickerDefaults.colors(
                     headerBackgroundColor = MaterialTheme.colors.secondaryVariant,
                     calendarHeaderTextColor = MaterialTheme.colors.secondaryVariant,
                     dateActiveBackgroundColor = MaterialTheme.colors.secondaryVariant
@@ -301,7 +308,7 @@ private fun ProfileScreenLoaded(
                                     .trim() else fullnameEditing,
                                 lastName = if (i >= 0) fullnameEditing.substring(i)
                                     .trim() else null,
-                                birthdate = ConvertLocalDateToDate(birthdateEditing),
+                                birthdate = birthdateEditing?.let {ConvertLocalDateToDate(it) },
                                 gender = Gender.values()[seggsIndexEditing]
                             )
                         )

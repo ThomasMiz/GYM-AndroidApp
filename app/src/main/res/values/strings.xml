@@ -26,6 +26,8 @@
 
     <string name="profileSeggsLabel">Sex: %1$s</string>
     <string name="profileBithdateLabel">Birthdate: %1$s</string>
+    <string name="unspecified">Unspecified</string>
+    <string name="unknown">Unknown</string>
 
     <string name="male">Male</string>
     <string name="female">Female</string>
