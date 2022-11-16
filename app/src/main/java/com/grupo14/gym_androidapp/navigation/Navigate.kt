@@ -14,19 +14,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.navigation.*
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
 import com.grupo14.gym_androidapp.viewmodels.HomeViewModel
+import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
 import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
 import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
@@ -39,23 +37,45 @@ fun Activities(
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (gymRepository.getAuthtoken() == null) "login" else "home",
-
-        ) {
-
+        startDestination = if (gymRepository.getAuthtoken() == null) "login" else "home"
+    ) {
         composable(route = "login") {
             val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
-            LoginScreen(navController, viewModel)
+            LoginScreen(onNavigate = { route ->
+                navController.navigate(route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }, viewModel)
         }
 
         composable(route = "register") {
             val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
-            RegisterScreen(navController, viewModel)
+            RegisterScreen(onNavigate = { route ->
+                navController.navigate(route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }, viewModel)
         }
 
         composable(route = "verify") {
             val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
-            VerifyUserScreen(navController, viewModel)
+            VerifyUserScreen(onNavigate = { route ->
+                navController.navigate(route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }, viewModel)
         }
 
         composable(route = "home") {

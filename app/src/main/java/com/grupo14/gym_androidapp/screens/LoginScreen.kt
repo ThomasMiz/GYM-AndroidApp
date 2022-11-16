@@ -33,26 +33,26 @@ import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     if (viewModel.sessionUiState.isLoggingIn) {
-        LoginScreenLoaded(navController, viewModel, true)
-    } else if(viewModel.sessionUiState.isLoggedIn) {
+        LoginScreenLoaded(onNavigate, viewModel, true)
+    } else if (viewModel.sessionUiState.isLoggedIn) {
         viewModel.userReadyToLogin()
-        navController.navigate("home")
-    } else if(viewModel.sessionUiState.errorString != null) {
-        LoginScreenError(navController, viewModel)
+        onNavigate("home")
+    } else if (viewModel.sessionUiState.errorString != null) {
+        LoginScreenError(onNavigate, viewModel)
     } else {
-        LoginScreenLoaded(navController, viewModel, false)
+        LoginScreenLoaded(onNavigate, viewModel, false)
     }
 }
 
 @Composable
 fun LoginScreenLoaded(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel,
-    loading : Boolean
+    loading: Boolean
 ) {
     val context = LocalContext.current
 
@@ -86,7 +86,7 @@ fun LoginScreenLoaded(
     ) {
         OutlinedTextField(
             value = userVal.value,
-            onValueChange = { if(!loading) userVal.value = it else userVal.value = userVal.value },
+            onValueChange = { if (!loading) userVal.value = it else userVal.value = userVal.value },
             label = { Text(text = "Usuario", color = Color.Gray) },
             placeholder = { Text(text = "Usuario") },
             singleLine = true,
@@ -105,7 +105,9 @@ fun LoginScreenLoaded(
 
         OutlinedTextField(
             value = passwordVal.value,
-            onValueChange = { if(!loading) passwordVal.value = it else passwordVal.value = passwordVal.value },
+            onValueChange = {
+                if (!loading) passwordVal.value = it else passwordVal.value = passwordVal.value
+            },
             trailingIcon = {
                 IconButton(onClick = {
                     passwordVisibility.value = !passwordVisibility.value
@@ -132,17 +134,28 @@ fun LoginScreenLoaded(
                 unfocusedIndicatorColor = MaterialTheme.colors.secondary,
                 disabledIndicatorColor = Color.Transparent
             ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Password),
-            keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()})
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
+            ),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
 
         Button(
             onClick = {
-                if(!loading){
+                if (!loading) {
                     if (userVal.value.isEmpty()) {
-                        Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Por favor, ingrese un correo electrónico",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else if (passwordVal.value.isEmpty()) {
-                        Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Por favor, ingrese una contraseña",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         viewModel.loginUser(userVal.value, passwordVal.value)
                     }
@@ -152,7 +165,7 @@ fun LoginScreenLoaded(
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
         ) {
-            if(!loading){
+            if (!loading) {
                 Text(
                     "Ingresar",
                     Modifier
@@ -179,7 +192,7 @@ fun LoginScreenLoaded(
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(
-                onClick = { if(!loading) navController.navigate("register") }
+                onClick = { if (!loading) onNavigate("register") }
             ) {
                 Text(
                     "¡Registrate!",
@@ -192,7 +205,7 @@ fun LoginScreenLoaded(
 
 @Composable
 fun LoginScreenError(
-    navController : NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     Column(
@@ -219,7 +232,7 @@ fun LoginScreenError(
         )
 
         Button(
-            onClick = { navController.navigate("login") },
+            onClick = { onNavigate("login") },
             modifier = Modifier.padding(top = 40.dp)
         ) {
             Text(

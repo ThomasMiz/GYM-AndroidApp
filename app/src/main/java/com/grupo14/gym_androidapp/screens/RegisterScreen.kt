@@ -28,34 +28,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.R
-import com.grupo14.gym_androidapp.viewmodels.*
+import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 
 @Composable
 fun RegisterScreen(
-    navController: NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     val context = LocalContext.current
     if (viewModel.sessionUiState.isRegistering) {
-        RegisterScreenLoaded(navController, viewModel, true)
+        RegisterScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.isRegistered) {
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
-        navController.navigate("verify")
-    } else if(viewModel.sessionUiState.errorString != null) {
-        RegisterScreenError(navController, viewModel)
+        onNavigate("verify")
+    } else if (viewModel.sessionUiState.errorString != null) {
+        RegisterScreenError(onNavigate, viewModel)
     } else {
-        RegisterScreenLoaded(navController, viewModel, false)
+        RegisterScreenLoaded(onNavigate, viewModel, false)
     }
 }
 
 
 @Composable
-private fun RegisterScreenLoaded(navController: NavHostController, viewModel: SessionViewModel, loading : Boolean) {
+private fun RegisterScreenLoaded(
+    onNavigate: (route: String) -> Unit,
+    viewModel: SessionViewModel,
+    loading: Boolean
+) {
     val context = LocalContext.current
 
     val emailVal = remember { mutableStateOf("") }
-    val userVal = remember { mutableStateOf("")}
+    val userVal = remember { mutableStateOf("") }
     val passwordVal = remember { mutableStateOf("") }
     val repPasswordVal = remember { mutableStateOf("") }
 
@@ -88,7 +92,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
 
         OutlinedTextField(
             value = emailVal.value,
-            onValueChange = { if(!loading) emailVal.value = it },
+            onValueChange = { if (!loading) emailVal.value = it },
             label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
@@ -107,7 +111,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
 
         OutlinedTextField(
             value = userVal.value,
-            onValueChange = { if(!loading) userVal.value = it },
+            onValueChange = { if (!loading) userVal.value = it },
             label = { Text(text = "Nombre de usuario", color = Color.Gray) },
             placeholder = { Text(text = "Nombre de usuario") },
             singleLine = true,
@@ -126,7 +130,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
 
         OutlinedTextField(
             value = passwordVal.value,
-            onValueChange = { if(!loading) passwordVal.value = it},
+            onValueChange = { if (!loading) passwordVal.value = it },
             trailingIcon = {
                 IconButton(onClick = {
                     passwordVisibility.value = !passwordVisibility.value
@@ -153,12 +157,15 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
                 unfocusedIndicatorColor = MaterialTheme.colors.secondary,
                 disabledIndicatorColor = Color.Transparent
             ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
+            ),
         )
 
         OutlinedTextField(
             value = repPasswordVal.value,
-            onValueChange = { if(!loading) repPasswordVal.value = it},
+            onValueChange = { if (!loading) repPasswordVal.value = it },
             trailingIcon = {
                 IconButton(onClick = {
                     repPasswordVisibility.value = !repPasswordVisibility.value
@@ -185,22 +192,38 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
                 unfocusedIndicatorColor = MaterialTheme.colors.secondary,
                 disabledIndicatorColor = Color.Transparent
             ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Password),
-            keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()})
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
+            ),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
 
         Button(
             // Basic checks, improve them.
             onClick = {
-                if(!loading){
+                if (!loading) {
                     if (emailVal.value.isEmpty()) {
-                        Toast.makeText(context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT).show()
-                    } else if(userVal.value.isEmpty()) {
-                        Toast.makeText(context, "Por favor, ingrese un nombre de usuario", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Por favor, ingrese un correo electrónico",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (userVal.value.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Por favor, ingrese un nombre de usuario",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else if (passwordVal.value.isEmpty()) {
-                        Toast.makeText(context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT).show()
-                    } else if(!passwordVal.value.equals(repPasswordVal.value)) {
-                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Por favor, ingrese una contraseña",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else if (!passwordVal.value.equals(repPasswordVal.value)) {
+                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
+                            .show()
                     } else {
                         viewModel.registerNewUser(emailVal.value, userVal.value, passwordVal.value)
                     }
@@ -210,7 +233,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
         ) {
-            if(!loading){
+            if (!loading) {
                 Text(
                     "Continuar",
                     Modifier
@@ -237,7 +260,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(
-                onClick = { if(!loading) navController.navigate("login") }
+                onClick = { if (!loading) onNavigate("login") }
             ) {
                 Text(
                     "¡Ingresa ahora!",
@@ -251,7 +274,7 @@ private fun RegisterScreenLoaded(navController: NavHostController, viewModel: Se
 
 @Composable
 private fun RegisterScreenError(
-    navController : NavHostController,
+    onNavigate: (route: String) -> Unit,
     viewModel: SessionViewModel
 ) {
     Column(
@@ -278,7 +301,7 @@ private fun RegisterScreenError(
         )
 
         Button(
-            onClick = { navController.navigate("register") },
+            onClick = { onNavigate("register") },
             modifier = Modifier.padding(top = 40.dp)
         ) {
             Text(
