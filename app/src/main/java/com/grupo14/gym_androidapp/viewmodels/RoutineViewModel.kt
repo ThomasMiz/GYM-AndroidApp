@@ -306,12 +306,16 @@ class RoutineViewModel(
                             cycleStates = newCycleStates
                         )
                         fetchCycleExercises(cycleState) { newCycleState ->
-                            val ncs: MutableList<CycleUiState> = mutableListOf()
-                            ncs.addAll(uiState.cycleStates)
-                            ncs[cycleIndex] = newCycleState
-                            uiState = uiState.copy(
-                                cycleStates = ncs
-                            )
+                            try {
+                                val ncs: MutableList<CycleUiState> = mutableListOf()
+                                ncs.addAll(uiState.cycleStates)
+                                ncs[cycleIndex] = newCycleState
+                                uiState = uiState.copy(
+                                    cycleStates = ncs
+                                )
+                            } catch (e: Exception) {
+                                // nada lol
+                            }
                         }
                     }
 
