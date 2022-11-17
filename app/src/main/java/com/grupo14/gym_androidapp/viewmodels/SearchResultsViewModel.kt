@@ -1,39 +1,24 @@
 package com.grupo14.gym_androidapp.viewmodels
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
+import com.grupo14.gym_androidapp.api.models.Difficulty
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
-import com.grupo14.gym_androidapp.ui.theme.DifficultyRed
-import com.grupo14.gym_androidapp.ui.theme.StarYellow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 data class SearchResultsUIState(
-    val isSearching: Boolean = false,
-    val searchFinished: Boolean = false,
+    val routines: List<RoutineApiModel> = listOf(),
+    val isFetchingRoutines: Boolean = false,
+    val fetchRoutinesErrorStringId: Int? = null,
+    val hasMoreRoutinesToFetch: Boolean = true,
+    val initialized: Boolean = false
 )
 
 class SearchResultsViewModel(
@@ -41,109 +26,81 @@ class SearchResultsViewModel(
 ) : ViewModel() {
     var uiState by mutableStateOf(SearchResultsUIState())
         private set
-}
 
-@Composable
-private fun RoutineCardEntry(
-    routine: RoutineApiModel,
-) {
-    Card(
-        elevation = 5.dp,
-        modifier = Modifier
-            .fillMaxWidth()
-        //.clickable(/*To do */)
+    private val maxRoutinesToShow = 100
+    private var nextFetchRoutinesPage: Int = 0
+    private var currentFetchRoutinesJob: Job? = null
+
+    var search: String? = null
+    var username: String? = null
+    var categoryId: Int? = null
+    var difficulty: Difficulty? = null
+    var score: Int? = null
+    var orderBy: String? = null
+    var direction: String? = null
+
+    fun initialize(
+        search: String?,
+        username: String?,
+        categoryId: Int?,
+        difficulty: String?,
+        score: Int?,
+        orderBy: String?,
+        direction: String?
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth()
-        ) {
-            // Routine image
-            Image(
-                painter = painterResource(id = R.drawable.rutina),
-                contentDescription = "routine",
-                alignment = Alignment.TopCenter,
-                contentScale = ContentScale.FillHeight,
-                modifier = Modifier
-                    .height(70.dp)
-                    .width(90.dp)
-                    .clip(RoundedCornerShape(10))
-            )
+        this.search = if (search.isNullOrBlank()) null else search.trim()
+        this.username =  if (username.isNullOrBlank()) null else username.trim()
+        this.categoryId = if (categoryId != null && categoryId >= 0) categoryId else null
+        this.difficulty =  Difficulty.values().find { it.apiEnumString == difficulty }
+        this.score = if (score != null && score >= 0) score else null
+        this.orderBy = if (orderBy.isNullOrBlank()) null else orderBy.trim()
+        this.direction = if (direction.isNullOrBlank()) null else direction.trim()
 
-            Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .padding(start = 10.dp)
-                    .fillMaxHeight()
-                    .weight(1.0f)
-            ) {
-                Text(
-                    text = routine.name!!,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+        uiState = SearchResultsUIState(initialized = true)
+    }
+
+    fun fetchMoreRoutines() {
+        if (currentFetchRoutinesJob != null && currentFetchRoutinesJob!!.isActive)
+            return
+
+        if (!uiState.hasMoreRoutinesToFetch)
+            return
+
+        currentFetchRoutinesJob = viewModelScope.launch {
+            try {
+                uiState = uiState.copy(isFetchingRoutines = true)
+
+                val userId: Int? = null
+                val moreRoutines = gymRepository.fetchRoutines(
+                    page = nextFetchRoutinesPage,
+                    search = search,
+                    userId = userId,
+                    categoryId = categoryId,
+                    difficulty = difficulty,
+                    score = score,
+                    orderBy = orderBy,
+                    direction = direction
                 )
 
-                Text(
-                    text = stringResource(id = R.string.by, "@${routine.user!!.username!!}")
+                val newRoutinesList = mutableListOf<RoutineApiModel>()
+                newRoutinesList.addAll(uiState.routines)
+                newRoutinesList.addAll(moreRoutines.content ?: emptyList())
+
+                nextFetchRoutinesPage++
+
+                uiState = uiState.copy(
+                    routines = newRoutinesList,
+                    isFetchingRoutines = false,
+                    fetchRoutinesErrorStringId = null,
+                    hasMoreRoutinesToFetch = !moreRoutines.isLastPage!! && newRoutinesList.size < maxRoutinesToShow
                 )
-            }
-
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                // Score text & icon
-                Surface(
-                    modifier = Modifier
-                        .padding(bottom = 3.dp)
-                        .fillMaxHeight(),
-                    elevation = 3.dp
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Text(
-                            text = if (routine.score == null || routine.score == 0f) " - " else routine.score.toString(),
-                            modifier = Modifier.padding(horizontal = 5.dp)
-                        )
-
-                        Icon(
-                            imageVector = Icons.Filled.Star,
-                            contentDescription = "routineScore",
-                            tint = StarYellow
-                        )
-                    }
-                }
-
-                // Difficulty text & icon
-                Surface(
-                    modifier = Modifier
-                        .padding(top = 3.dp)
-                        .fillMaxHeight(),
-                    elevation = 3.dp,
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        Text(
-                            text = stringResource(routine.difficulty!!.stringResourceId),
-                            modifier = Modifier.padding(horizontal = 5.dp)
-                        )
-
-                        Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.dumbbell),
-                            contentDescription = "routineDifficulty",
-                            tint = DifficultyRed,
-                            modifier = Modifier.padding(end = 3.dp)
-                        )
-                    }
+            } catch (e: Exception) {
+                if (isActive) {
+                    uiState = uiState.copy(
+                        isFetchingRoutines = false,
+                        fetchRoutinesErrorStringId = R.string.fetchFavoritesFailed, // TODO: Cambiar a routine
+                        hasMoreRoutinesToFetch = false
+                    )
                 }
             }
         }
