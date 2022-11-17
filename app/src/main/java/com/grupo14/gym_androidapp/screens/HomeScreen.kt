@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.grupo14.gym_androidapp.AdaptibleList
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.ui.theme.ErrorRed
 import com.grupo14.gym_androidapp.ui.theme.FavoritePink
@@ -84,19 +85,11 @@ fun HomeScreen(
                 )
             }
 
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                // contentPadding = PaddingValues(top = 0.dp),
-                state = rememberLazyListState(),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(viewModel.uiState.favorites) { routineState ->
-                    FavoriteRoutineCard(onNavigateToRoutineRequested, routineState) {
-                        if (unfavRoutineId < 0 && !viewModel.isUnfavoritingAny()) {
-                            unfavRoutineId = it
-                            confirmUnfavDialogState.show()
-                        }
+            AdaptibleList(viewModel.uiState.favorites) { routineState ->
+                FavoriteRoutineCard(onNavigateToRoutineRequested, routineState) {
+                    if (unfavRoutineId < 0 && !viewModel.isUnfavoritingAny()) {
+                        unfavRoutineId = it
+                        confirmUnfavDialogState.show()
                     }
                 }
             }
