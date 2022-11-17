@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,9 +32,48 @@ fun ExecuteRoutineScreen(
         viewModel.start(routineId)
     }
 
-    ExecutionFinished(routineId, onNavigateToRoutineExecutionRequested)
-
+    ExecuteScreenError(viewModel, routineId, onNavigateToRoutineExecutionRequested)
 }
+
+@Composable
+private fun ExecuteScreenError(
+    viewModel: ExecuteRoutineViewModel,
+    routineId: Int,
+    onNavigateToRoutineExecutionRequested: (id: Int) -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = stringResource(id = R.string.oops),
+            fontSize = 50.sp,
+            modifier = Modifier.padding(bottom = 40.dp)
+        )
+
+        if (viewModel.uiState.fetchRoutineErrorStringId != null) {
+            Text(
+                text = stringResource(viewModel.uiState.fetchRoutineErrorStringId!!)
+            )
+        }
+
+        Text(
+            text = stringResource(id = R.string.tryAgainLater),
+        )
+
+        Button(
+            onClick = { onNavigateToRoutineExecutionRequested(routineId) },
+            modifier = Modifier.padding(top = 40.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.tryAgain),
+                color = Color.Black
+            )
+        }
+    }
+}
+
 
 @Composable
 fun ExecutionFinished(routineId : Int, onNavigateToRoutineExecutionRequested: (id: Int) -> Unit) {
