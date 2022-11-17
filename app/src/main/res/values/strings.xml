@@ -85,4 +85,13 @@
     <string name="stillNoAccountRegister">Create one!</string>
     <string name="stillNotVerified">Need to verify your user?</string>
     <string name="stillNotVerifiedVerify">Do it here.</string>
+
+    <string name="userRegisteredSuccessfully">User registered successfully!</string>
+    <string name="email">Email</string>
+    <string name="repeatPassword">Repeat password</string>
+    <string name="pleaseInsertUsername">Please insert a valid username</string>
+    <string name="passwordsDontMatch">The passwords don\'t match</string>
+    <string name="continueXD">Continue</string>
+    <string name="alreadyHaveAccount">Already have an account?</string>
+    <string name="loginNow">Log in now!</string>
 </resources>

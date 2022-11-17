@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -35,7 +36,11 @@ fun RegisterScreen(
         RegisterScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.isRegistered) {
         viewModel.readyToVerify()
-        Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.userRegisteredSuccessfully),
+            Toast.LENGTH_SHORT
+        ).show()
         onNavigate("verify")
     } else {
         RegisterScreenLoaded(onNavigate, viewModel, false)
@@ -81,8 +86,8 @@ private fun RegisterScreenLoaded(
         OutlinedTextField(
             value = viewModel.emailVal,
             onValueChange = { if (!loading) viewModel.emailVal = it },
-            label = { Text(text = "Correo electrónico", color = Color.Gray) },
-            placeholder = { Text(text = "Correo electrónico") },
+            label = { Text(text = stringResource(id = R.string.email), color = Color.Gray) },
+            placeholder = { Text(text = stringResource(id = R.string.email)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Email, null) },
@@ -99,8 +104,8 @@ private fun RegisterScreenLoaded(
         OutlinedTextField(
             value = viewModel.usernameVal,
             onValueChange = { if (!loading) viewModel.usernameVal = it },
-            label = { Text(text = "Nombre de usuario", color = Color.Gray) },
-            placeholder = { Text(text = "Nombre de usuario") },
+            label = { Text(text = stringResource(id = R.string.username), color = Color.Gray) },
+            placeholder = { Text(text = stringResource(id = R.string.username)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Person, null) },
@@ -128,8 +133,8 @@ private fun RegisterScreenLoaded(
                     )
                 }
             },
-            label = { Text(text = "Contraseña", color = Color.Gray) },
-            placeholder = { Text(text = "Contraseña") },
+            label = { Text(text = stringResource(id = R.string.password), color = Color.Gray) },
+            placeholder = { Text(text = stringResource(id = R.string.password)) },
             singleLine = true,
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(0.8f),
@@ -160,8 +165,8 @@ private fun RegisterScreenLoaded(
                     )
                 }
             },
-            label = { Text(text = "Repetir contraseña", color = Color.Gray) },
-            placeholder = { Text(text = "Repetir contraseña") },
+            label = { Text(text = stringResource(R.string.repeatPassword), color = Color.Gray) },
+            placeholder = { Text(text = stringResource(id = R.string.repeatPassword)) },
             singleLine = true,
             visualTransformation = if (repPasswordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(0.8f),
@@ -179,6 +184,10 @@ private fun RegisterScreenLoaded(
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
 
+        val pleaseInsertEmail = stringResource(id = R.string.pleaseInsertEmail)
+        val pleaseInsertUsername = stringResource(id = R.string.pleaseInsertUsername)
+        val pleaseInsertPassword = stringResource(id = R.string.pleaseInsertPassword)
+        val passwordsDontMatch = stringResource(id = R.string.passwordsDontMatch)
         Button(
             // Basic checks, improve them.
             onClick = {
@@ -188,18 +197,18 @@ private fun RegisterScreenLoaded(
 
                     if (viewModel.emailVal.isEmpty()) {
                         Toast.makeText(
-                            context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT
+                            context, pleaseInsertEmail, Toast.LENGTH_SHORT
                         ).show()
                     } else if (viewModel.usernameVal.isEmpty()) {
                         Toast.makeText(
-                            context, "Por favor, ingrese un nombre de usuario", Toast.LENGTH_SHORT
+                            context, pleaseInsertUsername, Toast.LENGTH_SHORT
                         ).show()
                     } else if (viewModel.passwordVal.isEmpty()) {
                         Toast.makeText(
-                            context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT
+                            context, pleaseInsertPassword, Toast.LENGTH_SHORT
                         ).show()
                     } else if (!viewModel.passwordVal.equals(repPasswordVal)) {
-                        Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, passwordsDontMatch, Toast.LENGTH_SHORT)
                             .show()
                     } else {
                         viewModel.registerNewUser(
@@ -216,7 +225,7 @@ private fun RegisterScreenLoaded(
         ) {
             if (!loading) {
                 Text(
-                    "Continuar",
+                    stringResource(id = R.string.continueXD),
                     Modifier.padding(vertical = 8.dp),
                     color = MaterialTheme.colors.secondary,
                     fontSize = 25.sp
@@ -236,16 +245,15 @@ private fun RegisterScreenLoaded(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "¿Ya tienes una cuenta?",
+                stringResource(id = R.string.alreadyHaveAccount),
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(onClick = { if (!loading) onNavigate("login") }) {
                 Text(
-                    "¡Ingresa ahora!",
+                    stringResource(id = R.string.loginNow),
                     color = Color.Blue,
                 )
             }
         }
-
     }
 }
