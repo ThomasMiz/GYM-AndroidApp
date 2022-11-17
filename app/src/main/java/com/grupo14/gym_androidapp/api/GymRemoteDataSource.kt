@@ -57,6 +57,10 @@ class GymRemoteDataSource(
 
     // ↓ USERS ↓
 
+    suspend fun fetchUsers(
+        page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
+    ) = handleApiRequest { it.getUsers(page, size, search, orderBy, direction) }
+
     suspend fun registerNewUser(user: LoginUserApiModel) = handleApiRequest { it.registerNewUser(user) }
     suspend fun fetchUser(userId: Int) = handleApiRequest { it.getUser(userId) }
     suspend fun resendUserVerification(email: String) = handleVoidApiRequest { it.resendUserVerification(UserApiModel(email = email)) }
