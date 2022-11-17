@@ -17,7 +17,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,14 +25,14 @@ import androidx.compose.ui.unit.toSize
 @Composable
 fun MyDropDownMenu(
     elements: List<String>,
+    selectedText: String,
     modifier: Modifier = Modifier,
     label: String,
     enabled: Boolean = true,
-    onSelect: (String) -> Unit = {}
+    onValueChanged: (String) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
     val suggestions = elements
-    var selectedText by remember { mutableStateOf("") }
 
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
@@ -47,9 +46,7 @@ fun MyDropDownMenu(
     ) {
         OutlinedTextField(
             value = selectedText,
-            onValueChange = {
-                selectedText = it
-            },
+            onValueChange = { onValueChanged(it) },
             modifier = modifier
                 .onGloballyPositioned { coordinates ->
                     textfieldSize = coordinates.size.toSize()
@@ -73,9 +70,8 @@ fun MyDropDownMenu(
         ) {
             suggestions.forEach { label ->
                 DropdownMenuItem(onClick = {
-                    selectedText = label
                     expanded = false
-                    onSelect(selectedText)
+                    onValueChanged(label)
                 }) {
                     Text(text = label)
                 }

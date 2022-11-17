@@ -2,14 +2,15 @@ package com.grupo14.gym_androidapp.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.grupo14.gym_androidapp.SanitizeAndShit
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.api.api.ApiException
 import com.grupo14.gym_androidapp.api.models.Category
-import com.grupo14.gym_androidapp.api.models.RoutineApiModel
-import com.grupo14.gym_androidapp.api.models.SmallUserApiModel
+import com.grupo14.gym_androidapp.api.models.Difficulty
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -24,6 +25,13 @@ class SearchViewModel(
 ) : ViewModel() {
     var uiState by mutableStateOf(SearchUIState())
         private set
+
+    var filterSearch by mutableStateOf("")
+    var filterUsername by mutableStateOf("")
+    var filterCategory by mutableStateOf<Category?>(null)
+    var filterDifficulty by mutableStateOf<Difficulty?>(null)
+    var filterRating by mutableStateOf(0)
+    var filterOrderBy by mutableStateOf("")
 
     private var currentCategoriesJob: Job? = null
 
@@ -59,5 +67,22 @@ class SearchViewModel(
                 onFailure("pero la PUCHA, qué _MIERDA_ le paso al server??") // TODO: cambiar
             }
         }
+    }
+
+    fun fuckingGo(onNavigate: (route: String) -> Unit) {
+        filterSearch = SanitizeAndShit(filterSearch)
+        filterUsername = SanitizeAndShit(filterUsername)
+
+        var route = "search/results?"
+
+        if (!filterSearch.isNullOrBlank()) route += "search=${filterSearch}&"
+        if (!filterUsername.isNullOrBlank()) route += "username=${filterUsername}&"
+        if (filterCategory != null) route += "categoryId=${filterCategory?.id ?: -1}&"
+        if (filterDifficulty != null) route += "difficulty=${filterDifficulty?.apiEnumString ?: ""}&"
+        if (filterRating != null && filterRating > 0) route += "score=${filterRating}&"
+        if (!filterOrderBy.isNullOrBlank()) route += "orderBy=${filterOrderBy}&"
+
+        route = route.trimEnd('&', '?')
+        onNavigate(route)
     }
 }
