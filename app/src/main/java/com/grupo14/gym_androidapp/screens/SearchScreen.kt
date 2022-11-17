@@ -57,7 +57,7 @@ fun SearchScreen(
     var filterUsername by remember { mutableStateOf("") }
     var filterCategory by remember { mutableStateOf<Category?>(null) }
     var filterDifficulty by remember { mutableStateOf<String?>(null) }
-    var filterRating by remember { mutableStateOf(0f) }
+    var filterRating by remember { mutableStateOf(0) }
     var filterOrderBy by remember { mutableStateOf("") }
 
     if (!viewModel.uiState.startedLoadingCategories) {
@@ -182,6 +182,7 @@ fun SearchScreen(
                             ) { string ->
                                 filterCategory =
                                     viewModel.uiState.categories.find { it.name == string }
+                                println("CATEGORY IS $string $filterCategory")
                             }
                         }
                     }
@@ -227,10 +228,10 @@ fun SearchScreen(
                 )
 
                 RatingBar(
-                    value = filterRating,
+                    value = filterRating.toFloat(),
                     config = RatingBarConfig().style(RatingBarStyle.HighLighted),
-                    onValueChange = { filterRating = it },
-                    onRatingChanged = { filterRating = it }
+                    onValueChange = { filterRating = it.toInt() },
+                    onRatingChanged = { filterRating = it.toInt() }
                 )
 
                 Button(
@@ -240,6 +241,7 @@ fun SearchScreen(
 
                         var route = "search/results?"
 
+                        println("search=$filterSearch username=$filterUsername cat=$filterCategory dif=$filterDifficulty rating=$filterRating ordby=$filterOrderBy")
                         if (filterSearch.isNotBlank()) route += "search=${filterSearch}&"
                         if (filterUsername.isNotBlank()) route += "userId=${filterUsername.length}&"
                         if (filterCategory != null) route += "categoryId=${filterCategory?.id ?: -1}&"
@@ -247,6 +249,7 @@ fun SearchScreen(
                         if (filterRating > 0) route += "score=${filterRating}&"
                         if (filterOrderBy.isNotBlank()) route += "orderBy=${filterOrderBy}&"
 
+                        println("NAVIGATING TO $route")
                         route = route.trimEnd('&', '?')
                         onNavigate(route)
                     },

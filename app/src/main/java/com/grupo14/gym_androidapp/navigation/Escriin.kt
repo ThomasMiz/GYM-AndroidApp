@@ -29,7 +29,8 @@ data class Escriin(
     }
 
     companion object {
-        var sessionViewModel: SessionViewModel? = null
+        private var sessionViewModel: SessionViewModel? = null
+        private var searchViewModel: SearchViewModel? = null
 
         val LoginEscriin = Escriin(
             titleResId = R.string.login,
@@ -98,7 +99,10 @@ data class Escriin(
             showBackButton = false,
             route = "search"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(SearchViewModel(gymRepository)) }
+            if (searchViewModel == null)
+                searchViewModel = SearchViewModel(gymRepository)
+
+            val viewModel by remember { mutableStateOf(searchViewModel!!) }
             SearchScreen(
                 onNavigate = onNavigate,
                 viewModel = viewModel

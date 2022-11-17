@@ -39,8 +39,6 @@ fun MyDropDownMenu(
 
     val icon = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
 
-    val focusManager = LocalFocusManager.current
-
     Column(
         Modifier
             .padding(horizontal = 10.dp, vertical = 10.dp),
@@ -51,7 +49,6 @@ fun MyDropDownMenu(
             value = selectedText,
             onValueChange = {
                 selectedText = it
-                onSelect(selectedText)
             },
             modifier = modifier
                 .onGloballyPositioned { coordinates ->
@@ -78,6 +75,7 @@ fun MyDropDownMenu(
                 DropdownMenuItem(onClick = {
                     selectedText = label
                     expanded = false
+                    onSelect(selectedText)
                 }) {
                     Text(text = label)
                 }
