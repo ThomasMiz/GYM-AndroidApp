@@ -1,6 +1,5 @@
 package com.grupo14.gym_androidapp
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
