@@ -9,30 +9,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 
+
 @Composable
 fun <T> AdaptibleList(
     items: List<T>,
+    maxItemWidth: Int = 500,
+    itemPaddingDp: Int = 10,
     content: @Composable (item: T) -> Unit
 ) {
-    val maxItemWidth = 500
-
     val currentConfig = LocalConfiguration.current
     val columnCount = (currentConfig.screenWidthDp + maxItemWidth - 1) / maxItemWidth
     val maxRowCount = (items.size + columnCount - 1) / columnCount
 
-    val paddingDp = 10
-    val itemWidth = (currentConfig.screenWidthDp - columnCount * paddingDp) / columnCount
+    val itemWidth = (currentConfig.screenWidthDp - columnCount * itemPaddingDp) / columnCount
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(paddingDp.dp),
+        verticalArrangement = Arrangement.spacedBy(itemPaddingDp.dp),
         // contentPadding = PaddingValues(top = 0.dp),
         state = rememberLazyListState()
     ) {
         items(maxRowCount) { rowIndex ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(paddingDp.dp),
+                horizontalArrangement = Arrangement.spacedBy(itemPaddingDp.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val startIndex = rowIndex * columnCount
