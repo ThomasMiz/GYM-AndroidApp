@@ -98,9 +98,17 @@ data class Escriin(
         }
 
         val SearchResultsEscriin = Escriin(
-            titleResId = R.string.search,
-            showBackButton = false,
-            route = "search/results?search={search},userId={userId},categoryId={categoryId},difficulty={difficulty},score={score},orderBy={orderBy},direction={direction}"
+            titleResId = R.string.search, // TODO: Change to "Search Results"
+            route = "search/results?search={search}&userId={userId}&categoryId={categoryId}&difficulty={difficulty}&score={score}&orderBy={orderBy}&direction={direction}",
+            routeArgs = listOf(
+                navArgument("search") { defaultValue = null; nullable = true; type = NavType.StringType },
+                navArgument("userId") { defaultValue = -1; type = NavType.IntType },
+                navArgument("categoryId") { defaultValue = -1; type = NavType.IntType },
+                navArgument("difficulty") { defaultValue = null; nullable = true; type = NavType.StringType },
+                navArgument("score") { defaultValue = -1; type = NavType.IntType },
+                navArgument("orderBy") { defaultValue = null; nullable = true; type = NavType.StringType },
+                navArgument("direction") { defaultValue = null; nullable = true; type = NavType.StringType }
+            )
         ) { gymRepository, onNavigate, navBackStackEntry ->
             val search = navBackStackEntry.arguments?.getString("search")
             val userId = navBackStackEntry.arguments?.getInt("userId")
@@ -111,8 +119,8 @@ data class Escriin(
             val direction = navBackStackEntry.arguments?.getString("direction")
             println("Searching with search=$search uid=$userId cat=$categoryId dif=$difficulty scor=$score ord=$orderBy dir=$direction")
 
-            val viewModel by remember { mutableStateOf(SearchViewModel(gymRepository)) }
-            SearchScreen(
+            val viewModel by remember { mutableStateOf(SearchResultsViewModel(gymRepository)) }
+            SearchResultsScreen(
                 onNavigate = onNavigate,
                 viewModel = viewModel
             )

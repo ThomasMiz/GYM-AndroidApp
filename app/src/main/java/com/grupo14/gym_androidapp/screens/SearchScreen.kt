@@ -10,7 +10,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -31,7 +31,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarConfig
 import com.gowtham.ratingbar.RatingBarStyle
@@ -43,7 +44,7 @@ import com.grupo14.gym_androidapp.api.models.Difficulty
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
 import com.grupo14.gym_androidapp.ui.theme.DifficultyRed
 import com.grupo14.gym_androidapp.ui.theme.StarYellow
-import com.grupo14.gym_androidapp.viewmodels.*
+import com.grupo14.gym_androidapp.viewmodels.SearchViewModel
 
 @Composable
 fun SearchScreen(
@@ -61,7 +62,8 @@ fun SearchScreen(
 
     if (!viewModel.uiState.startedLoadingCategories) {
         viewModel.fetchCategories() { // TODO: Traducir
-            Toast.makeText(context, "No se pudieron cargar las categorias", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "No se pudieron cargar las categorias", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -236,16 +238,17 @@ fun SearchScreen(
                         filterSearch = SanitizeAndShit(filterSearch)
                         filterUsername = SanitizeAndShit(filterUsername)
 
-                        /*viewModel.searchRoutines(
-                            searchByName = searchRoutine,
-                            searchByCreator = searchCreator,
-                            orderBySelected = "",
-                            filterByCategory = filterCategory,
-                            filterByClassification = filterDifficulty,
-                            filterByDifficulty = rating.toString(),
-                        ) { errorMessage ->
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                        }*/
+                        var route = "search/results?"
+
+                        if (filterSearch.isNotBlank()) route += "search=${filterSearch}&"
+                        if (filterUsername.isNotBlank()) route += "userId=${filterUsername.length}&"
+                        if (filterCategory != null) route += "categoryId=${filterCategory?.id ?: -1}&"
+                        if (filterDifficulty != null) route += "difficulty=${filterDifficulty}&"
+                        if (filterRating > 0) route += "score=${filterRating}&"
+                        if (filterOrderBy.isNotBlank()) route += "orderBy=${filterOrderBy}&"
+
+                        route = route.trimEnd('&', '?')
+                        onNavigate(route)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
