@@ -93,7 +93,8 @@ fun LoginScreenLoaded(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
 
-        OutlinedTextField(value = viewModel.passwordVal,
+        OutlinedTextField(
+            value = viewModel.passwordVal,
             onValueChange = { if (!loading) viewModel.passwordVal = it },
             trailingIcon = {
                 IconButton(onClick = {
@@ -140,7 +141,10 @@ fun LoginScreenLoaded(
                             context, pleaseInsertPassword, Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        viewModel.loginUser(viewModel.usernameVal, viewModel.passwordVal) { errorMessage ->
+                        viewModel.loginUser(
+                            viewModel.usernameVal,
+                            viewModel.passwordVal
+                        ) { errorMessage ->
                             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     }

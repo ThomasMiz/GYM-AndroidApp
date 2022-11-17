@@ -34,11 +34,19 @@ fun VerifyUserScreen(
         VerifyUserScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.userVerified) {
         viewModel.readyToLogin()
-        Toast.makeText(context, stringResource(id = R.string.userVerifiedSuccessfully), Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.userVerifiedSuccessfully),
+            Toast.LENGTH_SHORT
+        ).show()
         onNavigate("login")
     } else if (viewModel.sessionUiState.codeSent) {
         viewModel.readyToVerify()
-        Toast.makeText(context, stringResource(id = R.string.verifyCodeResentSuccessfully), Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            stringResource(id = R.string.verifyCodeResentSuccessfully),
+            Toast.LENGTH_SHORT
+        ).show()
         onNavigate("verify")
     } else {
         VerifyUserScreenLoaded(onNavigate, viewModel, false)
@@ -65,9 +73,14 @@ fun VerifyUserScreenLoaded(
         if (!resend.value) KeyboardActions(onDone = null) else KeyboardActions(onDone = { focusManager.clearFocus() })
     val boxText =
         if (!resend.value) stringResource(id = R.string.insertCodeToVerify) else stringResource(id = R.string.insertEmailToContinue)
-    val buttonText = if (!resend.value) stringResource(id = R.string.verify) else stringResource(id = R.string.resend)
-    val footerText = if (!resend.value) stringResource(id = R.string.didntReceiveEmailCode) else stringResource(id = R.string.hasReceivedCode)
-    val footerLink = if (!resend.value) stringResource(id = R.string.resend) else stringResource(id = R.string.verifyHere)
+    val buttonText =
+        if (!resend.value) stringResource(id = R.string.verify) else stringResource(id = R.string.resend)
+    val footerText =
+        if (!resend.value) stringResource(id = R.string.didntReceiveEmailCode) else stringResource(
+            id = R.string.hasReceivedCode
+        )
+    val footerLink =
+        if (!resend.value) stringResource(id = R.string.resend) else stringResource(id = R.string.verifyHere)
 
 
     Column(
