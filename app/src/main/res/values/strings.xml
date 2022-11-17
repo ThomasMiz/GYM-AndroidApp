@@ -15,6 +15,7 @@
     <string name="profile">Profile</string>
     <string name="search">Search</string>
     <string name="routine">Routine</string>
+    <string name="execute">Execute</string>
 
     <string name="pedro">Peter</string>
     <string name="signOut">Sign out</string>
@@ -106,4 +107,9 @@
     <string name="verifyHere">verify here.</string>
     <string name="code">Code</string>
     <string name="pleaseInsertVerificationCode">Please insert a verification code</string>
+
+    <string name="loadingRutine">Loading…</string>
+    <string name="executionFinished">Routine completed!</string>
+    <string name="timeTaken">Total time</string>
+    <string name="finish">Finish</string>
 </resources>

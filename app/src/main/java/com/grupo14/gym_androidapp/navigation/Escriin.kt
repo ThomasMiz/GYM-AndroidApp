@@ -11,10 +11,7 @@ import androidx.navigation.navArgument
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
-import com.grupo14.gym_androidapp.viewmodels.HomeViewModel
-import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
-import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
-import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
+import com.grupo14.gym_androidapp.viewmodels.*
 
 data class Escriin(
     val titleResId: Int,
@@ -32,8 +29,6 @@ data class Escriin(
     }
 
     companion object {
-        var sessionViewModel: SessionViewModel? = null
-
         val LoginEscriin = Escriin(
             titleResId = R.string.login,
             showBackButton = false,
@@ -42,9 +37,7 @@ data class Escriin(
             showBottomAppBar = false,
             onNavigatedNewStart = "login"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            if (sessionViewModel == null)
-                sessionViewModel = SessionViewModel(gymRepository)
-            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
+            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
             LoginScreen(onNavigate = onNavigate, viewModel)
         }
 
@@ -57,9 +50,7 @@ data class Escriin(
             onNavigatedNewStart = "login",
             onNavigatedPopBackInclusive = false
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            if (sessionViewModel == null)
-                sessionViewModel = SessionViewModel(gymRepository)
-            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
+            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
             RegisterScreen(
                 onNavigate = onNavigate,
                 viewModel
@@ -73,9 +64,7 @@ data class Escriin(
             showBottomAppBar = false,
             onNavigatedPopBackInclusive = false
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            if (sessionViewModel == null)
-                sessionViewModel = SessionViewModel(gymRepository)
-            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
+            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
             VerifyUserScreen(
                 onNavigate = onNavigate,
                 viewModel
@@ -123,7 +112,24 @@ data class Escriin(
             routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
         ) { gymRepository, onNavigate, navBackStackEntry ->
             val viewModel by remember { mutableStateOf(RoutineViewModel(gymRepository)) }
-            RoutineScreen(viewModel, navBackStackEntry.arguments?.getInt("routineId") ?: -1)
+            RoutineScreen(
+                viewModel = viewModel,
+                routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
+                onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id/execute") }
+            )
+        }
+
+        val ExecuteRoutine = Escriin(
+            titleResId = R.string.execute,
+            route = "routine/{routineId}/execute",
+            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
+        ) { gymRepository, onNavigate, navBackStackEntry ->
+            val viewModel by remember { mutableStateOf(ExecuteRoutineViewModel(gymRepository)) }
+            ExecuteRoutineScreen(
+                viewModel = viewModel,
+                routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
+                onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id") }
+            )
         }
     }
 }

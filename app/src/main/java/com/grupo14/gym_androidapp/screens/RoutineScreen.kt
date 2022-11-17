@@ -52,7 +52,8 @@ import com.vanpra.composematerialdialogs.title
 @Composable
 fun RoutineScreen(
     viewModel: RoutineViewModel,
-    routineId: Int
+    routineId: Int,
+    onNavigateToRoutineExecutionRequested: (id: Int) -> Unit
 ) {
     if (viewModel.uiState.fetchingRoutineId != routineId) {
         // This should only run once, on the first compose of this screen
@@ -61,9 +62,9 @@ fun RoutineScreen(
         FullLoadingScreen()
     } else if (viewModel.uiState.routine != null) {
         if (viewModel.uiState.isViewingDetails)
-            RoutineDetailScreen(viewModel, routineId)
+            RoutineDetailScreen(viewModel, routineId, onNavigateToRoutineExecutionRequested)
         else
-            RoutineScreenLoaded(viewModel, routineId)
+            RoutineScreenLoaded(viewModel, routineId, onNavigateToRoutineExecutionRequested)
     } else if (viewModel.uiState.fetchRoutineErrorStringId != null) {
         RoutineScreenError(viewModel, routineId)
     } else {
@@ -113,7 +114,8 @@ private fun RoutineScreenError(
 @Composable
 private fun RoutineScreenLoaded(
     viewModel: RoutineViewModel,
-    routineId: Int
+    routineId: Int,
+    onNavigateToRoutineExecutionRequested: (id: Int) -> Unit
 ) {
     val context = LocalContext.current
     val currentConfig = LocalConfiguration.current
@@ -390,7 +392,7 @@ private fun RoutineScreenLoaded(
                 }
 
                 // Button for start
-                StartRoutineButton(viewModel, routineId)
+                StartRoutineButton(viewModel, routineId, onNavigateToRoutineExecutionRequested)
             }
         }
     }
@@ -399,7 +401,8 @@ private fun RoutineScreenLoaded(
 @Composable
 private fun RoutineDetailScreen(
     viewModel: RoutineViewModel,
-    routineId: Int
+    routineId: Int,
+    onNavigateToRoutineExecutionRequested: (id: Int) -> Unit
 ) {
     BackHandler() {
         viewModel.switchToNormalView()
@@ -456,7 +459,7 @@ private fun RoutineDetailScreen(
             Column(
                 modifier = Modifier.padding(horizontal = 60.dp, vertical = 15.dp)
             ) {
-                StartRoutineButton(viewModel, routineId)
+                StartRoutineButton(viewModel, routineId, onNavigateToRoutineExecutionRequested)
             }
         }
     }
@@ -604,7 +607,8 @@ private fun ExerciseView(exercise: CycleExerciseApiModel) {
 @Composable
 fun StartRoutineButton(
     viewModel: RoutineViewModel,
-    routineId: Int
+    routineId: Int,
+    onNavigateToRoutineExecutionRequested: (id: Int) -> Unit
 ) {
     Button(
         colors = ButtonDefaults.buttonColors(
@@ -612,7 +616,7 @@ fun StartRoutineButton(
             contentColor = Color.Black
         ),
         modifier = Modifier.fillMaxWidth(),
-        onClick = { viewModel.switchToStartRoutine(routineId) }
+        onClick = { onNavigateToRoutineExecutionRequested(routineId) }
     ) {
         Text(
             text = stringResource(id = R.string.startRoutine),

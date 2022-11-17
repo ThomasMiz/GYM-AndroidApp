@@ -31,7 +31,8 @@ private val ActiveScreens = listOf(
     Escriin.HomeEscriin,
     Escriin.ProfileEscriin,
     Escriin.SearchEscriin,
-    Escriin.RoutineEscriin
+    Escriin.RoutineEscriin,
+    Escriin.ExecuteRoutine,
 )
 
 fun handleOnNavigate(navController: NavController, route: String) {
@@ -104,7 +105,7 @@ fun Activities(
                     arguments = screen.routeArgs ?: emptyList(),
                     deepLinks = listOf(
                         //navDeepLink { uriPattern = AppConfig.BASE_URL + screen.route }
-                    NavDeepLink(uri = AppConfig.BASE_URL + screen.route)
+                        NavDeepLink(uri = AppConfig.BASE_URL + screen.route)
                     )
                 ) { navBackStackEntry ->
                     screen.content(
