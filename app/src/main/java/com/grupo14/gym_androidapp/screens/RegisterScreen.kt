@@ -36,7 +36,6 @@ fun RegisterScreen(
     } else if (viewModel.sessionUiState.isRegistered) {
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
-        viewModel.passwordVal = ""
         onNavigate("verify")
     } else {
         RegisterScreenLoaded(onNavigate, viewModel, false)
