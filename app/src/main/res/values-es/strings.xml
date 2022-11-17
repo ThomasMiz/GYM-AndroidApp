@@ -75,4 +75,14 @@
 
     <string name="confirmUnfavoriteDialogTitle">Sacar de favoritas</string>
     <string name="confirmUnfavoriteDialogMessage">Estas seguro que queres sacar esta rutina de tus favoritas?</string>
+
+    <string name="username">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="pleaseInsertEmail">Por favor, ingrese un correo electrónico válido</string>
+    <string name="pleaseInsertPassword">Por favor, ingrese una contraseña</string>
+    <string name="loginButton">Ingresar</string>
+    <string name="stillNoAccount">¿No tienes una cuenta aún?</string>
+    <string name="stillNoAccountRegister">¡Registrate!</string>
+    <string name="stillNotVerified">¿Te falta verificar tu usuario?</string>
+    <string name="stillNotVerifiedVerify">Hazlo aquí.</string>
 </resources>

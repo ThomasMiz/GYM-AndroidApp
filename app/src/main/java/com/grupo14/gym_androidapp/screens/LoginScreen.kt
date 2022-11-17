@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -77,8 +78,8 @@ fun LoginScreenLoaded(
         OutlinedTextField(
             value = viewModel.usernameVal,
             onValueChange = { if (!loading) viewModel.usernameVal = it.trim() },
-            label = { Text(text = "Usuario", color = Color.Gray) },
-            placeholder = { Text(text = "Usuario") },
+            label = { Text(text = stringResource(id = R.string.username), color = Color.Gray) },
+            placeholder = { Text(text = stringResource(id = R.string.username)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Person, null) },
@@ -105,8 +106,8 @@ fun LoginScreenLoaded(
                     )
                 }
             },
-            label = { Text(text = "Contraseña", color = Color.Gray) },
-            placeholder = { Text(text = "Contraseña") },
+            label = { Text(text = stringResource(id = R.string.password), color = Color.Gray) },
+            placeholder = { Text(text = stringResource(id = R.string.password)) },
             singleLine = true,
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(0.8f),
@@ -124,17 +125,19 @@ fun LoginScreenLoaded(
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
 
+        val pleaseInsertEmail = stringResource(id = R.string.pleaseInsertEmail)
+        val pleaseInsertPassword = stringResource(id = R.string.pleaseInsertPassword)
         Button(
             onClick = {
                 if (!loading) {
                     viewModel.usernameVal = viewModel.usernameVal.trim()
                     if (viewModel.usernameVal.isEmpty()) {
                         Toast.makeText(
-                            context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT
+                            context, pleaseInsertEmail, Toast.LENGTH_SHORT
                         ).show()
                     } else if (viewModel.passwordVal.isEmpty()) {
                         Toast.makeText(
-                            context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT
+                            context, pleaseInsertPassword, Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         viewModel.loginUser(viewModel.usernameVal, viewModel.passwordVal) { errorMessage ->
@@ -149,7 +152,7 @@ fun LoginScreenLoaded(
         ) {
             if (!loading) {
                 Text(
-                    "Ingresar",
+                    stringResource(id = R.string.loginButton),
                     Modifier.padding(vertical = 8.dp),
                     color = MaterialTheme.colors.secondary,
                     fontSize = 25.sp
@@ -169,12 +172,12 @@ fun LoginScreenLoaded(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "¿No tienes una cuenta aún?",
+                stringResource(id = R.string.stillNoAccount),
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(onClick = { if (!loading) onNavigate("register") }) {
                 Text(
-                    "¡Registrate!",
+                    stringResource(id = R.string.stillNoAccountRegister),
                     color = Color.Blue,
                 )
             }
@@ -184,12 +187,12 @@ fun LoginScreenLoaded(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "¿Te falta verificar tu usuario?",
+                stringResource(id = R.string.stillNotVerified),
                 color = MaterialTheme.colors.secondary,
             )
             TextButton(onClick = { if (!loading) onNavigate("verify") }) {
                 Text(
-                    "Hazlo aquí.",
+                    stringResource(id = R.string.stillNotVerifiedVerify),
                     color = Color.Blue,
                 )
             }
