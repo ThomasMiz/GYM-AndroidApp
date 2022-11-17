@@ -10,9 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +36,7 @@ fun RegisterScreen(
     } else if (viewModel.sessionUiState.isRegistered) {
         viewModel.readyToVerify()
         Toast.makeText(context, "¡Usuario registrado con éxito!", Toast.LENGTH_SHORT).show()
+        viewModel.passwordVal = ""
         onNavigate("verify")
     } else {
         RegisterScreenLoaded(onNavigate, viewModel, false)
@@ -51,10 +50,7 @@ private fun RegisterScreenLoaded(
 ) {
     val context = LocalContext.current
 
-    val emailVal = remember { mutableStateOf("") }
-    val userVal = remember { mutableStateOf("") }
-    val passwordVal = remember { mutableStateOf("") }
-    val repPasswordVal = remember { mutableStateOf("") }
+    var repPasswordVal by remember { mutableStateOf("") }
 
     val passwordVisibility = remember { mutableStateOf(false) }
     val repPasswordVisibility = remember { mutableStateOf(false) }
@@ -84,8 +80,8 @@ private fun RegisterScreenLoaded(
     ) {
 
         OutlinedTextField(
-            value = emailVal.value,
-            onValueChange = { if (!loading) emailVal.value = it },
+            value = viewModel.emailVal,
+            onValueChange = { if (!loading) viewModel.emailVal = it },
             label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
@@ -102,8 +98,8 @@ private fun RegisterScreenLoaded(
         )
 
         OutlinedTextField(
-            value = userVal.value,
-            onValueChange = { if (!loading) userVal.value = it },
+            value = viewModel.usernameVal,
+            onValueChange = { if (!loading) viewModel.usernameVal = it },
             label = { Text(text = "Nombre de usuario", color = Color.Gray) },
             placeholder = { Text(text = "Nombre de usuario") },
             singleLine = true,
@@ -120,8 +116,8 @@ private fun RegisterScreenLoaded(
         )
 
         OutlinedTextField(
-            value = passwordVal.value,
-            onValueChange = { if (!loading) passwordVal.value = it },
+            value = viewModel.passwordVal,
+            onValueChange = { if (!loading) viewModel.passwordVal = it },
             trailingIcon = {
                 IconButton(onClick = {
                     passwordVisibility.value = !passwordVisibility.value
@@ -152,8 +148,8 @@ private fun RegisterScreenLoaded(
         )
 
         OutlinedTextField(
-            value = repPasswordVal.value,
-            onValueChange = { if (!loading) repPasswordVal.value = it },
+            value = repPasswordVal,
+            onValueChange = { if (!loading) repPasswordVal = it },
             trailingIcon = {
                 IconButton(onClick = {
                     repPasswordVisibility.value = !repPasswordVisibility.value
@@ -188,24 +184,27 @@ private fun RegisterScreenLoaded(
             // Basic checks, improve them.
             onClick = {
                 if (!loading) {
-                    if (emailVal.value.isEmpty()) {
+                    viewModel.usernameVal = viewModel.usernameVal.trim()
+                    viewModel.emailVal = viewModel.emailVal.trim()
+
+                    if (viewModel.emailVal.isEmpty()) {
                         Toast.makeText(
                             context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT
                         ).show()
-                    } else if (userVal.value.isEmpty()) {
+                    } else if (viewModel.usernameVal.isEmpty()) {
                         Toast.makeText(
                             context, "Por favor, ingrese un nombre de usuario", Toast.LENGTH_SHORT
                         ).show()
-                    } else if (passwordVal.value.isEmpty()) {
+                    } else if (viewModel.passwordVal.isEmpty()) {
                         Toast.makeText(
                             context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT
                         ).show()
-                    } else if (!passwordVal.value.equals(repPasswordVal.value)) {
+                    } else if (!viewModel.passwordVal.equals(repPasswordVal)) {
                         Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT)
                             .show()
                     } else {
                         viewModel.registerNewUser(
-                            emailVal.value, userVal.value, passwordVal.value
+                            viewModel.emailVal, viewModel.usernameVal, viewModel.passwordVal
                         ) { errorMessage ->
                             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                         }

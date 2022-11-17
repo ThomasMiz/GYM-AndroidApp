@@ -10,9 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,8 +50,7 @@ fun VerifyUserScreenLoaded(
 ) {
     val context = LocalContext.current
 
-    val emailVal = remember { mutableStateOf("") }
-    val codeVal = remember { mutableStateOf("") }
+    var codeVal by remember { mutableStateOf("") }
 
     val focusManager = LocalFocusManager.current
 
@@ -99,8 +96,8 @@ fun VerifyUserScreenLoaded(
         }
 
         OutlinedTextField(
-            value = emailVal.value,
-            onValueChange = { if (!loading) emailVal.value = it },
+            value = viewModel.emailVal,
+            onValueChange = { if (!loading) viewModel.emailVal = it },
             label = { Text(text = "Correo electrónico", color = Color.Gray) },
             placeholder = { Text(text = "Correo electrónico") },
             singleLine = true,
@@ -118,8 +115,8 @@ fun VerifyUserScreenLoaded(
         )
         if (!resend.value) {
             OutlinedTextField(
-                value = codeVal.value,
-                onValueChange = { if (!loading) codeVal.value = it },
+                value = codeVal,
+                onValueChange = { if (!loading) codeVal = it },
                 label = { Text(text = "Código", color = Color.Gray) },
                 placeholder = { Text(text = "Código") },
                 singleLine = true,
@@ -141,27 +138,30 @@ fun VerifyUserScreenLoaded(
             // Basic checks, improve them.
             onClick = {
                 if (!loading) {
+                    viewModel.emailVal = viewModel.emailVal.trim()
+                    codeVal = codeVal.trim()
+
                     if (!resend.value) {
-                        if (emailVal.value.isEmpty()) {
+                        if (viewModel.emailVal.isEmpty()) {
                             Toast.makeText(
                                 context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT
                             ).show()
-                        } else if (codeVal.value.isEmpty()) {
+                        } else if (codeVal.isEmpty()) {
                             Toast.makeText(
                                 context, "Ingrese un código de verificación", Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            viewModel.verifyUser(emailVal.value, codeVal.value) { errorMessage ->
+                            viewModel.verifyUser(viewModel.emailVal, codeVal) { errorMessage ->
                                 Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                             }
                         }
                     } else {
-                        if (emailVal.value.isEmpty()) {
+                        if (viewModel.emailVal.isEmpty()) {
                             Toast.makeText(
                                 context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            viewModel.resendVerification(emailVal.value) { errorMessage ->
+                            viewModel.resendVerification(viewModel.emailVal) { errorMessage ->
                                 Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                             }
                         }

@@ -32,6 +32,8 @@ data class Escriin(
     }
 
     companion object {
+        var sessionViewModel: SessionViewModel? = null
+
         val LoginEscriin = Escriin(
             titleResId = R.string.login,
             showBackButton = false,
@@ -40,7 +42,9 @@ data class Escriin(
             showBottomAppBar = false,
             onNavigatedNewStart = "login"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            if (sessionViewModel == null)
+                sessionViewModel = SessionViewModel(gymRepository)
+            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
             LoginScreen(onNavigate = onNavigate, viewModel)
         }
 
@@ -53,7 +57,9 @@ data class Escriin(
             onNavigatedNewStart = "login",
             onNavigatedPopBackInclusive = false
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            if (sessionViewModel == null)
+                sessionViewModel = SessionViewModel(gymRepository)
+            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
             RegisterScreen(
                 onNavigate = onNavigate,
                 viewModel
@@ -67,7 +73,9 @@ data class Escriin(
             showBottomAppBar = false,
             onNavigatedPopBackInclusive = false
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            if (sessionViewModel == null)
+                sessionViewModel = SessionViewModel(gymRepository)
+            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
             VerifyUserScreen(
                 onNavigate = onNavigate,
                 viewModel

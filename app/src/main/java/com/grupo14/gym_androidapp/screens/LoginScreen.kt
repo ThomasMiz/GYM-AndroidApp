@@ -36,6 +36,7 @@ fun LoginScreen(
         LoginScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.isLoggedIn) {
         viewModel.userReadyToLogin()
+        viewModel.passwordVal = ""
         onNavigate("home")
     } else {
         LoginScreenLoaded(onNavigate, viewModel, false)
@@ -47,9 +48,6 @@ fun LoginScreenLoaded(
     onNavigate: (route: String) -> Unit, viewModel: SessionViewModel, loading: Boolean
 ) {
     val context = LocalContext.current
-
-    val userVal = remember { mutableStateOf("") }
-    val passwordVal = remember { mutableStateOf("") }
 
     val passwordVisibility = remember { mutableStateOf(false) }
 
@@ -77,8 +75,8 @@ fun LoginScreenLoaded(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
-            value = userVal.value,
-            onValueChange = { if (!loading) userVal.value = it else userVal.value = userVal.value },
+            value = viewModel.usernameVal,
+            onValueChange = { if (!loading) viewModel.usernameVal = it.trim() },
             label = { Text(text = "Usuario", color = Color.Gray) },
             placeholder = { Text(text = "Usuario") },
             singleLine = true,
@@ -94,10 +92,8 @@ fun LoginScreenLoaded(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
 
-        OutlinedTextField(value = passwordVal.value,
-            onValueChange = {
-                if (!loading) passwordVal.value = it else passwordVal.value = passwordVal.value
-            },
+        OutlinedTextField(value = viewModel.passwordVal,
+            onValueChange = { if (!loading) viewModel.passwordVal = it },
             trailingIcon = {
                 IconButton(onClick = {
                     passwordVisibility.value = !passwordVisibility.value
@@ -131,16 +127,17 @@ fun LoginScreenLoaded(
         Button(
             onClick = {
                 if (!loading) {
-                    if (userVal.value.isEmpty()) {
+                    viewModel.usernameVal = viewModel.usernameVal.trim()
+                    if (viewModel.usernameVal.isEmpty()) {
                         Toast.makeText(
                             context, "Por favor, ingrese un correo electrónico", Toast.LENGTH_SHORT
                         ).show()
-                    } else if (passwordVal.value.isEmpty()) {
+                    } else if (viewModel.passwordVal.isEmpty()) {
                         Toast.makeText(
                             context, "Por favor, ingrese una contraseña", Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        viewModel.loginUser(userVal.value, passwordVal.value) { errorMessage ->
+                        viewModel.loginUser(viewModel.usernameVal, viewModel.passwordVal) { errorMessage ->
                             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     }

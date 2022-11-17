@@ -35,6 +35,10 @@ class SessionViewModel(
     var sessionUiState by mutableStateOf(SessionUiState())
         private set
 
+    var usernameVal by mutableStateOf("")
+    var passwordVal by mutableStateOf("")
+    var emailVal by mutableStateOf("")
+
     private var currentUserJob: Job? = null
 
     fun loginUser(username: String, password: String, onFailure: (errorMessage: String) -> Unit) {
