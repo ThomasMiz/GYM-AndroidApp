@@ -11,10 +11,7 @@ import androidx.navigation.navArgument
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
-import com.grupo14.gym_androidapp.viewmodels.HomeViewModel
-import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
-import com.grupo14.gym_androidapp.viewmodels.RoutineViewModel
-import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
+import com.grupo14.gym_androidapp.viewmodels.*
 
 data class Escriin(
     val titleResId: Int,
@@ -93,7 +90,11 @@ data class Escriin(
             showBackButton = false,
             route = "search"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            SearchScreen()
+            val viewModel by remember { mutableStateOf(SearchViewModel(gymRepository)) }
+            SearchScreen(
+                onNavigate = onNavigate,
+                viewModel = viewModel
+            )
         }
 
         val ProfileEscriin = Escriin(

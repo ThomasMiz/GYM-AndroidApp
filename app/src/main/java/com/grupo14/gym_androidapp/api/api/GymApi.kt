@@ -56,7 +56,7 @@ interface GymApi {
 
     @GET("users/{userId}/routines")
     fun getUserRoutines(
-        @Path("userId") userId: Int,
+        @Query("userId") userId: Int?,
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("search") search: String?,

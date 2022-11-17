@@ -46,7 +46,7 @@ class GymRepository(
     ) = gymRemoteDataSource.fetchCurrentUserRoutines(page, size, search, difficulty, orderBy, direction)
 
     suspend fun fetchUserRoutines(
-        userId: Int, page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, difficulty: Difficulty? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
+        userId: Int? = null, page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, difficulty: Difficulty? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = gymRemoteDataSource.fetchUserRoutines(userId, page, size, search, difficulty, orderBy, direction)
 
     suspend fun fetchCurrentUserReviews(
