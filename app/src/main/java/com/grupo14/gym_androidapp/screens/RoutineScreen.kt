@@ -36,6 +36,7 @@ import androidx.core.content.ContextCompat
 import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarConfig
 import com.gowtham.ratingbar.RatingBarStyle
+import com.grupo14.gym_androidapp.AdaptibleSimpleList
 import com.grupo14.gym_androidapp.AppConfig
 import com.grupo14.gym_androidapp.FullLoadingScreen
 import com.grupo14.gym_androidapp.R
@@ -476,6 +477,7 @@ private fun CycleView(cycle: CycleUiState) {
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxHeight()
+                .widthIn(min = 140.dp)
                 .background(Color.DarkGray)
         ) {
             Text(
@@ -489,12 +491,19 @@ private fun CycleView(cycle: CycleUiState) {
         }
     }
 
-    cycle.exercises.forEachIndexed { index, exercise ->
+    AdaptibleSimpleList(
+        itemCount = cycle.exercises.size,
+        itemPaddingDp = 0
+    ) { index ->
+        ExerciseView(cycle.exercises[index])
+    }
+
+    /*cycle.exercises.forEachIndexed { index, exercise ->
         ExerciseView(exercise)
 
         if (index < cycle.exercises.size - 1)
             Divider(color = Color.DarkGray)
-    }
+    }*/
 
     if (cycle.fetchExercisesErrorStringId != null) {
         Text(
