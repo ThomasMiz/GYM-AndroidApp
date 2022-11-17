@@ -97,6 +97,27 @@ data class Escriin(
             )
         }
 
+        val SearchResultsEscriin = Escriin(
+            titleResId = R.string.search,
+            showBackButton = false,
+            route = "search/results?search={search},userId={userId},categoryId={categoryId},difficulty={difficulty},score={score},orderBy={orderBy},direction={direction}"
+        ) { gymRepository, onNavigate, navBackStackEntry ->
+            val search = navBackStackEntry.arguments?.getString("search")
+            val userId = navBackStackEntry.arguments?.getInt("userId")
+            val categoryId = navBackStackEntry.arguments?.getInt("categoryId")
+            val difficulty = navBackStackEntry.arguments?.getString("difficulty")
+            val score = navBackStackEntry.arguments?.getInt("score")
+            val orderBy = navBackStackEntry.arguments?.getString("orderBy")
+            val direction = navBackStackEntry.arguments?.getString("direction")
+            println("Searching with search=$search uid=$userId cat=$categoryId dif=$difficulty scor=$score ord=$orderBy dir=$direction")
+
+            val viewModel by remember { mutableStateOf(SearchViewModel(gymRepository)) }
+            SearchScreen(
+                onNavigate = onNavigate,
+                viewModel = viewModel
+            )
+        }
+
         val ProfileEscriin = Escriin(
             titleResId = R.string.profile,
             showBackButton = false,

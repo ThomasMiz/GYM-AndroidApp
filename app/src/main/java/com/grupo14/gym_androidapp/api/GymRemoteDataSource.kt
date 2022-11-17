@@ -109,7 +109,7 @@ class GymRemoteDataSource(
     // ↓ ROUTINES ↓
 
     suspend fun fetchRoutines(
-        page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, userId: Int? = null, categoryId: Int? = null, difficulty: String? = null, score: Int? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
+        page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, userId: Int? = null, categoryId: Int? = null, difficulty: Difficulty? = null, score: Int? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = handleApiRequest { it.getRoutines(page, size, search, userId, categoryId, difficulty, score, orderBy, direction) }
 
     suspend fun fetchRoutine(routineId: Int) = handleApiRequest { it.getRoutine(routineId) }

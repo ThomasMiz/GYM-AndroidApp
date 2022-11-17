@@ -1,6 +1,5 @@
 package com.grupo14.gym_androidapp.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -19,13 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,38 +35,35 @@ import androidx.compose.ui.unit.*
 import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarConfig
 import com.gowtham.ratingbar.RatingBarStyle
-import com.grupo14.gym_androidapp.AdaptibleList
+import com.grupo14.gym_androidapp.MyDropDownMenu
 import com.grupo14.gym_androidapp.R
+import com.grupo14.gym_androidapp.SanitizeAndShit
+import com.grupo14.gym_androidapp.api.models.Category
+import com.grupo14.gym_androidapp.api.models.Difficulty
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
 import com.grupo14.gym_androidapp.ui.theme.DifficultyRed
 import com.grupo14.gym_androidapp.ui.theme.StarYellow
 import com.grupo14.gym_androidapp.viewmodels.*
 
 @Composable
-fun SearchScreen(onNavigate: (route: String) -> Unit, viewModel: SearchViewModel){
+fun SearchScreen(
+    onNavigate: (route: String) -> Unit,
+    viewModel: SearchViewModel
+) {
     val context = LocalContext.current
 
-    if(viewModel.searchUIState.isSearching){
-        println("Ahora estoy cargando")
-        SearchScreenLoaded(viewModel = viewModel, loading = true)
-    } else if(viewModel.searchUIState.searchFinished){
-        println("Juju tengo resultados")
-        viewModel.readyToDisplayResults()
-        SearchScreenLoaded(viewModel = viewModel, loading = false)
-        AdaptibleList(items = viewModel.routineUIState.routineList) { routine ->
-            RoutineCardEntry(routine = routine)
+    var filterSearch by remember { mutableStateOf("") }
+    var filterUsername by remember { mutableStateOf("") }
+    var filterCategory by remember { mutableStateOf<Category?>(null) }
+    var filterDifficulty by remember { mutableStateOf<String?>(null) }
+    var filterRating by remember { mutableStateOf(0f) }
+    var filterOrderBy by remember { mutableStateOf("") }
+
+    if (!viewModel.uiState.startedLoadingCategories) {
+        viewModel.fetchCategories() { // TODO: Traducir
+            Toast.makeText(context, "No se pudieron cargar las categorias", Toast.LENGTH_SHORT).show()
         }
-    } else {
-        println("Nada pibe")
-        viewModel.fetchCategories() {errorMessage ->  Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()}
-        SearchScreenLoaded(viewModel = viewModel, loading = false)
     }
-}
-
-
-@Composable
-fun SearchScreenLoaded(viewModel : SearchViewModel, loading : Boolean) {
-    val context = LocalContext.current
 
     Column(
         Modifier
@@ -88,10 +81,9 @@ fun SearchScreenLoaded(viewModel : SearchViewModel, loading : Boolean) {
         ) {
             Column(
                 horizontalAlignment = CenterHorizontally
-            ){
-
+            ) {
                 Text(
-                    "Búsqueda",
+                    text = "Búsqueda", // TODO: Traducir
                     fontFamily = FontFamily.SansSerif,
                     fontSize = 25.sp,
                     modifier = Modifier
@@ -107,79 +99,45 @@ fun SearchScreenLoaded(viewModel : SearchViewModel, loading : Boolean) {
                         .padding(bottom = 10.dp)
                         .fillMaxWidth(0.8f)
                 )
-                var searchRoutine by remember { mutableStateOf("")}
-                var searchCreator by remember { mutableStateOf("")}
 
-                Row(){
 
+                Row() {
                     SearchBar(
-                        hint = "Buscar rutina...",
+                        hint = "Buscar rutina...", // TODO: Traducir
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .padding(horizontal = 10.dp, vertical = 5.dp)
-                    ) { search -> searchRoutine = search }
+                    ) { search -> filterSearch = search }
 
                     SearchBar(
-                        hint = "Buscar creador...",
+                        hint = "Buscar creador...", // TODO: Traducir
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp, vertical = 5.dp),
-                    ) { search -> searchCreator = search }
+                    ) { search -> filterUsername = search }
                 }
-                DropDownMenu(
-                    listOf("Fecha de creación", "Puntuación", "Dificultad", "Categoría"),
-                    Modifier
+
+                val orderByStrings = listOf( // TODO: Traducir
+                    "Fecha de creación",
+                    "Puntuación",
+                    "Dificultad",
+                    "Categoría"
+                )
+                val orderByValues = listOf("date", "score", "difficulty", "category")
+
+                MyDropDownMenu(
+                    label = "Ordenar por", // TODO: Traducir
+                    elements = orderByStrings,
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White, CircleShape),
-                    label = "Ordenar por"
-                )
-
-                Text(
-                    "Filtros",
-                    fontFamily = FontFamily.SansSerif,
-                    fontSize = 25.sp,
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .padding(top = 20.dp)
-                        .padding(bottom = 10.dp),
-                )
-
-                Divider(
-                    color = MaterialTheme.colors.primary,
-                    thickness = 1.dp,
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .fillMaxWidth(0.8f)
-                )
-
-                var filterCategory by remember { mutableStateOf("")}
-
-                val categoryList = mutableListOf<String>()
-                viewModel.routineUIState.categoryList.forEach{category -> if(category.name != null) categoryList.add(category.name) }
-
-                var filterDifficulty by remember { mutableStateOf("")}
-
-                Row(){
-
-                    DropDownMenu(
-                        categoryList,
-                        Modifier
-                            .fillMaxWidth(0.5f)
-                            .background(Color.White, CircleShape),
-                        label = "Categorias"
-                    ) { string -> filterCategory = string }
-
-                    DropDownMenu(
-                        listOf("rookie", "beginner", "intermediate", "advanced", "expert"),
-                        Modifier
-                            .fillMaxWidth()
-                            .background(Color.White, CircleShape),
-                        label = "Dificultad"
-                    ) { string -> filterDifficulty = string}
+                        .background(Color.White, CircleShape)
+                ) { selectedString ->
+                    val i = orderByStrings.indexOf(selectedString)
+                    filterOrderBy = if (i >= 0) orderByValues[i] else ""
                 }
 
                 Text(
-                    "Clasificación",
+                    text = "Filtros", // TODO: Traducir
                     fontFamily = FontFamily.SansSerif,
                     fontSize = 25.sp,
                     modifier = Modifier
@@ -196,30 +154,99 @@ fun SearchScreenLoaded(viewModel : SearchViewModel, loading : Boolean) {
                         .fillMaxWidth(0.8f)
                 )
 
-                var rating = remember { mutableStateOf(0f) }
+                Row {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (viewModel.uiState.isLoadingCategories) {
+                            CircularProgressIndicator(
+                                color = MaterialTheme.colors.secondaryVariant,
+                                modifier = Modifier.padding(top = 25.dp)
+                            )
+                        } else {
+                            val categoryStrings = mutableListOf<String>()
+                            viewModel.uiState.categories.forEach { category ->
+                                if (category.name != null) categoryStrings.add(category.name)
+                            }
+
+                            MyDropDownMenu(
+                                label = "Categorias", // TODO: Traducir
+                                elements = categoryStrings,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color.White, CircleShape),
+                                enabled = !categoryStrings.isEmpty()
+                            ) { string ->
+                                filterCategory =
+                                    viewModel.uiState.categories.find { it.name == string }
+                            }
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val difficultyStrings = listOf(
+                            stringResource(Difficulty.ROOKIE.stringResourceId),
+                            stringResource(Difficulty.BEGINNER.stringResourceId),
+                            stringResource(Difficulty.INTERMEDIATE.stringResourceId),
+                            stringResource(Difficulty.ADVANCED.stringResourceId),
+                            stringResource(Difficulty.EXPERT.stringResourceId)
+                        )
+
+                        MyDropDownMenu(
+                            label = "Dificultad",
+                            elements = difficultyStrings,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.White, CircleShape)
+                        ) { string -> filterDifficulty = string }
+                    }
+                }
+
+                Text(
+                    text = "Clasificación",
+                    fontFamily = FontFamily.SansSerif,
+                    fontSize = 25.sp,
+                    modifier = Modifier
+                        .padding(horizontal = 15.dp)
+                        .padding(top = 20.dp)
+                        .padding(bottom = 10.dp),
+                )
+
+                Divider(
+                    color = MaterialTheme.colors.primary,
+                    thickness = 1.dp,
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .fillMaxWidth(0.8f)
+                )
 
                 RatingBar(
-                    value = rating.value,
-                    config = RatingBarConfig()
-                        .style(RatingBarStyle.HighLighted),
-                    onValueChange = {
-                        rating.value = it
-                    },
-                    onRatingChanged = {
-                        Log.d("TAG", "onRatingChanged: $it")
-                    }
+                    value = filterRating,
+                    config = RatingBarConfig().style(RatingBarStyle.HighLighted),
+                    onValueChange = { filterRating = it },
+                    onRatingChanged = { filterRating = it }
                 )
 
                 Button(
-                    onClick = { viewModel.searchRoutines(
-                        searchByName = searchRoutine,
-                        searchByCreator = searchCreator,
-                        orderBySelected = "",
-                        filterByCategory = filterCategory,
-                        filterByClassification = filterDifficulty,
-                        filterByDifficulty = rating.toString(),
-                        ) { errorMessage ->  Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show() }
-                      },
+                    onClick = {
+                        filterSearch = SanitizeAndShit(filterSearch)
+                        filterUsername = SanitizeAndShit(filterUsername)
+
+                        /*viewModel.searchRoutines(
+                            searchByName = searchRoutine,
+                            searchByCreator = searchCreator,
+                            orderBySelected = "",
+                            filterByCategory = filterCategory,
+                            filterByClassification = filterDifficulty,
+                            filterByDifficulty = rating.toString(),
+                        ) { errorMessage ->
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                        }*/
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp)
@@ -228,17 +255,13 @@ fun SearchScreenLoaded(viewModel : SearchViewModel, loading : Boolean) {
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                 ) {
-                    if(!loading) {
-                        Text(
-                            "Buscar",
-                            Modifier
-                                .padding(vertical = 8.dp),
-                            color = MaterialTheme.colors.secondary,
-                            fontSize = 25.sp
-                        )
-                    } else {
-                        CircularProgressIndicator(color = MaterialTheme.colors.secondaryVariant)
-                    }
+                    Text(
+                        text = "Buscar", // TODO strings de mierda
+                        Modifier
+                            .padding(vertical = 8.dp),
+                        color = MaterialTheme.colors.secondary,
+                        fontSize = 25.sp
+                    )
                 }
 
             }
@@ -252,11 +275,11 @@ fun SearchBar(
     hint: String = "",
     onSearch: (String) -> Unit = {},
 ) {
-    var text by remember { mutableStateOf("")}
-    var isHintDisplayed by remember { mutableStateOf(hint != "")}
+    var text by remember { mutableStateOf("") }
+    var isHintDisplayed by remember { mutableStateOf(hint != "") }
     val focusManager = LocalFocusManager.current
 
-    Box(modifier=modifier){
+    Box(modifier = modifier) {
         BasicTextField(
             value = text,
             onValueChange = {
@@ -274,10 +297,13 @@ fun SearchBar(
                 .onFocusChanged {
                     isHintDisplayed = !it.isFocused && text == ""
                 },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()}),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         )
-        if(isHintDisplayed){
+        if (isHintDisplayed) {
             Text(
                 text = hint,
                 fontSize = 15.sp,
@@ -289,68 +315,6 @@ fun SearchBar(
     }
 }
 
-@Composable
-fun DropDownMenu(
-    elements : List<String>,
-    modifier: Modifier = Modifier,
-    label : String,
-    onSelect: (String) -> Unit = {}
-) {
-
-    var expanded by remember { mutableStateOf(false) }
-    val suggestions = elements
-    var selectedText by remember { mutableStateOf("") }
-
-    var textfieldSize by remember { mutableStateOf(Size.Zero)}
-
-    val icon = if (expanded)  Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
-
-    val focusManager = LocalFocusManager.current
-
-    Column(
-        Modifier
-            .padding(horizontal = 10.dp, vertical = 10.dp),
-                horizontalAlignment = CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
-    ) {
-        OutlinedTextField(
-            value = selectedText,
-            onValueChange = {
-                selectedText = it
-                onSelect(selectedText)
-            },
-            modifier = modifier
-                .onGloballyPositioned { coordinates ->
-                    textfieldSize = coordinates.size.toSize()
-                },
-            label = {Text(text= label, color = Color.Black)},
-            placeholder = { Text(text = label, color = Color.Black) },
-            singleLine = true,
-            trailingIcon = {
-                Icon(icon,null, Modifier.clickable { expanded = !expanded })
-            },
-            shape = RoundedCornerShape(50),
-            textStyle = TextStyle(color=Color.Black, fontSize = 15.sp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()}),
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .width(with(LocalDensity.current){textfieldSize.width.toDp()})
-        ) {
-            suggestions.forEach { label ->
-                DropdownMenuItem(onClick = {
-                    selectedText = label
-                    expanded = false
-                }) {
-                    Text(text = label)
-                }
-            }
-        }
-    }
-}
 
 @Composable
 private fun RoutineCardEntry(
@@ -360,7 +324,7 @@ private fun RoutineCardEntry(
         elevation = 5.dp,
         modifier = Modifier
             .fillMaxWidth()
-            //.clickable(/*To do */)
+        //.clickable(/*To do */)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
