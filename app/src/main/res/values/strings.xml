@@ -94,4 +94,16 @@
     <string name="continueXD">Continue</string>
     <string name="alreadyHaveAccount">Already have an account?</string>
     <string name="loginNow">Log in now!</string>
+
+    <string name="userVerifiedSuccessfully">User verified successfully!</string>
+    <string name="verifyCodeResentSuccessfully">Verification code resent!</string>
+    <string name="insertCodeToVerify">Please insert the code sent to your email address so we can verify your account.</string>
+    <string name="insertEmailToContinue">Insert the email address you registered with to continue</string>
+    <string name="verify">Verify</string>
+    <string name="resend">Resend</string>
+    <string name="didntReceiveEmailCode">Didn\'t receive a verification code?</string>
+    <string name="hasReceivedCode">If you received a verification code,</string>
+    <string name="verifyHere">verify here.</string>
+    <string name="code">Code</string>
+    <string name="pleaseInsertVerificationCode">Please insert a verification code</string>
 </resources>

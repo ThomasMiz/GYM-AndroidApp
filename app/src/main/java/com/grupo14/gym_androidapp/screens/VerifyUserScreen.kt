@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,11 +34,11 @@ fun VerifyUserScreen(
         VerifyUserScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.userVerified) {
         viewModel.readyToLogin()
-        Toast.makeText(context, "¡Usuario verificado con éxito!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, stringResource(id = R.string.userVerifiedSuccessfully), Toast.LENGTH_SHORT).show()
         onNavigate("login")
     } else if (viewModel.sessionUiState.codeSent) {
         viewModel.readyToVerify()
-        Toast.makeText(context, "¡Código reenviado con éxito!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, stringResource(id = R.string.verifyCodeResentSuccessfully), Toast.LENGTH_SHORT).show()
         onNavigate("verify")
     } else {
         VerifyUserScreenLoaded(onNavigate, viewModel, false)
@@ -63,10 +64,10 @@ fun VerifyUserScreenLoaded(
     val keyboardAction =
         if (!resend.value) KeyboardActions(onDone = null) else KeyboardActions(onDone = { focusManager.clearFocus() })
     val boxText =
-        if (!resend.value) "Ingrese el código que ha sido enviado a su casilla de correo electrónico para que podamos verificar su cuenta." else "Ingrese el correo electrónico con el que se ha registado para continuar"
-    val buttonText = if (!resend.value) "Verificar" else "Reenviar"
-    val footerText = if (!resend.value) "¿No te llegó un código?" else "Si recibió el código,"
-    val footerLink = if (!resend.value) "Reenviar" else "ingrese aquí"
+        if (!resend.value) stringResource(id = R.string.insertCodeToVerify) else stringResource(id = R.string.insertEmailToContinue)
+    val buttonText = if (!resend.value) stringResource(id = R.string.verify) else stringResource(id = R.string.resend)
+    val footerText = if (!resend.value) stringResource(id = R.string.didntReceiveEmailCode) else stringResource(id = R.string.hasReceivedCode)
+    val footerLink = if (!resend.value) stringResource(id = R.string.resend) else stringResource(id = R.string.verifyHere)
 
 
     Column(
@@ -98,8 +99,8 @@ fun VerifyUserScreenLoaded(
         OutlinedTextField(
             value = viewModel.emailVal,
             onValueChange = { if (!loading) viewModel.emailVal = it },
-            label = { Text(text = "Correo electrónico", color = Color.Gray) },
-            placeholder = { Text(text = "Correo electrónico") },
+            label = { Text(text = stringResource(id = R.string.email), color = Color.Gray) },
+            placeholder = { Text(text = stringResource(id = R.string.email)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Email, null) },
@@ -117,8 +118,8 @@ fun VerifyUserScreenLoaded(
             OutlinedTextField(
                 value = codeVal,
                 onValueChange = { if (!loading) codeVal = it },
-                label = { Text(text = "Código", color = Color.Gray) },
-                placeholder = { Text(text = "Código") },
+                label = { Text(text = stringResource(id = R.string.code), color = Color.Gray) },
+                placeholder = { Text(text = stringResource(id = R.string.code)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(0.8f),
                 leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
@@ -134,6 +135,8 @@ fun VerifyUserScreenLoaded(
             )
         }
 
+        val insertEmail = stringResource(id = R.string.pleaseInsertEmail)
+        val insertVerificationCode = stringResource(id = R.string.pleaseInsertVerificationCode)
         Button(
             // Basic checks, improve them.
             onClick = {
@@ -144,11 +147,11 @@ fun VerifyUserScreenLoaded(
                     if (!resend.value) {
                         if (viewModel.emailVal.isEmpty()) {
                             Toast.makeText(
-                                context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT
+                                context, insertEmail, Toast.LENGTH_SHORT
                             ).show()
                         } else if (codeVal.isEmpty()) {
                             Toast.makeText(
-                                context, "Ingrese un código de verificación", Toast.LENGTH_SHORT
+                                context, insertVerificationCode, Toast.LENGTH_SHORT
                             ).show()
                         } else {
                             viewModel.verifyUser(viewModel.emailVal, codeVal) { errorMessage ->
@@ -158,7 +161,7 @@ fun VerifyUserScreenLoaded(
                     } else {
                         if (viewModel.emailVal.isEmpty()) {
                             Toast.makeText(
-                                context, "Ingrese un correo electrónico", Toast.LENGTH_SHORT
+                                context, insertEmail, Toast.LENGTH_SHORT
                             ).show()
                         } else {
                             viewModel.resendVerification(viewModel.emailVal) { errorMessage ->
