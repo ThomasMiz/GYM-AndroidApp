@@ -3,19 +3,9 @@ package com.grupo14.gym_androidapp.api.api
 import com.grupo14.gym_androidapp.api.models.*
 import retrofit2.Call
 import retrofit2.http.*
-import java.util.*
 
 interface GymApi {
     // ↓ USERS ↓
-
-    @GET("users")
-    fun fetchUsers(
-        @Query("search") search : String?,
-        @Query("page") page : Int,
-        @Query("size") size : Int,
-        @Query("orderBy") orderBy: String?,
-        @Query("direction") direction : String?
-    ) : Call<ApiModelListPageOf<SmallUserApiModel>>
 
     @POST("users")
     fun registerNewUser(@Body user: LoginUserApiModel): Call<UserApiModel>
@@ -56,7 +46,7 @@ interface GymApi {
 
     @GET("users/{userId}/routines")
     fun getUserRoutines(
-        @Query("userId") userId: Int?,
+        @Path("userId") userId: Int,
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("search") search: String?,
