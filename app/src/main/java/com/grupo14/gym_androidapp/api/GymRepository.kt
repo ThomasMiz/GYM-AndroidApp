@@ -20,6 +20,10 @@ class GymRepository(
 
     // ↓ USERS ↓
 
+    suspend fun fetchUsers(
+        page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
+    ) = gymRemoteDataSource.fetchUsers(page, size, search, orderBy, direction)
+
     suspend fun registerNewUser(user: LoginUserApiModel) = gymRemoteDataSource.registerNewUser(user)
     suspend fun fetchUser(userId: Int) = gymRemoteDataSource.fetchUser(userId)
     suspend fun resendUserVerification(email: String) = gymRemoteDataSource.resendUserVerification(email)
@@ -77,7 +81,7 @@ class GymRepository(
     // ↓ ROUTINES ↓
 
     suspend fun fetchRoutines(
-        page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, userId: Int? = null, categoryId: Int? = null, difficulty: String? = null, score: Int? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
+        page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, userId: Int? = null, categoryId: Int? = null, difficulty: Difficulty? = null, score: Int? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
     ) = gymRemoteDataSource.fetchRoutines(page, size, search, userId, categoryId, difficulty, score, orderBy, direction)
 
     suspend fun fetchRoutine(routineId: Int) = gymRemoteDataSource.fetchRoutine(routineId)

@@ -7,6 +7,15 @@ import retrofit2.http.*
 interface GymApi {
     // ↓ USERS ↓
 
+    @GET("users")
+    fun getUsers(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("search") search: String?,
+        @Query("orderBy") orderBy: String?,
+        @Query("direction") direction: String?
+    ): Call<ApiModelListPageOf<SmallUserApiModel>>
+
     @POST("users")
     fun registerNewUser(@Body user: LoginUserApiModel): Call<UserApiModel>
 
@@ -112,7 +121,7 @@ interface GymApi {
         @Query("search") search: String?,
         @Query("userId") userId: Int?,
         @Query("categoryId") categoryId: Int?,
-        @Query("difficulty") difficulty: String?,
+        @Query("difficulty") difficulty: Difficulty?,
         @Query("score") score: Int?,
         @Query("orderBy") orderBy: String?,
         @Query("direction") direction: String?

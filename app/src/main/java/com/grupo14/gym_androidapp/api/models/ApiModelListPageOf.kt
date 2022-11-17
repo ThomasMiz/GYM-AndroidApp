@@ -13,6 +13,6 @@ data class ApiModelListPageOf<T> (
     @JsonProperty("size") val size: Int?,
     @JsonProperty("page") val page: Int?,
     @JsonProperty("isLastPage") val isLastPage: Boolean?,
-
+    @JsonProperty("search") val search: String?,
     @JsonProperty("content") val content: List<T>?,
 )
