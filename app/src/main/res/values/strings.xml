@@ -150,5 +150,9 @@
 
     <string name="NoDesc">No description provided for the exercise</string>
 
+    <string name="millis">millis cant be negative</string>
+    <string name="confirmCancelationRoutine"> Are you sure you want to stop the execution?</string>
+    <string name="cancelExecution">Cancel execution</string>
+
     <string name= "times">times</string>
 </resources>

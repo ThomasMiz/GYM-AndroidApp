@@ -150,5 +150,9 @@
 
     <string name="NoDesc">No hay descripcion para este ejercicio</string>
 
+    <string name="millis">El parámetro millis no puede ser negativo</string>
+    <string name="confirmCancelationRoutine">¿Estás seguro que deseas cancelar la ejecución?</string>
+    <string name="cancelExecution">Cancelar ejecución</string>
+
     <string name= "times">repeticiones</string>
 </resources>

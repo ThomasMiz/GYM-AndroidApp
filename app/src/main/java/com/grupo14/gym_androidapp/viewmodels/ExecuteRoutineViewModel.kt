@@ -1,5 +1,6 @@
 package com.grupo14.gym_androidapp.viewmodels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,11 +21,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class ExecutionState(
-    val currentCycleId : Int? = null,
-    val currentExerciseId : Int? = null,
-
-    val cyclesList : MutableList<CycleApiModel> = mutableListOf(),
-    val exercisesList : MutableList<CycleExerciseApiModel> = mutableListOf(),
+    val cyclesList: MutableList<CycleApiModel> = mutableListOf(),
+    val exercisesList: MutableList<CycleExerciseApiModel> = mutableListOf(),
     val _exercisesListIndex: MutableStateFlow<Int> = MutableStateFlow(0),
     val exercisesListIndex: StateFlow<Int> = _exercisesListIndex.asStateFlow()
 )
@@ -117,13 +115,5 @@ class ExecuteRoutineViewModel(
                 }
             }
         }
-    }
-
-    fun updateExerciseId(id : Int){
-        executionUiState = executionUiState.copy(currentExerciseId = id)
-    }
-
-    fun updateCycleId(id : Int){
-        executionUiState = executionUiState.copy(currentExerciseId = id)
     }
 }
