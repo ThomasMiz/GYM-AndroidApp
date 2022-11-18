@@ -50,15 +50,34 @@ class SearchResultsViewModel(
         orderBy: String?,
         direction: String?
     ) {
-        this.search = if (search.isNullOrBlank()) null else search.trim()
-        this.username = if (username.isNullOrBlank()) null else username.trim()
-        this.categoryId = if (categoryId != null && categoryId >= 0) categoryId else null
-        this.difficulty = Difficulty.values().find { it.apiEnumString == difficulty }
-        this.score = if (score != null && score >= 0) score else null
-        this.orderBy = if (orderBy.isNullOrBlank()) null else orderBy.trim()
-        this.direction = if (direction.isNullOrBlank()) null else direction.trim()
+        val newsearch = if (search.isNullOrBlank()) null else search.trim()
+        val newusername = if (username.isNullOrBlank()) null else username.trim()
+        val newcategoryId = if (categoryId != null && categoryId >= 0) categoryId else null
+        val newdifficulty = Difficulty.values().find { it.apiEnumString == difficulty }
+        val newscore = if (score != null && score >= 0) score else null
+        val neworderBy = if (orderBy.isNullOrBlank()) null else orderBy.trim()
+        val newdirection = if (direction.isNullOrBlank()) null else direction.trim()
 
-        uiState = SearchResultsUIState(initialized = true)
+        if (this.search == newsearch
+            && this.username == newusername
+            && this.categoryId == newcategoryId
+            && this.difficulty == newdifficulty
+            && this.score == newscore
+            && this.orderBy == neworderBy
+            && this.direction == newdirection
+        ) {
+            return
+        }
+
+        this.search = newsearch
+        this.username = newusername
+        this.categoryId = newcategoryId
+        this.difficulty = newdifficulty
+        this.score = newscore
+        this.orderBy = neworderBy
+        this.direction = newdirection
+
+        uiState = SearchResultsUIState(initialized = true, isFetchingRoutines = true)
     }
 
     fun fetchMoreRoutines() {
@@ -84,7 +103,6 @@ class SearchResultsViewModel(
                             hasMoreRoutinesToFetch = false
                         )
                     }
-                    return@launch
                 } catch (e: Exception) {
                     if (isActive) {
                         uiState = uiState.copy(
@@ -93,16 +111,12 @@ class SearchResultsViewModel(
                             hasMoreRoutinesToFetch = false
                         )
                     }
-                    return@launch
                 }
             }
 
-            if (!isActive)
-                return@launch
-
             try {
                 val moreRoutines = gymRepository.fetchRoutines(
-                    page = nextFetchRoutinesPage,
+                    page = nextFetchRoutinesPage,// size = 1,
                     search = search,
                     userId = userId,
                     categoryId = categoryId,

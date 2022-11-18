@@ -127,6 +127,10 @@
     <string name="noUsersFoundBySearch">No routines found by that user</string>
     <string name="asc">Ascending</string>
     <string name="desc">Descending</string>
+    <string name="clearFiltersButton">Clear filters</string>
+    <string name="clearFiltersDialogTitle">Clear filters</string>
+    <string name="clearFiltersDialogMessage">Are you sure you want to restore all search filters to their default values?</string>
+
 
     <string name="searchResults">Search results</string>
     <string name="noRoutinesFound">No routines found</string>

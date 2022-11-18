@@ -46,8 +46,7 @@ fun HomeScreen(
         Text(
             text = stringResource(id = R.string.yourFavoriteRoutines),
             textAlign = TextAlign.Start,
-            fontSize = 24.sp,
-            modifier = Modifier.padding(bottom = 10.dp)
+            fontSize = 24.sp
         )
 
         Column(
@@ -80,7 +79,10 @@ fun HomeScreen(
                 )
             }
 
-            AdaptibleList(viewModel.uiState.favorites) { routineState ->
+            AdaptibleList(
+                items = viewModel.uiState.favorites,
+                addLoadingIndicator = viewModel.uiState.isFetchingFavorites
+            ) { routineState ->
                 FavoriteRoutineCard(onNavigateToRoutineRequested, routineState) {
                     if (unfavRoutineId < 0 && !viewModel.isUnfavoritingAny()) {
                         unfavRoutineId = it
@@ -97,10 +99,10 @@ fun HomeScreen(
             }
 
             if (viewModel.uiState.isFetchingFavorites) {
-                CircularProgressIndicator(
+                /*CircularProgressIndicator(
                     color = MaterialTheme.colors.secondaryVariant,
                     modifier = Modifier.padding(top = 10.dp)
-                )
+                )*/
             } else {
                 if (viewModel.uiState.hasMoreFavoritesToFetch) {
                     viewModel.fetchMoreFavorites()

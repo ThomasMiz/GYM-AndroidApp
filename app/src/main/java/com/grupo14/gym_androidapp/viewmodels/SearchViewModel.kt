@@ -2,7 +2,6 @@ package com.grupo14.gym_androidapp.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -80,5 +79,14 @@ class SearchViewModel(
 
         route = route.trimEnd('&', '?')
         onNavigate(route)
+    }
+
+    fun clearFilters() {
+        filterSearch = ""
+        filterUsername = ""
+        filterCategory = null
+        filterDifficulty = null
+        filterRating = 0
+        filterOrderBy = ""
     }
 }

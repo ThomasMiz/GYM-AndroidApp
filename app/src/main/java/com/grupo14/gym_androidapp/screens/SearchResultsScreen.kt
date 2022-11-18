@@ -6,7 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
@@ -113,7 +116,10 @@ fun SearchResultsScreen(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxWidth()
         ) {
-            AdaptibleList(viewModel.uiState.routines) { routine ->
+            AdaptibleList(
+                items = viewModel.uiState.routines,
+                addLoadingIndicator = viewModel.uiState.isFetchingRoutines
+            ) { routine ->
                 RoutineCardEntry(routine, onNavigateToRoutineRequested)
             }
 
@@ -125,10 +131,10 @@ fun SearchResultsScreen(
             }
 
             if (viewModel.uiState.isFetchingRoutines) {
-                CircularProgressIndicator(
+                /*CircularProgressIndicator(
                     color = MaterialTheme.colors.secondaryVariant,
                     modifier = Modifier.padding(top = 10.dp)
-                )
+                )*/
             } else {
                 if (viewModel.uiState.hasMoreRoutinesToFetch) {
                     viewModel.fetchMoreRoutines()

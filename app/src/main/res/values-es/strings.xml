@@ -127,6 +127,9 @@
     <string name="noUsersFoundBySearch">No se han encontrado rutinas por ese usuario</string>
     <string name="asc">Ascendiente</string>
     <string name="desc">Descendiente</string>
+    <string name="clearFiltersButton">Restablecer filtros</string>
+    <string name="clearFiltersDialogTitle">Restablecer filtros</string>
+    <string name="clearFiltersDialogMessage">¿Estás seguro de que querés reestablecer todos los filtros a sus valores predeterminados?</string>
 
     <string name="searchResults">Resultados de la búsqueda</string>
     <string name="noRoutinesFound">No se encontraron rutinas</string>

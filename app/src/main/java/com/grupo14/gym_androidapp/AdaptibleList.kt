@@ -3,7 +3,9 @@ package com.grupo14.gym_androidapp
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +18,7 @@ fun <T> AdaptibleList(
     items: List<T>,
     maxItemWidth: Int = 500,
     itemPaddingDp: Int = 10,
+    addLoadingIndicator: Boolean = false,
     content: @Composable (item: T) -> Unit
 ) {
     val currentConfig = LocalConfiguration.current
@@ -27,7 +30,7 @@ fun <T> AdaptibleList(
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(itemPaddingDp.dp),
-        // contentPadding = PaddingValues(top = 0.dp),
+        contentPadding = PaddingValues(vertical = 10.dp),
         state = rememberLazyListState()
     ) {
         items(maxRowCount) { rowIndex ->
@@ -45,6 +48,15 @@ fun <T> AdaptibleList(
                         content(items[index])
                     }
                 }
+            }
+        }
+
+        if (addLoadingIndicator) {
+            item {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colors.secondaryVariant,
+                    modifier = Modifier.padding(top = 10.dp)
+                )
             }
         }
     }

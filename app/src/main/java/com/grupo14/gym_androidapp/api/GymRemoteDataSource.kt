@@ -73,11 +73,11 @@ class GymRemoteDataSource(
 
     suspend fun fetchCurrentUserRoutines(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, difficulty: Difficulty? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
-    ) = handleApiRequest { it.getCurrentUserRoutines(page, size, search, difficulty, orderBy, direction) }
+    ) = handleApiRequest { it.getCurrentUserRoutines(page, size, search, difficulty?.apiEnumString, orderBy, direction) }
 
     suspend fun fetchUserRoutines(
         userId: Int, page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, difficulty: Difficulty? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
-    ) = handleApiRequest { it.getUserRoutines(userId, page, size, search, difficulty, orderBy, direction) }
+    ) = handleApiRequest { it.getUserRoutines(userId, page, size, search, difficulty?.apiEnumString, orderBy, direction) }
 
     suspend fun fetchCurrentUserReviews(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
@@ -110,7 +110,7 @@ class GymRemoteDataSource(
 
     suspend fun fetchRoutines(
         page: Int, size: Int = DEFAULT_PAGE_SIZE, search: String? = null, userId: Int? = null, categoryId: Int? = null, difficulty: Difficulty? = null, score: Int? = null, orderBy: String? = DEFAULT_ORDERBY, direction: String? = DEFAULT_DIRECTION
-    ) = handleApiRequest { it.getRoutines(page, size, search, userId, categoryId, difficulty, score, orderBy, direction) }
+    ) = handleApiRequest { it.getRoutines(page, size, search, userId, categoryId, difficulty?.apiEnumString, score, orderBy, direction) }
 
     suspend fun fetchRoutine(routineId: Int) = handleApiRequest { it.getRoutine(routineId) }
 

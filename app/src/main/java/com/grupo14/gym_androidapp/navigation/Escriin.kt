@@ -130,7 +130,6 @@ data class Escriin(
             val score = navBackStackEntry.arguments?.getInt("score")
             val orderBy = navBackStackEntry.arguments?.getString("orderBy")
             val direction = navBackStackEntry.arguments?.getString("direction")
-            //println("Searching with search=$search usern=$username cat=$categoryId dif=$difficulty scor=$score ord=$orderBy dir=$direction")
 
             val viewModel by remember { mutableStateOf(SearchResultsViewModel(gymRepository)) }
             viewModel.initialize(search, username, categoryId, difficulty, score, orderBy, direction)

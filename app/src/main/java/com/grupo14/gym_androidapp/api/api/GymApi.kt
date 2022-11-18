@@ -48,7 +48,7 @@ interface GymApi {
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("search") search: String?,
-        @Query("difficulty") difficulty: Difficulty?,
+        @Query("difficulty") difficulty: String?,
         @Query("orderBy") orderBy: String?,
         @Query("direction") direction: String?
     ): Call<ApiModelListPageOf<RoutineApiModel>>
@@ -59,7 +59,7 @@ interface GymApi {
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("search") search: String?,
-        @Query("difficulty") difficulty: Difficulty?,
+        @Query("difficulty") difficulty: String?,
         @Query("orderBy") orderBy: String?,
         @Query("direction") direction: String?
     ): Call<ApiModelListPageOf<RoutineApiModel>>
@@ -121,7 +121,7 @@ interface GymApi {
         @Query("search") search: String?,
         @Query("userId") userId: Int?,
         @Query("categoryId") categoryId: Int?,
-        @Query("difficulty") difficulty: Difficulty?,
+        @Query("difficulty") difficulty: String?,
         @Query("score") score: Int?,
         @Query("orderBy") orderBy: String?,
         @Query("direction") direction: String?
