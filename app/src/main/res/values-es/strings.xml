@@ -15,6 +15,7 @@
     <string name="profile">Perfil</string>
     <string name="search">Buscar</string>
     <string name="routine">Rutina</string>
+    <string name="preview">Vista previa</string>
     <string name="execute">Ejecutar</string>
 
     <string name="pedro">Pedro</string>
@@ -62,6 +63,7 @@
     <string name="submitReviewSuccess">Tu calificación ha sido enviada!</string>
     <string name="viewDetails">Ver detalles</string>
     <string name="startRoutine">Empezar rutina</string>
+    <string name="changeMode">Cambiar modo</string>
     <string name="fetchCyclesFailed">No pudimos cargar los ciclos de esta rutina</string>
     <string name="fetchExerciseFailed">No pudimos cargar este ejercicio</string>
     <string name="categoryDisplay">Categoría: %1$s</string>

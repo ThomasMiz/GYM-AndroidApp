@@ -33,7 +33,10 @@ private val ActiveScreens = listOf(
     Escriin.SearchEscriin,
     Escriin.SearchResultsEscriin,
     Escriin.RoutineEscriin,
-    Escriin.ExecuteRoutineScreen
+    Escriin.PreviewExecutionScreen,
+    Escriin.ExecutionRoutineScreen1,
+    Escriin.ExecutionRoutineScreen2,
+    Escriin.ExecutionFinishedScreen,
 )
 
 fun handleOnNavigate(navController: NavController, route: String) {

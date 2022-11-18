@@ -1,19 +1,15 @@
 package com.grupo14.gym_androidapp.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,174 +23,149 @@ import com.grupo14.gym_androidapp.viewmodels.ExecuteRoutineViewModel
 
 
 @Composable
-fun ExecuteRoutineScreen(
-    viewModel: ExecuteRoutineViewModel,
+fun PreviewExecutionScreen(
     routineId: Int,
-    onNavigateToRoutineExecutionRequested: (id: Int) -> Unit
+    onNavigateToExecutionMode: (routineId: Int, mode : Int) -> Unit,
+    onNavigateToRoutineRequested: (routineId: Int) -> Unit
 ) {
-
     val context = LocalContext.current
-    if (viewModel.uiState.currentRoutineId != routineId) {
-        println("VOY A BUSCAR LA MIERDA")
-        viewModel.fetchWholeRoutine(
-            routineId = routineId,
-            onFailure = { Toast.makeText(context, "pero la PUCHA", Toast.LENGTH_SHORT).show() },
-            onFinish = {
-                Toast.makeText(context, "TERMINÉ DE CARGAR LAS RUTINAS :DDDDD", Toast.LENGTH_SHORT).show()
-                println("PEDROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-                println("------------------------------------------------------------------------------")
-                println("${viewModel.uiState}")
-                println("------------------------------------------------------------------------------")
-            }
-        )
-    }
-
-    val isRunning = true
-
-    TopBar(Modifier.padding(top = 20.dp, bottom = 16.dp))
+    var mode = 1
     Column(
         Modifier
-            .padding(horizontal = 10.dp, vertical = 30.dp)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .padding(70.dp)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.padding(vertical = 20.dp))
-        Image(
-            painter = painterResource(id = R.drawable.rutina),
-            contentDescription = "routine",
-            alignment = Alignment.TopCenter,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(10))
-        )
+    ){
 
         Text(
-            text = "Ciclo 1" + ": " + "Salto",
+            text = "Ready?",
             color = MaterialTheme.colors.secondary,
-            fontSize = 24.sp,
-            maxLines = 1,
+            style = MaterialTheme.typography.h2,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
-        Divider(
-            color = MaterialTheme.colors.secondary,
-            thickness = 1.dp,
-            modifier = Modifier.padding(top = 10.dp)
+            modifier = Modifier.fillMaxHeight(0.6f)
+
         )
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Button(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
+            shape = RoundedCornerShape(16.dp),
+            onClick = {
+                mode = if(mode == 1) 2 else 1
+                Toast.makeText(context, "Modo cambiado a: ExecutionRoutineScreen$mode", Toast.LENGTH_SHORT).show()
+            }
         ) {
             Text(
-                text = " 30 repeticiones",
+                text = stringResource(id = R.string.changeMode),
                 color = MaterialTheme.colors.secondary,
-                fontSize = 16.sp,
-                maxLines = 1,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.button,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 30.dp)
-            )
-
-            Text(
-                text = "40 segundos",
-                color = MaterialTheme.colors.secondary,
-                fontSize = 16.sp,
-                maxLines = 1,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 30.dp)
             )
         }
 
-        if (!isRunning) {
+        Button(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+            shape = RoundedCornerShape(16.dp),
+            onClick = {
+                when (mode) {
+                    1 -> onNavigateToExecutionMode(routineId, mode)
+                    2 -> onNavigateToExecutionMode(routineId, mode)
+                }
+            }
+        ) {
             Text(
-                text = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCC",
+                text = stringResource(id = R.string.startRoutine),
                 color = MaterialTheme.colors.secondary,
-                modifier = Modifier.padding(horizontal = 50.dp),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Light,
-                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.button,
             )
+        }
 
-            Button(
-                onClick = { /*To Do */ },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
-            ) {
-
-                Text(
-                    "Comenzar",
-                    Modifier.padding(vertical = 8.dp),
-                    color = MaterialTheme.colors.secondary,
-                    fontSize = 25.sp
-                )
+        Button(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+            shape = RoundedCornerShape(16.dp),
+            onClick = {
+                onNavigateToRoutineRequested(routineId)
             }
-        } else {
+        ) {
+            Text(
+                text = stringResource(id = R.string.cancel),
+                color = MaterialTheme.colors.secondary,
+                style = MaterialTheme.typography.button,
+            )
+        }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(vertical = 10.dp)
-            ) {
 
-                // Timer de MIERDA
+    }
+}
 
-                Button(
-                    onClick = { println("PEDRO ${viewModel.uiState}") },
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
-                ) {
+@Composable
+fun ExecutionRoutineScreen1(
+    viewModel: ExecuteRoutineViewModel,
+    routineId: Int,
+    onNavigateToRoutine: (id: Int) -> Unit,
+    onNavigateToFinishScreen: (id: Int) -> Unit
+){
+    Column() {
 
-                    Text(
-                        "Comenzar",
-                        Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colors.secondary,
-                        fontSize = 14.sp
-                    )
-                }
+        Text(
+            text = "Pedro 1",
+            color = MaterialTheme.colors.secondary,
+            style = MaterialTheme.typography.button,
+        )
 
+        Button(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+            shape = RoundedCornerShape(16.dp),
+            onClick = {
+                onNavigateToFinishScreen(routineId)
             }
-
-            Row() {
-
-                Button(
-                    onClick = { /*To Do */ },
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray)
-                ) {
-
-                    Text(
-                        "Pausar",
-                        Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colors.secondary,
-                        fontSize = 14.sp
-                    )
-                }
-
-                Button(
-                    onClick = { /*To Do */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 5.dp),
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
-                ) {
-
-                    Text(
-                        "Finalizar",
-                        Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colors.secondary,
-                        fontSize = 14.sp
-                    )
-                }
-            }
+        ) {
+            Text(
+                text =  "Irme a finish",
+                color = MaterialTheme.colors.secondary,
+                style = MaterialTheme.typography.button,
+            )
         }
     }
+
+}
+
+@Composable
+fun ExecutionRoutineScreen2(
+    viewModel: ExecuteRoutineViewModel,
+    routineId: Int,
+    onNavigateToRoutine: (id: Int) -> Unit,
+    onNavigateToFinishScreen: (id: Int) -> Unit
+){
+
+    Column() {
+
+        Text(
+            text = "Pedro 2",
+            color = MaterialTheme.colors.secondary,
+            style = MaterialTheme.typography.button,
+        )
+
+        Button(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+            shape = RoundedCornerShape(16.dp),
+            onClick = {
+                onNavigateToFinishScreen(routineId)
+            }
+        ) {
+            Text(
+                text =  "Irme a finish",
+                color = MaterialTheme.colors.secondary,
+                style = MaterialTheme.typography.button,
+            )
+        }
+    }
+
 }
 
 @Composable
@@ -238,7 +209,7 @@ private fun ExecuteScreenError(
 
 
 @Composable
-fun ExecutionFinished(routineId: Int, onNavigateToRoutineExecutionRequested: (id: Int) -> Unit) {
+fun ExecutionFinishedScreen(routineId: Int, onNavigateToRoutineExecutionRequested: (id: Int) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight()

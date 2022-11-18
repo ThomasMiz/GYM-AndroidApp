@@ -162,22 +162,68 @@ data class Escriin(
             RoutineScreen(
                 viewModel = viewModel,
                 routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
-                onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id/execute") }
+                onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id/preview") }
             )
         }
 
-        val ExecuteRoutineScreen = Escriin(
+        val PreviewExecutionScreen = Escriin(
+            titleResId = R.string.preview,
+            showBottomAppBar = false,
+            showTopAppBar = false,
+            route = "routine/{routineId}/preview",
+            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
+        ) { gymRepository, onNavigate, navBackStackEntry ->
+            PreviewExecutionScreen(
+                routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
+                onNavigateToExecutionMode = { id, mode -> onNavigate("routine/$id/execute/$mode") },
+                onNavigateToRoutineRequested = { id -> onNavigate("routine/$id") }
+            )
+        }
+
+        val ExecutionRoutineScreen1 = Escriin(
             titleResId = R.string.execute,
             showBottomAppBar = false,
-            route = "routine/{routineId}/execute",
+            showTopAppBar = false,
+            route = "routine/{routineId}/execute/1",
             routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
         ) { gymRepository, onNavigate, navBackStackEntry ->
             val viewModel by remember { mutableStateOf(ExecuteRoutineViewModel(gymRepository)) }
-            ExecuteRoutineScreen(
+            ExecutionRoutineScreen1(
                 viewModel = viewModel,
+                routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
+                onNavigateToRoutine = { id -> onNavigate("routine/$id") },
+                onNavigateToFinishScreen = {id -> onNavigate("routine/$id/finish")}
+            )
+        }
+
+        val ExecutionRoutineScreen2 = Escriin(
+            titleResId = R.string.execute,
+            showBottomAppBar = false,
+            showTopAppBar = false,
+            route = "routine/{routineId}/execute/2",
+            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
+        ) { gymRepository, onNavigate, navBackStackEntry ->
+            val viewModel by remember { mutableStateOf(ExecuteRoutineViewModel(gymRepository)) }
+            ExecutionRoutineScreen2(
+                viewModel = viewModel,
+                routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
+                onNavigateToRoutine = { id -> onNavigate("routine/$id") },
+                onNavigateToFinishScreen = {id -> onNavigate("routine/$id/finish")}
+            )
+        }
+
+        val ExecutionFinishedScreen = Escriin(
+            titleResId = R.string.finish,
+            showBottomAppBar = false,
+            showTopAppBar = false,
+            route = "routine/{routineId}/finish",
+            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
+        ) { gymRepository, onNavigate, navBackStackEntry ->
+            ExecutionFinishedScreen(
                 routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
                 onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id") }
             )
         }
+
     }
 }
