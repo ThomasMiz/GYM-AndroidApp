@@ -36,10 +36,10 @@ fun MyDropDownMenu(
 
     val icon = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
 
-    Column(
+    Box(
         Modifier.padding(paddingValues = padding),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
+        //horizontalAlignment = Alignment.CenterHorizontally,
+        //verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
     ) {
         OutlinedTextField(
             value = selectedText,

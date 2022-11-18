@@ -75,9 +75,7 @@ fun SearchResultsScreen(
                         .background(Color.White, CircleShape)
                 ) { selectedString ->
                     viewModel.setFilterOrderBy(
-                        orderByValues.elementAtOrNull(
-                            orderByStrings.indexOf(selectedString)
-                        )
+                        orderByValues.elementAtOrNull(orderByStrings.indexOf(selectedString))
                     )
                 }
             }
@@ -103,9 +101,7 @@ fun SearchResultsScreen(
                         .background(Color.White, CircleShape)
                 ) { selectedString ->
                     viewModel.setFilterDirection(
-                        directionValues.elementAtOrNull(
-                            directionStrings.indexOf(selectedString)
-                        )
+                        directionValues.elementAtOrNull(directionStrings.indexOf(selectedString))
                     )
                 }
             }

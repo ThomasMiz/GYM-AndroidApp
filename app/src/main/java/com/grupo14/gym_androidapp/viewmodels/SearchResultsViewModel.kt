@@ -63,8 +63,6 @@ class SearchResultsViewModel(
             && this.categoryId == newcategoryId
             && this.difficulty == newdifficulty
             && this.score == newscore
-            && this.orderBy == neworderBy
-            && this.direction == newdirection
         ) {
             return
         }
