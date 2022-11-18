@@ -40,7 +40,9 @@ data class Escriin(
             showBottomAppBar = false,
             onNavigatedNewStart = "login"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            if (sessionViewModel == null)
+                sessionViewModel = SessionViewModel(gymRepository)
+            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
             LoginScreen(onNavigate = onNavigate, viewModel)
         }
 
@@ -53,7 +55,9 @@ data class Escriin(
             onNavigatedNewStart = "login",
             onNavigatedPopBackInclusive = false
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            if (sessionViewModel == null)
+                sessionViewModel = SessionViewModel(gymRepository)
+            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
             RegisterScreen(
                 onNavigate = onNavigate,
                 viewModel
@@ -67,7 +71,9 @@ data class Escriin(
             showBottomAppBar = false,
             onNavigatedPopBackInclusive = false
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(SessionViewModel(gymRepository)) }
+            if (sessionViewModel == null)
+                sessionViewModel = SessionViewModel(gymRepository)
+            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
             VerifyUserScreen(
                 onNavigate = onNavigate,
                 viewModel
@@ -160,7 +166,7 @@ data class Escriin(
             )
         }
 
-        val ExecuteRoutine = Escriin(
+        val ExecuteRoutineScreen = Escriin(
             titleResId = R.string.execute,
             route = "routine/{routineId}/execute",
             routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
