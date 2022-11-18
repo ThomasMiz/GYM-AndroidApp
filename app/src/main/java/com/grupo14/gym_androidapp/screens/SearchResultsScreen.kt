@@ -46,7 +46,8 @@ fun SearchResultsScreen(
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(bottom = 10.dp)
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,
