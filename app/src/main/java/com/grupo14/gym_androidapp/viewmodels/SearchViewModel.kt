@@ -22,7 +22,7 @@ data class SearchUIState(
 )
 
 class SearchViewModel(
-    val gymRepository: GymRepository = GymRepository()
+    val gymRepository: GymRepository
 ) : ViewModel() {
     var uiState by mutableStateOf(SearchUIState())
         private set
@@ -57,8 +57,10 @@ class SearchViewModel(
                 if (uiState.categories.isEmpty())
                     onFailure(R.string.noCategoriesFound)
             } catch (e: ApiException) {
+                uiState = uiState.copy(isLoadingCategories = false)
                 onFailure(getErrorStringIdForHttpCode(e.response?.code()))
             } catch (e: Exception) {
+                uiState = uiState.copy(isLoadingCategories = false)
                 onFailure(R.string.unknownError)
             }
         }

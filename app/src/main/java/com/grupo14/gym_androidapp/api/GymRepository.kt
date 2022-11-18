@@ -1,17 +1,35 @@
 package com.grupo14.gym_androidapp.api
 
+import android.content.Context
 import com.grupo14.gym_androidapp.api.models.*
 
 class GymRepository(
-    private val gymRemoteDataSource: GymRemoteDataSource = GymRemoteDataSource(),
-    // private val gymLocalDataSource: GymLocalDataSource // No explicaron como hacer esto 👍
+    private val applicationContext: Context,
+    private val gymRemoteDataSource: GymRemoteDataSource = GymRemoteDataSource()
 ) {
     private val DEFAULT_PAGE_SIZE = 10
     private val DEFAULT_ORDERBY: String? = null
     private val DEFAULT_DIRECTION: String? = null
 
+    private val preferences = applicationContext.getSharedPreferences("my_app", Context.MODE_PRIVATE)
+
+    init {
+        val token = preferences.getString("auth_token", null)
+        if (!token.isNullOrBlank()) {
+            gymRemoteDataSource.setAuthToken(token)
+        }
+    }
+
     fun setAuthtoken(authToken: String?) {
         gymRemoteDataSource.setAuthToken(authToken);
+        try {
+            with (preferences.edit()) {
+                putString("auth_token", authToken)
+                apply()
+            }
+        } catch (e: Exception) {
+            // oops 💀
+        }
     }
 
     fun getAuthtoken(): String? {

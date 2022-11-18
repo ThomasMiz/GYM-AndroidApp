@@ -86,8 +86,8 @@ var myLittlePony: GymViewModel? = null
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Activities(
-    navController: NavHostController = rememberNavController(),
-    gymRepository: GymRepository = GymRepository()
+    gymRepository: GymRepository,
+    navController: NavHostController = rememberNavController()
 ) {
     val viewModel by remember { mutableStateOf(GymViewModel(navController)) }
     myLittlePony = viewModel

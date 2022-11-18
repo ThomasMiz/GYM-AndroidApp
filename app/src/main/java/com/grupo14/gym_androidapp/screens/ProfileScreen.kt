@@ -60,7 +60,7 @@ private fun ProfileScreenError(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxHeight()
+        modifier = Modifier.fillMaxSize()
     ) {
         Text(
             text = stringResource(id = R.string.oops),

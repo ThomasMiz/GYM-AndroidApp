@@ -29,7 +29,7 @@ data class SessionUiState(
 // TODO: sacar prints en todo este archivo
 
 class SessionViewModel(
-    val gymRepository: GymRepository = GymRepository()
+    val gymRepository: GymRepository
 ) : ViewModel() {
 
     var sessionUiState by mutableStateOf(SessionUiState())

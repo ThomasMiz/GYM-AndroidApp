@@ -1,5 +1,7 @@
 package com.grupo14.gym_androidapp
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,7 +20,7 @@ class MainActivity : ComponentActivity() {
         instance = this;
         super.onCreate(savedInstanceState)
 
-        val gymRepository = GymRepository()
+        val gymRepository = GymRepository(applicationContext)
 
         if (AppConfig.INITIAL_AUTH_TOKEN != null)
             gymRepository.setAuthtoken(AppConfig.INITIAL_AUTH_TOKEN);

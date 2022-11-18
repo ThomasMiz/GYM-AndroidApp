@@ -24,7 +24,7 @@ data class SearchResultsUIState(
 )
 
 class SearchResultsViewModel(
-    val gymRepository: GymRepository = GymRepository()
+    val gymRepository: GymRepository
 ) : ViewModel() {
     var uiState by mutableStateOf(SearchResultsUIState())
         private set
