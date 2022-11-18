@@ -1,10 +1,7 @@
 package com.grupo14.gym_androidapp
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -29,6 +26,7 @@ fun MyDropDownMenu(
     modifier: Modifier = Modifier,
     label: String,
     enabled: Boolean = true,
+    padding: PaddingValues = PaddingValues(10.dp),
     onValueChanged: (String) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -39,8 +37,7 @@ fun MyDropDownMenu(
     val icon = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
 
     Column(
-        Modifier
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+        Modifier.padding(paddingValues = padding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
     ) {

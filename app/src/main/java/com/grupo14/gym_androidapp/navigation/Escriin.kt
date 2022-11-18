@@ -110,7 +110,7 @@ data class Escriin(
         }
 
         val SearchResultsEscriin = Escriin(
-            titleResId = R.string.search, // TODO: Change to "Search Results"
+            titleResId = R.string.searchResults,
             showBottomAppBar = false,
             route = "search/results?search={search}&username={username}&categoryId={categoryId}&difficulty={difficulty}&score={score}&orderBy={orderBy}&direction={direction}",
             routeArgs = listOf(

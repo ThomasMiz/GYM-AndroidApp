@@ -85,7 +85,6 @@ fun SearchScreen(
                         .fillMaxWidth(0.8f)
                 )
 
-
                 Row() {
                     SearchBar(
                         text = viewModel.filterSearch,

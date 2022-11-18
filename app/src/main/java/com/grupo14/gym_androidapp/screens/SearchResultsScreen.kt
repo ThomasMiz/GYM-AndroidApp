@@ -1,8 +1,10 @@
 package com.grupo14.gym_androidapp.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -11,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -21,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.grupo14.gym_androidapp.AdaptibleList
+import com.grupo14.gym_androidapp.MyDropDownMenu
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
 import com.grupo14.gym_androidapp.ui.theme.DifficultyRed
@@ -40,14 +44,68 @@ fun SearchResultsScreen(
             .padding(start = 10.dp, end = 10.dp, top = 10.dp)
             .fillMaxWidth()
     ) {
-        Text(
-            text = stringResource(id = R.string.searchResults),
-            textAlign = TextAlign.Start,
-            fontSize = 24.sp,
-            modifier = Modifier.padding(bottom = 10.dp)
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                contentAlignment = Alignment.TopCenter,
+                modifier = Modifier.fillMaxWidth(0.5f)
+            ) {
+                val orderByStrings = listOf(
+                    stringResource(id = R.string.orderByDateString),
+                    stringResource(id = R.string.orderByRatingString),
+                    stringResource(id = R.string.orderByDifficultyString),
+                    stringResource(id = R.string.orderByCategoryString)
+                )
+                val orderByValues = listOf("date", "score", "difficulty", "category")
 
-        // TODO: Dropdown for "order by"
+                MyDropDownMenu(
+                    label = stringResource(id = R.string.orderByPlaceholder),
+                    elements = orderByStrings,
+                    selectedText = orderByStrings.elementAtOrNull(orderByValues.indexOfFirst { it == viewModel.orderBy })
+                        ?: "",
+                    padding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White, CircleShape)
+                ) { selectedString ->
+                    viewModel.setFilterOrderBy(
+                        orderByValues.elementAtOrNull(
+                            orderByStrings.indexOf(selectedString)
+                        )
+                    )
+                }
+            }
+
+            Box(
+                contentAlignment = Alignment.TopCenter,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                val directionStrings = listOf(
+                    stringResource(id = R.string.asc),
+                    stringResource(id = R.string.desc)
+                )
+                val directionValues = listOf("asc", "desc")
+
+                MyDropDownMenu(
+                    label = stringResource(id = R.string.directionPlaceholder),
+                    elements = directionStrings,
+                    selectedText = directionStrings.elementAtOrNull(directionValues.indexOfFirst { it == viewModel.direction })
+                        ?: "",
+                    padding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White, CircleShape)
+                ) { selectedString ->
+                    viewModel.setFilterDirection(
+                        directionValues.elementAtOrNull(
+                            directionStrings.indexOf(selectedString)
+                        )
+                    )
+                }
+            }
+        }
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

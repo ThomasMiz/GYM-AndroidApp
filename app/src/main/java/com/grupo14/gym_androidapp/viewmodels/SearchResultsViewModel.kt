@@ -33,13 +33,13 @@ class SearchResultsViewModel(
     private var nextFetchRoutinesPage: Int = 0
     private var currentFetchRoutinesJob: Job? = null
 
-    var search: String? = null
-    var username: String? = null
-    var categoryId: Int? = null
-    var difficulty: Difficulty? = null
-    var score: Int? = null
-    var orderBy: String? = null
-    var direction: String? = null
+    private var search: String? = null
+    private var username: String? = null
+    private var categoryId: Int? = null
+    private var difficulty: Difficulty? = null
+    private var score: Int? = null
+    var orderBy by mutableStateOf<String?>(null)
+    var direction by mutableStateOf<String?>(null)
 
     fun initialize(
         search: String?,
@@ -84,6 +84,7 @@ class SearchResultsViewModel(
                             hasMoreRoutinesToFetch = false
                         )
                     }
+                    return@launch
                 } catch (e: Exception) {
                     if (isActive) {
                         uiState = uiState.copy(
@@ -92,8 +93,12 @@ class SearchResultsViewModel(
                             hasMoreRoutinesToFetch = false
                         )
                     }
+                    return@launch
                 }
             }
+
+            if (!isActive)
+                return@launch
 
             try {
                 val moreRoutines = gymRepository.fetchRoutines(
@@ -139,5 +144,37 @@ class SearchResultsViewModel(
                 }
             }
         }
+    }
+
+    fun setFilterOrderBy(orderBy: String?) {
+        if (this.orderBy == orderBy)
+            return
+
+        this.orderBy = orderBy
+        currentFetchRoutinesJob?.cancel()
+        nextFetchRoutinesPage = 0
+        uiState = uiState.copy(
+            routines = emptyList(),
+            isFetchingRoutines = false,
+            fetchRoutinesErrorStringId = null,
+            hasMoreRoutinesToFetch = true
+        )
+        fetchMoreRoutines()
+    }
+
+    fun setFilterDirection(direction: String?) {
+        if (this.direction == direction)
+            return
+
+        this.direction = direction
+        currentFetchRoutinesJob?.cancel()
+        nextFetchRoutinesPage = 0
+        uiState = uiState.copy(
+            routines = emptyList(),
+            isFetchingRoutines = false,
+            fetchRoutinesErrorStringId = null,
+            hasMoreRoutinesToFetch = true
+        )
+        fetchMoreRoutines()
     }
 }
