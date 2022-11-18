@@ -147,4 +147,8 @@
     <string name="serverInternalError">Ocurrió un error interno en el servidor</string>
     <string name="serverUnknownError">Ocurrió un error inesperado en el servidor</string>
     <string name="unknownError">Ocurrió un error inesperado</string>
+
+    <string name="NoDesc">No hay descripcion para este ejercicio</string>
+
+    <string name= "times">repeticiones</string>
 </resources>
