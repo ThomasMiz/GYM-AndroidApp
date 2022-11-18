@@ -13,6 +13,7 @@ import com.grupo14.gym_androidapp.api.models.CycleExerciseApiModel
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
 import com.grupo14.gym_androidapp.getErrorStringIdForHttpCode
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 data class CycleState(
@@ -39,7 +40,11 @@ class ExecuteRoutineViewModel(
 
     private var currentFetchRoutineJob: Job? = null
 
-    fun fetchWholeRoutine(routineId: Int, onFailure: (errorMessageId: Int) -> Unit) {
+    fun fetchWholeRoutine(
+        routineId: Int,
+        onFinish: () -> Unit,
+        onFailure: (errorMessageId: Int) -> Unit
+    ) {
         if (currentFetchRoutineJob != null) {
             if (currentFetchRoutineJob!!.isActive)
                 return
@@ -53,11 +58,43 @@ class ExecuteRoutineViewModel(
                 uiState = uiState.copy(isFetchingRoutine = true)
 
                 val routineResult = gymRepository.fetchRoutine(routineId)
+                if (isActive)
+                    uiState = uiState.copy(routine = routineResult)
 
+                val cyclesResult =
+                    gymRepository.fetchRoutineCycles(routineId, 0, 999, "order", "asc")
+                val cycleList = mutableListOf<CycleState>()
+
+                cyclesResult.content?.forEach { cycle ->
+                    val exercises = mutableListOf<CycleExerciseApiModel>()
+                    val exercisesResult =
+                        gymRepository.fetchCycleExercises(cycle.id!!, 0, 999, "order", "asc")
+                    exercisesResult.content?.forEach { exercise ->
+                        exercises.add(exercise)
+                    }
+
+                    cycleList.add(CycleState(cycle, exercises))
+                }
+
+                if (isActive) {
+                    uiState = uiState.copy(
+                        routine = routineResult,
+                        isFetchingRoutine = false,
+                        cycleStates = cycleList,
+                        fetchRoutineErrorStringId = null
+                    )
+                    onFinish()
+                }
             } catch (e: ApiException) {
-                onFailure(getErrorStringIdForHttpCode(e.response?.code()))
+                if (isActive) {
+                    uiState = uiState.copy(isFetchingRoutine = false)
+                    onFailure(getErrorStringIdForHttpCode(e.response?.code()))
+                }
             } catch (e: Exception) {
-                onFailure(R.string.unknownError)
+                if (isActive) {
+                    uiState = uiState.copy(isFetchingRoutine = false)
+                    onFailure(R.string.unknownError)
+                }
             }
         }
     }
