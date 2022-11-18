@@ -3,6 +3,8 @@ package com.grupo14.gym_androidapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.navigation.Activities
 import com.grupo14.gym_androidapp.ui.theme.GYMAndroidAppTheme

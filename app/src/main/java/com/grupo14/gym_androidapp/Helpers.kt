@@ -1,9 +1,12 @@
 package com.grupo14.gym_androidapp
 
+import android.content.res.Configuration
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.grupo14.gym_androidapp.api.models.Gender
+import com.grupo14.gym_androidapp.navigation.myLittlePony
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -55,4 +58,13 @@ fun getErrorStringIdForHttpCode(code: Int?): Int {
         500 -> R.string.serverInternalError
         else -> R.string.serverUnknownError
     }
+}
+
+@Composable
+fun getCurrentMaxWidth(): Int {
+    val configuration = LocalConfiguration.current
+    var width = configuration.screenWidthDp
+    if (myLittlePony?.uiState?.currentScreen?.showBottomAppBar == true && configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        width -= 80
+    return width
 }

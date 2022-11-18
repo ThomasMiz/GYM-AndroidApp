@@ -1,8 +1,10 @@
 package com.grupo14.gym_androidapp.navigation
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -10,15 +12,19 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.grupo14.gym_androidapp.AppConfig
+import com.grupo14.gym_androidapp.MyBottomNavigationItem
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.screens.*
@@ -75,6 +81,8 @@ fun getCurrentScreenOf(navController: NavController): Escriin? {
     return currentScreen
 }
 
+var myLittlePony: GymViewModel? = null
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Activities(
@@ -82,6 +90,7 @@ fun Activities(
     gymRepository: GymRepository = GymRepository()
 ) {
     val viewModel by remember { mutableStateOf(GymViewModel(navController)) }
+    myLittlePony = viewModel
 
     BackHandler(
         enabled = navController.previousBackStackEntry != null
@@ -89,16 +98,19 @@ fun Activities(
         navController.popBackStack()
     }
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Scaffold(
-        topBar = {
+        topBar = if (!isLandscape) ({
             val currentScreen = viewModel.uiState.currentScreen
             if (currentScreen != null && currentScreen.showTopAppBar) {
                 MyTopAppBar(currentScreen.titleResId, currentScreen.showBackButton) {
                     navController.popBackStack()
                 }
             }
-        },
-        bottomBar = {
+        }) else ({}),
+        bottomBar = if (!isLandscape) ({
             val currentScreen = viewModel.uiState.currentScreen
             if (currentScreen != null && currentScreen.showBottomAppBar) {
                 MyBottomAppBar(
@@ -106,27 +118,41 @@ fun Activities(
                     onNavigate = { route -> handleOnNavigate(navController, route) }
                 )
             }
-        }
+        }) else ({}),
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = if (gymRepository.getAuthtoken() == null) Escriin.LoginEscriin.route else Escriin.HomeEscriin.route,
-            modifier = Modifier.padding(innerPadding)
+        Row(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
         ) {
-            ActiveScreens.forEach { screen ->
-                composable(
-                    route = screen.route,
-                    arguments = screen.routeArgs ?: emptyList(),
-                    deepLinks = listOf(
-                        //navDeepLink { uriPattern = AppConfig.BASE_URL + screen.route }
-                        NavDeepLink(uri = AppConfig.BASE_URL + screen.route)
+            if (isLandscape) {
+                val currentScreen = viewModel.uiState.currentScreen
+                if (currentScreen != null && currentScreen.showBottomAppBar) {
+                    MyShittySidebar(
+                        currentRoute = currentScreen.route,
+                        onNavigate = { route -> handleOnNavigate(navController, route) }
                     )
-                ) { navBackStackEntry ->
-                    screen.content(
-                        gymRepository = gymRepository,
-                        onNavigate = { route -> handleOnNavigate(navController, route) },
-                        navBackStackEntry = navBackStackEntry
-                    )
+                }
+            }
+
+            NavHost(
+                navController = navController,
+                startDestination = if (gymRepository.getAuthtoken() == null) Escriin.LoginEscriin.route else Escriin.HomeEscriin.route,
+            ) {
+                ActiveScreens.forEach { screen ->
+                    composable(
+                        route = screen.route,
+                        arguments = screen.routeArgs ?: emptyList(),
+                        deepLinks = listOf(
+                            NavDeepLink(uri = AppConfig.BASE_URL + screen.route)
+                        )
+                    ) { navBackStackEntry ->
+                        screen.content(
+                            gymRepository = gymRepository,
+                            onNavigate = { route -> handleOnNavigate(navController, route) },
+                            navBackStackEntry = navBackStackEntry
+                        )
+                    }
                 }
             }
         }
@@ -188,5 +214,76 @@ fun MyBottomAppBar(currentRoute: String, onNavigate: (route: String) -> Unit) {
             unselectedContentColor = Color.White,
             onClick = { onNavigate(profileRoute) }
         )
+    }
+}
+
+@Composable
+fun MyShittySidebar(currentRoute: String, onNavigate: (route: String) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .background(MaterialTheme.colors.secondary)
+            .width(80.dp)
+            .fillMaxHeight()
+    ) {
+        val itemHeight = (LocalConfiguration.current.screenHeightDp / 4).dp
+        Box(
+            modifier = Modifier.height(itemHeight)
+        ) {
+            val searchTitle = stringResource(R.string.search)
+            val searchRoute = Escriin.SearchEscriin.route
+            MyBottomNavigationItem(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = searchTitle
+                    )
+                },
+                label = { Text(text = searchTitle) },
+                alwaysShowLabel = true,
+                selected = currentRoute == searchRoute,
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = Color.White,
+                onClick = { onNavigate(searchRoute) }
+            )
+        }
+
+        Box(
+            modifier = Modifier.height(itemHeight)
+        ) {
+            val homeTitle = stringResource(R.string.home)
+            val homeRoute = Escriin.HomeEscriin.route
+            MyBottomNavigationItem(
+                icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = homeTitle) },
+                label = { Text(text = homeTitle) },
+                alwaysShowLabel = true,
+                selected = currentRoute == homeRoute,
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = Color.White,
+                onClick = { onNavigate(homeRoute) }
+            )
+        }
+
+        Box(
+            modifier = Modifier.height(itemHeight)
+        ) {
+            val profileTitle = stringResource(R.string.profile)
+            val profileRoute = Escriin.ProfileEscriin.route
+            MyBottomNavigationItem(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = profileTitle
+                    )
+                },
+                label = { Text(text = profileTitle) },
+                alwaysShowLabel = true,
+                selected = currentRoute == profileRoute,
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = Color.White,
+                onClick = { onNavigate(profileRoute) }
+            )
+        }
     }
 }

@@ -21,11 +21,11 @@ fun <T> AdaptibleList(
     addLoadingIndicator: Boolean = false,
     content: @Composable (item: T) -> Unit
 ) {
-    val currentConfig = LocalConfiguration.current
-    val columnCount = (currentConfig.screenWidthDp + maxItemWidth - 1) / maxItemWidth
+    val currentWidth = getCurrentMaxWidth()
+    val columnCount = (currentWidth + maxItemWidth - 1) / maxItemWidth
     val maxRowCount = (items.size + columnCount - 1) / columnCount
 
-    val itemWidth = (currentConfig.screenWidthDp - columnCount * itemPaddingDp) / columnCount
+    val itemWidth = (currentWidth - columnCount * itemPaddingDp) / columnCount
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,11 +69,11 @@ fun AdaptibleSimpleList(
     itemPaddingDp: Int = 10,
     content: @Composable (index: Int) -> Unit
 ) {
-    val currentConfig = LocalConfiguration.current
-    val columnCount = (currentConfig.screenWidthDp + maxItemWidth - 1) / maxItemWidth
+    val currentWidth = getCurrentMaxWidth()
+    val columnCount = (currentWidth + maxItemWidth - 1) / maxItemWidth
     val maxRowCount = (itemCount + columnCount - 1) / columnCount
 
-    val itemWidth = (currentConfig.screenWidthDp - columnCount * itemPaddingDp) / columnCount
+    val itemWidth = (currentWidth - columnCount * itemPaddingDp) / columnCount
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
