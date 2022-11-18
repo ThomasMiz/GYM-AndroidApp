@@ -12,8 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -133,15 +136,19 @@ private fun ProfileScreenLoaded(
             Box(
                 modifier = Modifier.padding(horizontal = 75.dp, vertical = 20.dp)
             ) {
-                val profileImageSizeMod =
+                var profileImageMods =
                     if (currentConfig.screenWidthDp > 400) Modifier.width(400.dp) else Modifier.fillMaxWidth()
+
+                if (viewModel.uiState.isEditingUser)
+                    profileImageMods = profileImageMods.clickable {  }
 
                 Image(
                     painter = painterResource(R.drawable.profile_placeholder),
                     contentDescription = "ProfilePic",
                     contentScale = ContentScale.FillWidth,
                     alignment = Alignment.Center,
-                    modifier = profileImageSizeMod.clip(RoundedCornerShape(10))
+                    modifier = profileImageMods.clip(RoundedCornerShape(10)),
+                    colorFilter = if (viewModel.uiState.isEditingUser) ColorFilter.tint(Color.Gray, BlendMode.Multiply) else null
                     // .border(5.dp, Color.Gray, RoundedCornerShape(10))
                 )
             }
@@ -242,7 +249,8 @@ private fun ProfileScreenLoaded(
                     MyDropDownMenu(
                         elements = genderOptionsList,
                         selectedText = genderOptionsList[seggsIndexEditing],
-                        label = stringResource(R.string.seggsPlaceholder)
+                        label = stringResource(R.string.seggsPlaceholder),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         seggsIndexEditing = genderOptionsList.indexOf(it)
                         if (seggsIndexEditing < 0)
