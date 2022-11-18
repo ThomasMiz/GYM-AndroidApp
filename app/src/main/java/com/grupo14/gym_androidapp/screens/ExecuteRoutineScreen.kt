@@ -147,7 +147,7 @@ fun ExecutionRoutineScreen1(
     viewModel: ExecuteRoutineViewModel,
     routineId: Int,
     onNavigateToRoutine: (id: Int) -> Unit,
-    onNavigateToFinishScreen: (id: Int) -> Unit,
+    onNavigateToFinishScreen: (id: Int, seconds: Int) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -158,7 +158,7 @@ fun ExecutionRoutineScreen1(
     val coroutineScope = rememberCoroutineScope()
 
     var renderAgain by remember { mutableStateOf(false) }
-    var millis by remember { mutableStateOf(0L) }
+    var seconds by remember { mutableStateOf(0) }
 
     val cancelDialogState = rememberMaterialDialogState()
     MaterialDialog(dialogState = cancelDialogState, buttons = {
@@ -174,7 +174,7 @@ fun ExecutionRoutineScreen1(
     LaunchedEffect(Unit) {
         while (true) {
             delay(1000)
-            millis++
+            seconds++
         }
     }
 
@@ -389,7 +389,7 @@ fun ExecutionRoutineScreen1(
                             }
                             renderAgain = true
                         } else {
-                            onNavigateToFinishScreen(routineId)
+                            onNavigateToFinishScreen(routineId, seconds)
                         }
                     }) {
                     Icon(
@@ -502,11 +502,11 @@ fun ExecutionRoutineScreen2(
     viewModel: ExecuteRoutineViewModel,
     routineId: Int,
     onNavigateToRoutine: (id: Int) -> Unit,
-    onNavigateToFinishScreen: (id: Int) -> Unit
+    onNavigateToFinishScreen: (id: Int, seconds: Int) -> Unit
 ) {
     val context = LocalContext.current
 
-    var millis by remember { mutableStateOf(-1) }
+    var seconds by remember { mutableStateOf(0) }
 
     val execUiState = viewModel.executionUiState
     val routUiState = viewModel.uiState
@@ -514,7 +514,7 @@ fun ExecutionRoutineScreen2(
     LaunchedEffect(Unit) {
         while (true) {
             delay(1000)
-            millis++
+            seconds++
         }
     }
 
@@ -824,7 +824,7 @@ fun ExecutionRoutineScreen2(
                                                 6
                                             }
                                     } else {
-                                        onNavigateToFinishScreen(routineId)
+                                        onNavigateToFinishScreen(routineId, seconds)
                                     }
                                 }) {
                                 Icon(
@@ -1029,7 +1029,7 @@ fun ExecutionRoutineScreen2(
                                                 6
                                             }
                                     } else {
-                                        onNavigateToFinishScreen(routineId)
+                                        onNavigateToFinishScreen(routineId, seconds)
                                     }
                                 }) {
                                 Icon(
@@ -1296,7 +1296,7 @@ fun ExecutionRoutineScreen2(
                                                 6
                                             }
                                     } else {
-                                        onNavigateToFinishScreen(routineId)
+                                        onNavigateToFinishScreen(routineId, seconds)
                                     }
                                 }) {
                                 Icon(
@@ -1374,29 +1374,31 @@ private fun ExecuteScreenError(
 
 @Composable
 fun ExecutionFinishedScreen(
-    routineId: Int, onNavigateToRoutine: (id: Int) -> Unit, millis: Long = 3600
+    routineId: Int,
+    onNavigateToRoutine: (id: Int) -> Unit,
+    seconds: Int
 ) {
     val context = LocalContext.current
 
-    if (millis < 0) {
+    if (seconds < 0) {
         Toast.makeText(
             context, stringResource(id = R.string.fetchRoutinesFailed), Toast.LENGTH_SHORT
         ).show()
         onNavigateToRoutine(routineId)
     }
-
+    val millisToL = (seconds * 1000).toLong()
     // https://stackoverflow.com/questions/9027317/how-to-convert-milliseconds-to-hhmmss-format
     val hms = String.format(
         "%02d:%02d:%02d",
-        TimeUnit.MILLISECONDS.toHours(millis),
-        TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
+        TimeUnit.MILLISECONDS.toHours(millisToL),
+        TimeUnit.MILLISECONDS.toMinutes(millisToL) - TimeUnit.HOURS.toMinutes(
             TimeUnit.MILLISECONDS.toHours(
-                millis
+                millisToL
             )
         ),
-        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
+        TimeUnit.MILLISECONDS.toSeconds(millisToL) - TimeUnit.MINUTES.toSeconds(
             TimeUnit.MILLISECONDS.toMinutes(
-                millis
+                millisToL
             )
         )
     )
