@@ -282,6 +282,14 @@ private fun RoutineScreenLoaded(
                 }
             }
 
+            if (routine.detail != null) {
+                Text(
+                    text = routine.detail,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(vertical = 10.dp)
+                )
+            }
+
             Divider(
                 color = MaterialTheme.colors.secondaryVariant,
                 modifier = Modifier.padding(vertical = 10.dp)
