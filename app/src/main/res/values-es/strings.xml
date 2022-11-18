@@ -15,6 +15,7 @@
     <string name="profile">Perfil</string>
     <string name="search">Buscar</string>
     <string name="routine">Rutina</string>
+    <string name="execute">Ejecutar</string>
 
     <string name="pedro">Pedro</string>
     <string name="signOut">Cerrar Sesión</string>
@@ -108,6 +109,11 @@
     <string name="verifyHere">ingréselo aquí.</string>
     <string name="code">Código</string>
     <string name="pleaseInsertVerificationCode">Ingrese un código de verificación</string>
+
+    <string name="loadingRutine">Cargando…</string>
+    <string name="executionFinished">¡Rutina completada!</string>
+    <string name="timeTaken">Tiempo total</string>
+    <string name="finish">Finalizar</string>
 
     <string name="loadCategoriesFailed">No pudimos cargar las categorias</string>
     <string name="searchTitle">Búsqueda</string>

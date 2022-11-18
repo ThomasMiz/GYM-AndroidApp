@@ -159,7 +159,24 @@ data class Escriin(
             routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
         ) { gymRepository, onNavigate, navBackStackEntry ->
             val viewModel by remember { mutableStateOf(RoutineViewModel(gymRepository)) }
-            RoutineScreen(viewModel, navBackStackEntry.arguments?.getInt("routineId") ?: -1)
+            RoutineScreen(
+                viewModel = viewModel,
+                routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
+                onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id/execute") }
+            )
+        }
+
+        val ExecuteRoutineScreen = Escriin(
+            titleResId = R.string.execute,
+            route = "routine/{routineId}/execute",
+            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
+        ) { gymRepository, onNavigate, navBackStackEntry ->
+            val viewModel by remember { mutableStateOf(ExecuteRoutineViewModel(gymRepository)) }
+            ExecuteRoutineScreen(
+                viewModel = viewModel,
+                routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
+                onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id") }
+            )
         }
     }
 }

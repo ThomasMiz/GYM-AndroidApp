@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.core.os.bundleOf
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +32,8 @@ private val ActiveScreens = listOf(
     Escriin.ProfileEscriin,
     Escriin.SearchEscriin,
     Escriin.SearchResultsEscriin,
-    Escriin.RoutineEscriin
+    Escriin.RoutineEscriin,
+    Escriin.ExecuteRoutineScreen
 )
 
 fun handleOnNavigate(navController: NavController, route: String) {
@@ -106,7 +106,7 @@ fun Activities(
                     arguments = screen.routeArgs ?: emptyList(),
                     deepLinks = listOf(
                         //navDeepLink { uriPattern = AppConfig.BASE_URL + screen.route }
-                    NavDeepLink(uri = AppConfig.BASE_URL + screen.route)
+                        NavDeepLink(uri = AppConfig.BASE_URL + screen.route)
                     )
                 ) { navBackStackEntry ->
                     screen.content(

@@ -15,6 +15,7 @@
     <string name="profile">Profile</string>
     <string name="search">Search</string>
     <string name="routine">Routine</string>
+    <string name="execute">Execute</string>
 
     <string name="pedro">Peter</string>
     <string name="signOut">Sign out</string>
@@ -109,6 +110,11 @@
     <string name="code">Code</string>
     <string name="pleaseInsertVerificationCode">Please insert a verification code</string>
 
+    <string name="loadingRutine">Loading…</string>
+    <string name="executionFinished">Routine completed!</string>
+    <string name="timeTaken">Total time</string>
+    <string name="finish">Finish</string>
+
     <string name="loadCategoriesFailed">We couldn\'t fetch the categories from the server</string>
     <string name="searchTitle">Search</string>
     <string name="searchRoutinePlaceholder">Search by name…</string>
@@ -130,7 +136,6 @@
     <string name="clearFiltersButton">Clear filters</string>
     <string name="clearFiltersDialogTitle">Clear filters</string>
     <string name="clearFiltersDialogMessage">Are you sure you want to restore all search filters to their default values?</string>
-
 
     <string name="searchResults">Search results</string>
     <string name="noRoutinesFound">No routines found</string>
