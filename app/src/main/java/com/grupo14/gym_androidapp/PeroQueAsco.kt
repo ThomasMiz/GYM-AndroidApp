@@ -160,7 +160,6 @@ fun MeasureScope.placeLabelAndIcon(
 ): MeasureResult {
     val height = constraints.maxHeight
 
-    // TODO: consider multiple lines of text here, not really supported by spec but we should
     // have a better strategy than overlapping the icon and label
     val baseline = labelPlaceable[LastBaseline]
 

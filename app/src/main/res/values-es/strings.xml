@@ -111,6 +111,7 @@
     <string name="verifyHere">ingréselo aquí.</string>
     <string name="code">Código</string>
     <string name="pleaseInsertVerificationCode">Ingrese un código de verificación</string>
+    <string name="resendVerificationFailed">No se pudo reenviar un código de verificación</string>
 
     <string name="loadingRutine">Cargando…</string>
     <string name="executionFinished">¡Rutina completada!</string>
