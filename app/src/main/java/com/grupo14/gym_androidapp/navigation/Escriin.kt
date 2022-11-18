@@ -29,6 +29,9 @@ data class Escriin(
     }
 
     companion object {
+        private var sessionViewModel: SessionViewModel? = null
+        private var searchViewModel: SearchViewModel? = null
+
         val LoginEscriin = Escriin(
             titleResId = R.string.login,
             showBackButton = false,
@@ -90,7 +93,45 @@ data class Escriin(
             showBackButton = false,
             route = "search"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            SearchScreen()
+            if (searchViewModel == null)
+                searchViewModel = SearchViewModel(gymRepository)
+
+            val viewModel by remember { mutableStateOf(searchViewModel!!) }
+            SearchScreen(
+                onNavigate = onNavigate,
+                viewModel = viewModel
+            )
+        }
+
+        val SearchResultsEscriin = Escriin(
+            titleResId = R.string.searchResults,
+            showBottomAppBar = false,
+            route = "search/results?search={search}&username={username}&categoryId={categoryId}&difficulty={difficulty}&score={score}&orderBy={orderBy}&direction={direction}",
+            routeArgs = listOf(
+                navArgument("search") { defaultValue = null; nullable = true; type = NavType.StringType },
+                navArgument("userId") { defaultValue = -1; type = NavType.IntType },
+                navArgument("categoryId") { defaultValue = -1; type = NavType.IntType },
+                navArgument("difficulty") { defaultValue = null; nullable = true; type = NavType.StringType },
+                navArgument("score") { defaultValue = -1; type = NavType.IntType },
+                navArgument("orderBy") { defaultValue = null; nullable = true; type = NavType.StringType },
+                navArgument("direction") { defaultValue = null; nullable = true; type = NavType.StringType }
+            )
+        ) { gymRepository, onNavigate, navBackStackEntry ->
+            val search = navBackStackEntry.arguments?.getString("search")
+            val username = navBackStackEntry.arguments?.getString("username")
+            val categoryId = navBackStackEntry.arguments?.getInt("categoryId")
+            val difficulty = navBackStackEntry.arguments?.getString("difficulty")
+            val score = navBackStackEntry.arguments?.getInt("score")
+            val orderBy = navBackStackEntry.arguments?.getString("orderBy")
+            val direction = navBackStackEntry.arguments?.getString("direction")
+
+            val viewModel by remember { mutableStateOf(SearchResultsViewModel(gymRepository)) }
+            viewModel.initialize(search, username, categoryId, difficulty, score, orderBy, direction)
+
+            SearchResultsScreen(
+                onNavigateToRoutineRequested = { id -> onNavigate("routine/$id") },
+                viewModel = viewModel
+            )
         }
 
         val ProfileEscriin = Escriin(

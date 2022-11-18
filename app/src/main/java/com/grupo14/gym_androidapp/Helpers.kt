@@ -42,3 +42,17 @@ fun NavHostController.navigateAndReplaceStartRoute(route: String) {
     graph.setStartDestination(route)
     navigate(route)
 }
+
+fun SanitizeAndShit(s: String?): String {
+    return s?.filter { c ->
+        (c in 'a'..'z') || (c in 'A'..'Z') || (c in '0'..'9') || (c == '_') || (c == '.') || (c == ' ')
+    }?.trim() ?: ""
+}
+
+fun getErrorStringIdForHttpCode(code: Int?): Int {
+    return when (code) {
+        400 -> R.string.serverCommunicationError
+        500 -> R.string.serverInternalError
+        else -> R.string.serverUnknownError
+    }
+}

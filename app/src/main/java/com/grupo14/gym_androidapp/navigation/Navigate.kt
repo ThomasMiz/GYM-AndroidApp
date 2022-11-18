@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.core.os.bundleOf
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,8 +32,9 @@ private val ActiveScreens = listOf(
     Escriin.HomeEscriin,
     Escriin.ProfileEscriin,
     Escriin.SearchEscriin,
+    Escriin.SearchResultsEscriin,
     Escriin.RoutineEscriin,
-    Escriin.ExecuteRoutine,
+    Escriin.ExecuteRoutine
 )
 
 fun handleOnNavigate(navController: NavController, route: String) {

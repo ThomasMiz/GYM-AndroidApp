@@ -12,8 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -25,9 +28,12 @@ import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.models.Gender
 import com.grupo14.gym_androidapp.api.models.UserApiModel
 import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
-import com.vanpra.composematerialdialogs.*
+import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.title
 import java.time.LocalDate
 
 @Composable
@@ -121,7 +127,6 @@ private fun ProfileScreenLoaded(
                 })
             }
 
-            val seggsDialogState = rememberMaterialDialogState()
             val datepickerDialogState = rememberMaterialDialogState()
             val discardDialogState = rememberMaterialDialogState()
             val signoutDialogState = rememberMaterialDialogState()
@@ -131,15 +136,19 @@ private fun ProfileScreenLoaded(
             Box(
                 modifier = Modifier.padding(horizontal = 75.dp, vertical = 20.dp)
             ) {
-                val profileImageSizeMod =
+                var profileImageMods =
                     if (currentConfig.screenWidthDp > 400) Modifier.width(400.dp) else Modifier.fillMaxWidth()
+
+                if (viewModel.uiState.isEditingUser)
+                    profileImageMods = profileImageMods.clickable {  }
 
                 Image(
                     painter = painterResource(R.drawable.profile_placeholder),
                     contentDescription = "ProfilePic",
                     contentScale = ContentScale.FillWidth,
                     alignment = Alignment.Center,
-                    modifier = profileImageSizeMod.clip(RoundedCornerShape(10))
+                    modifier = profileImageMods.clip(RoundedCornerShape(10)),
+                    colorFilter = if (viewModel.uiState.isEditingUser) ColorFilter.tint(Color.Gray, BlendMode.Multiply) else null
                     // .border(5.dp, Color.Gray, RoundedCornerShape(10))
                 )
             }
@@ -224,40 +233,46 @@ private fun ProfileScreenLoaded(
                 Column(
                     modifier = Modifier.padding(top = 10.dp, start = 50.dp, end = 50.dp)
                 ) {
-                    TextField(
+                    OutlinedTextField(
                         value = fullnameEditing,
                         onValueChange = { newValue -> fullnameEditing = newValue },
                         //fontSize = 40.sp,
                         modifier = Modifier
                             .padding(horizontal = 0.dp, vertical = 10.dp)
                             .fillMaxWidth(),
-                        enabled = !viewModel.uiState.isPuttingUser
+                        enabled = !viewModel.uiState.isPuttingUser,
+                        label = { Text(text = stringResource(id = R.string.fullName)) },
+                        singleLine = true,
+                        shape = RoundedCornerShape(50),
                     )
 
-                    Button(
-                        onClick = { seggsDialogState.show() },
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-                        enabled = !viewModel.uiState.isPuttingUser
+                    MyDropDownMenu(
+                        elements = genderOptionsList,
+                        selectedText = genderOptionsList[seggsIndexEditing],
+                        label = stringResource(R.string.seggsPlaceholder),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = stringResource(
-                                R.string.profileSeggsLabel, genderOptionsList[seggsIndexEditing]
-                            ), color = Color.Black, modifier = Modifier.fillMaxWidth()
-                        )
+                        seggsIndexEditing = genderOptionsList.indexOf(it)
+                        if (seggsIndexEditing < 0)
+                            seggsIndexEditing = genderOptionsList.lastIndex
                     }
 
                     Button(
                         onClick = { datepickerDialogState.show() },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-                        enabled = !viewModel.uiState.isPuttingUser
+                        enabled = !viewModel.uiState.isPuttingUser,
+                        modifier = Modifier.padding(top = 10.dp)
                     ) {
-
                         Text(
                             text = stringResource(
                                 R.string.profileBithdateLabel,
                                 birthdateEditing?.let { formatDate(it) }
                                     ?: stringResource(id = R.string.unspecified)
-                            ), color = Color.Black, modifier = Modifier.fillMaxWidth()
+                            ),
+                            color = Color.Black,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 10.dp)
                         )
                     }
                 }
@@ -279,20 +294,6 @@ private fun ProfileScreenLoaded(
                     ) { date ->
                         birthdateEditing = date
                     }
-                }
-
-                MaterialDialog(dialogState = seggsDialogState, buttons = {
-                    negativeButton(stringResource(id = R.string.cancel))
-                }) {
-                    listItemsSingleChoice(
-                        list = genderOptionsList,
-                        initialSelection = seggsIndexEditing,
-                        onChoiceChange = { selectedIndex ->
-                            seggsIndexEditing = selectedIndex
-                            seggsDialogState.hide()
-                        },
-                        waitForPositiveButton = false
-                    )
                 }
 
                 MaterialDialog(dialogState = discardDialogState, buttons = {

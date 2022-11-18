@@ -30,7 +30,9 @@
     <string name="confirmSignoutProfileDialogTitle">Sign out</string>
     <string name="confirmSignoutProfileDialogMessage">Are you sure you want to sign out of your account on this device?</string>
 
+    <string name="fullName">Full Name</string>
     <string name="profileSeggsLabel">Sex: %1$s</string>
+    <string name="seggsPlaceholder">Sex</string>
     <string name="profileBithdateLabel">Birthdate: %1$s</string>
     <string name="unspecified">Unspecified</string>
     <string name="unknown">Unknown</string>
@@ -112,4 +114,35 @@
     <string name="executionFinished">Routine completed!</string>
     <string name="timeTaken">Total time</string>
     <string name="finish">Finish</string>
+
+    <string name="loadCategoriesFailed">We couldn\'t fetch the categories from the server</string>
+    <string name="searchTitle">Search</string>
+    <string name="searchRoutinePlaceholder">Search by name…</string>
+    <string name="searchCreatorPlaceholder">Search by creator…</string>
+    <string name="orderByDateString">Creation date</string>
+    <string name="orderByRatingString">Score</string>
+    <string name="orderByDifficultyString">Difficulty</string>
+    <string name="orderByCategoryString">Category</string>
+    <string name="orderByPlaceholder">Order by</string>
+    <string name="directionPlaceholder">Direction</string>
+    <string name="filters">Filters</string>
+    <string name="categories">Categories</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="rating">Ratings</string>
+    <string name="noCategoriesFound">No categories found</string>
+    <string name="noUsersFoundBySearch">No routines found by that user</string>
+    <string name="asc">Ascending</string>
+    <string name="desc">Descending</string>
+    <string name="clearFiltersButton">Clear filters</string>
+    <string name="clearFiltersDialogTitle">Clear filters</string>
+    <string name="clearFiltersDialogMessage">Are you sure you want to restore all search filters to their default values?</string>
+
+    <string name="searchResults">Search results</string>
+    <string name="noRoutinesFound">No routines found</string>
+    <string name="fetchRoutinesFailed">There was an error fetching the routines from the server</string>
+
+    <string name="serverCommunicationError">There was an error fetching data from the server</string>
+    <string name="serverInternalError">An internal server error occurred</string>
+    <string name="serverUnknownError">An unknown server error occurred</string>
+    <string name="unknownError">An unknown error occurred</string>
 </resources>
