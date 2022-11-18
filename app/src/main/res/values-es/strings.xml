@@ -147,4 +147,14 @@
     <string name="serverInternalError">Ocurrió un error interno en el servidor</string>
     <string name="serverUnknownError">Ocurrió un error inesperado en el servidor</string>
     <string name="unknownError">Ocurrió un error inesperado</string>
+
+    <string name="NoDesc">No hay descripcion para este ejercicio</string>
+
+    <string name="millis">El parámetro millis no puede ser negativo</string>
+    <string name="confirmCancelationRoutine">¿Estás seguro que deseas cancelar la ejecución?</string>
+    <string name="cancelExecution">Cancelar ejecución</string>
+    <string name="ready">=¿Todo listo?</string>
+    <string name="executionMode">Modo de ejecución actualizado</string>
+
+    <string name= "times">repeticiones</string>
 </resources>

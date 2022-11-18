@@ -1,5 +1,6 @@
 package com.grupo14.gym_androidapp.viewmodels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,8 +14,18 @@ import com.grupo14.gym_androidapp.api.models.CycleExerciseApiModel
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
 import com.grupo14.gym_androidapp.getErrorStringIdForHttpCode
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+
+data class ExecutionState(
+    val cyclesList: MutableList<CycleApiModel> = mutableListOf(),
+    val exercisesList: MutableList<CycleExerciseApiModel> = mutableListOf(),
+    val _exercisesListIndex: MutableStateFlow<Int> = MutableStateFlow(0),
+    val exercisesListIndex: StateFlow<Int> = _exercisesListIndex.asStateFlow()
+)
 
 data class CycleState(
     val cycle: CycleApiModel,
@@ -27,18 +38,25 @@ data class RoutineState(
     val isFetchingRoutine: Boolean = false,
     val fetchRoutineErrorStringId: Int? = null,
     val cycleStates: List<CycleState> = listOf(),
-
-    val isExecuting: Boolean = false,
 )
 
 class ExecuteRoutineViewModel(
     private val gymRepository: GymRepository
 ) : ViewModel() {
 
+    var buildAuxCollections: Boolean = false
+
     var uiState by mutableStateOf(RoutineState())
         private set
 
+    var executionUiState by mutableStateOf(ExecutionState())
+        private set
+
     private var currentFetchRoutineJob: Job? = null
+
+    fun setExercisesListIndex(index: Int) {
+        executionUiState._exercisesListIndex.value = index
+    }
 
     fun fetchWholeRoutine(
         routineId: Int,
@@ -98,9 +116,4 @@ class ExecuteRoutineViewModel(
             }
         }
     }
-
-    fun switchToExecuteView() {
-        uiState = uiState.copy(isExecuting = true)
-    }
-
 }

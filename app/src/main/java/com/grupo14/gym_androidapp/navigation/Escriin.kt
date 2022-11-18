@@ -210,7 +210,7 @@ data class Escriin(
                 viewModel = viewModel,
                 routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
                 onNavigateToRoutine = { id -> onNavigate("routine/$id") },
-                onNavigateToFinishScreen = {id -> onNavigate("routine/$id/finish")}
+                onNavigateToFinishScreen = {id -> onNavigate("routine/$id/finish",)}
             )
         }
 
@@ -219,11 +219,11 @@ data class Escriin(
             showBottomAppBar = false,
             showTopAppBar = false,
             route = "routine/{routineId}/finish",
-            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
+            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType }),
         ) { gymRepository, onNavigate, navBackStackEntry ->
             ExecutionFinishedScreen(
                 routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
-                onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id") }
+                onNavigateToRoutine = { id -> onNavigate("routine/$id") },
             )
         }
 
