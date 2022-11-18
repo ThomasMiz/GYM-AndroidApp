@@ -29,7 +29,9 @@
     <string name="confirmSignoutProfileDialogTitle">Cerrar sesión</string>
     <string name="confirmSignoutProfileDialogMessage">Estás seguro de que queres cerrar sesión en este dispositivo?</string>
 
+    <string name="fullName">Nombre Completo</string>
     <string name="profileSeggsLabel">Sexo: %1$s</string>
+    <string name="seggsPlaceholder">Sexo</string>
     <string name="profileBithdateLabel">Nacimiento: %1$s</string>
     <string name="unspecified">No especificado</string>
     <string name="unknown">No conocido</string>
