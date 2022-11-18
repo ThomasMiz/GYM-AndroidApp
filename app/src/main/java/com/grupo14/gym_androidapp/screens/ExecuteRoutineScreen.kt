@@ -234,7 +234,6 @@ fun ExecutionRoutineScreen1(
         }
 
 
-        TopBar(Modifier.padding(top = 20.dp, bottom = 16.dp))
 
         Column(
             Modifier
@@ -278,7 +277,7 @@ fun ExecutionRoutineScreen1(
             }
 
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(8.dp)
             ) {
                 if (currTime != null && execUiState.exercisesList[execUiState.exercisesListIndex.value].duration!! > 0) {
                     val seconds = (excAnimationSec?.minus(currTime.value))?.rem(60)?.let {
@@ -294,7 +293,8 @@ fun ExecutionRoutineScreen1(
                                 ).append(":").append(if (seconds < 10) "0" else "")
                                 .append(seconds.toString()).toString(),
                             color = MaterialTheme.colors.secondary,
-                            style = MaterialTheme.typography.h1
+                            style = MaterialTheme.typography.h3,
+                            fontSize = 30.sp,
                         )
                     }
                 }
@@ -307,6 +307,7 @@ fun ExecutionRoutineScreen1(
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.h3,
+                        fontSize = 30.sp,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
