@@ -168,6 +168,7 @@ data class Escriin(
 
         val ExecuteRoutineScreen = Escriin(
             titleResId = R.string.execute,
+            showBottomAppBar = false,
             route = "routine/{routineId}/execute",
             routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
         ) { gymRepository, onNavigate, navBackStackEntry ->
