@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -55,221 +56,231 @@ fun SearchScreen(
         }
     }
 
+    val currentConfig = LocalConfiguration.current
+    val columnWidthMod =
+        if (currentConfig.screenWidthDp > 500) Modifier.width(500.dp) else Modifier.fillMaxWidth()
+
     Column(
-        Modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
-        horizontalAlignment = CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier.fillMaxSize()
     ) {
-        Card(
-            backgroundColor = Color.White,
-            border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
-            shape = RoundedCornerShape(8.dp),
+        Column(
+            modifier = columnWidthMod
+                .fillMaxHeight()
+                .padding(8.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
+            horizontalAlignment = CenterHorizontally
         ) {
-            Column(
-                horizontalAlignment = CenterHorizontally
+            Card(
+                backgroundColor = Color.White,
+                border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
+                shape = RoundedCornerShape(8.dp),
             ) {
-                Text(
-                    text = stringResource(id = R.string.searchTitle),
-                    fontFamily = FontFamily.SansSerif,
-                    fontSize = 25.sp,
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .padding(top = 20.dp)
-                        .padding(bottom = 10.dp),
-                )
+                Column(
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.searchTitle),
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = 25.sp,
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .padding(top = 20.dp)
+                            .padding(bottom = 10.dp),
+                    )
 
-                Divider(
-                    color = MaterialTheme.colors.primary,
-                    thickness = 1.dp,
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .fillMaxWidth(0.8f)
-                )
+                    Divider(
+                        color = MaterialTheme.colors.primary,
+                        thickness = 1.dp,
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxWidth(0.8f)
+                    )
 
-                SearchBar(
-                    text = viewModel.filterSearch,
-                    hint = stringResource(id = R.string.searchRoutinePlaceholder),
-                    fontSize = 16.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                ) { search -> viewModel.filterSearch = search }
+                    SearchBar(
+                        text = viewModel.filterSearch,
+                        hint = stringResource(id = R.string.searchRoutinePlaceholder),
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp, vertical = 5.dp)
+                    ) { search -> viewModel.filterSearch = search }
 
-                SearchBar(
-                    text = viewModel.filterUsername,
-                    hint = stringResource(id = R.string.searchCreatorPlaceholder),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 5.dp),
-                ) { search -> viewModel.filterUsername = search }
+                    SearchBar(
+                        text = viewModel.filterUsername,
+                        hint = stringResource(id = R.string.searchCreatorPlaceholder),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                    ) { search -> viewModel.filterUsername = search }
 
-                val orderByStrings = listOf(
-                    stringResource(id = R.string.orderByDateString),
-                    stringResource(id = R.string.orderByRatingString),
-                    stringResource(id = R.string.orderByDifficultyString),
-                    stringResource(id = R.string.orderByCategoryString)
-                )
-                val orderByValues = listOf("date", "score", "difficulty", "category")
+                    val orderByStrings = listOf(
+                        stringResource(id = R.string.orderByDateString),
+                        stringResource(id = R.string.orderByRatingString),
+                        stringResource(id = R.string.orderByDifficultyString),
+                        stringResource(id = R.string.orderByCategoryString)
+                    )
+                    val orderByValues = listOf("date", "score", "difficulty", "category")
 
-                MyDropDownMenu(
-                    label = stringResource(id = R.string.orderByPlaceholder),
-                    elements = orderByStrings,
-                    selectedText = orderByStrings.elementAtOrNull(orderByValues.indexOfFirst { it == viewModel.filterOrderBy })
-                        ?: "",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White, CircleShape)
-                ) { selectedString ->
-                    val i = orderByStrings.indexOf(selectedString)
-                    viewModel.filterOrderBy = if (i >= 0) orderByValues[i] else ""
-                }
+                    MyDropDownMenu(
+                        label = stringResource(id = R.string.orderByPlaceholder),
+                        elements = orderByStrings,
+                        selectedText = orderByStrings.elementAtOrNull(orderByValues.indexOfFirst { it == viewModel.filterOrderBy })
+                            ?: "",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White, CircleShape)
+                    ) { selectedString ->
+                        val i = orderByStrings.indexOf(selectedString)
+                        viewModel.filterOrderBy = if (i >= 0) orderByValues[i] else ""
+                    }
 
-                Text(
-                    text = stringResource(id = R.string.filters),
-                    fontFamily = FontFamily.SansSerif,
-                    fontSize = 25.sp,
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .padding(top = 20.dp)
-                        .padding(bottom = 10.dp),
-                )
+                    Text(
+                        text = stringResource(id = R.string.filters),
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = 25.sp,
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .padding(top = 20.dp)
+                            .padding(bottom = 10.dp),
+                    )
 
-                Divider(
-                    color = MaterialTheme.colors.primary,
-                    thickness = 1.dp,
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .fillMaxWidth(0.8f)
-                )
+                    Divider(
+                        color = MaterialTheme.colors.primary,
+                        thickness = 1.dp,
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxWidth(0.8f)
+                    )
 
-                Row {
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (viewModel.uiState.isLoadingCategories) {
-                            CircularProgressIndicator(
-                                color = MaterialTheme.colors.secondaryVariant,
-                                modifier = Modifier.padding(top = 25.dp)
-                            )
-                        } else {
-                            val categoryStrings = mutableListOf<String>()
-                            viewModel.uiState.categories.forEach { category ->
-                                if (category.name != null)
-                                    categoryStrings.add(category.name)
+                    Row {
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (viewModel.uiState.isLoadingCategories) {
+                                CircularProgressIndicator(
+                                    color = MaterialTheme.colors.secondaryVariant,
+                                    modifier = Modifier.padding(top = 25.dp)
+                                )
+                            } else {
+                                val categoryStrings = mutableListOf<String>()
+                                viewModel.uiState.categories.forEach { category ->
+                                    if (category.name != null)
+                                        categoryStrings.add(category.name)
+                                }
+
+                                MyDropDownMenu(
+                                    label = stringResource(id = R.string.categories),
+                                    elements = categoryStrings,
+                                    selectedText = viewModel.filterCategory?.name ?: "",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(Color.White, CircleShape),
+                                    enabled = !categoryStrings.isEmpty()
+                                ) { string ->
+                                    viewModel.filterCategory =
+                                        viewModel.uiState.categories.find { it.name == string }
+                                }
                             }
+                        }
+
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            val difficulties = Difficulty.values()
+                            val difficultyStrings =
+                                difficulties.map { stringResource(it.stringResourceId) }
 
                             MyDropDownMenu(
-                                label = stringResource(id = R.string.categories),
-                                elements = categoryStrings,
-                                selectedText = viewModel.filterCategory?.name ?: "",
+                                label = stringResource(id = R.string.difficulty),
+                                elements = difficultyStrings,
+                                selectedText = difficultyStrings.elementAtOrNull(difficulties.indexOfFirst { it == viewModel.filterDifficulty })
+                                    ?: "",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(Color.White, CircleShape),
-                                enabled = !categoryStrings.isEmpty()
-                            ) { string ->
-                                viewModel.filterCategory =
-                                    viewModel.uiState.categories.find { it.name == string }
+                                    .background(Color.White, CircleShape)
+                            ) { dif ->
+                                val i = difficultyStrings.indexOf(dif)
+                                if (i >= 0)
+                                    viewModel.filterDifficulty = difficulties[i]
                             }
                         }
                     }
 
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center
+                    Text(
+                        text = stringResource(id = R.string.rating),
+                        fontFamily = FontFamily.SansSerif,
+                        fontSize = 25.sp,
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .padding(top = 20.dp)
+                            .padding(bottom = 10.dp),
+                    )
+
+                    Divider(
+                        color = MaterialTheme.colors.primary,
+                        thickness = 1.dp,
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxWidth(0.8f)
+                    )
+
+                    RatingBar(
+                        value = viewModel.filterRating.toFloat(),
+                        config = RatingBarConfig().style(RatingBarStyle.HighLighted),
+                        onValueChange = { viewModel.filterRating = it.toInt() },
+                        onRatingChanged = { viewModel.filterRating = it.toInt() }
+                    )
+
+                    Button(
+                        onClick = { viewModel.fuckingGo(onNavigate) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp)
+                            .padding(bottom = 10.dp)
+                            .padding(top = 20.dp),
+                        shape = RoundedCornerShape(50),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                     ) {
+                        Text(
+                            text = stringResource(id = R.string.search),
+                            Modifier
+                                .padding(vertical = 8.dp),
+                            color = MaterialTheme.colors.secondary,
+                            fontSize = 25.sp
+                        )
+                    }
 
-                        val difficulties = Difficulty.values()
-                        val difficultyStrings =
-                            difficulties.map { stringResource(it.stringResourceId) }
+                    val clearFiltersDialogState = rememberMaterialDialogState()
+                    Button(
+                        onClick = { clearFiltersDialogState.show() },
+                        modifier = Modifier
+                            .padding(vertical = 10.dp),
+                        shape = RoundedCornerShape(50),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.clearFiltersButton),
+                            Modifier.padding(vertical = 4.dp),
+                            color = MaterialTheme.colors.secondary,
+                            fontSize = 18.sp
+                        )
+                    }
 
-                        MyDropDownMenu(
-                            label = stringResource(id = R.string.difficulty),
-                            elements = difficultyStrings,
-                            selectedText = difficultyStrings.elementAtOrNull(difficulties.indexOfFirst { it == viewModel.filterDifficulty })
-                                ?: "",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.White, CircleShape)
-                        ) { dif ->
-                            val i = difficultyStrings.indexOf(dif)
-                            if (i >= 0)
-                                viewModel.filterDifficulty = difficulties[i]
+                    MaterialDialog(dialogState = clearFiltersDialogState, buttons = {
+                        positiveButton(res = R.string.yes) {
+                            viewModel.clearFilters()
                         }
+                        negativeButton(res = R.string.no)
+                    }) {
+                        title(res = R.string.clearFiltersDialogTitle)
+                        message(res = R.string.clearFiltersDialogMessage)
                     }
-                }
-
-                Text(
-                    text = stringResource(id = R.string.rating),
-                    fontFamily = FontFamily.SansSerif,
-                    fontSize = 25.sp,
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .padding(top = 20.dp)
-                        .padding(bottom = 10.dp),
-                )
-
-                Divider(
-                    color = MaterialTheme.colors.primary,
-                    thickness = 1.dp,
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .fillMaxWidth(0.8f)
-                )
-
-                RatingBar(
-                    value = viewModel.filterRating.toFloat(),
-                    config = RatingBarConfig().style(RatingBarStyle.HighLighted),
-                    onValueChange = { viewModel.filterRating = it.toInt() },
-                    onRatingChanged = { viewModel.filterRating = it.toInt() }
-                )
-
-                Button(
-                    onClick = { viewModel.fuckingGo(onNavigate) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                        .padding(bottom = 10.dp)
-                        .padding(top = 20.dp),
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.search),
-                        Modifier
-                            .padding(vertical = 8.dp),
-                        color = MaterialTheme.colors.secondary,
-                        fontSize = 25.sp
-                    )
-                }
-
-                val clearFiltersDialogState = rememberMaterialDialogState()
-                Button(
-                    onClick = { clearFiltersDialogState.show() },
-                    modifier = Modifier
-                        .padding(vertical = 10.dp),
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.clearFiltersButton),
-                        Modifier.padding(vertical = 4.dp),
-                        color = MaterialTheme.colors.secondary,
-                        fontSize = 18.sp
-                    )
-                }
-
-                MaterialDialog(dialogState = clearFiltersDialogState, buttons = {
-                    positiveButton(res = R.string.yes) {
-                        viewModel.clearFilters()
-                    }
-                    negativeButton(res = R.string.no)
-                }) {
-                    title(res = R.string.clearFiltersDialogTitle)
-                    message(res = R.string.clearFiltersDialogMessage)
                 }
             }
         }
@@ -307,7 +318,7 @@ fun SearchBar(
             ),
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
 
-        )
+            )
         if (isHintDisplayed) {
             Text(
                 text = hint,

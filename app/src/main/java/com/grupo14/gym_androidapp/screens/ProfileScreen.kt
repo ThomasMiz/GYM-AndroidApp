@@ -15,22 +15,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import com.grupo14.gym_androidapp.*
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.models.Gender
 import com.grupo14.gym_androidapp.api.models.UserApiModel
 import com.grupo14.gym_androidapp.viewmodels.ProfileViewModel
-import com.vanpra.composematerialdialogs.*
+import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.message
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.title
 import java.time.LocalDate
 
 @Composable
@@ -262,7 +262,9 @@ private fun ProfileScreenLoaded(
                                     ?: stringResource(id = R.string.unspecified)
                             ),
                             color = Color.Black,
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 10.dp)
                         )
                     }
                 }
