@@ -63,7 +63,7 @@ private fun RegisterScreenLoaded(
 
     Column(
         Modifier
-            .padding(30.dp)
+            .padding(50.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -79,7 +79,7 @@ private fun RegisterScreenLoaded(
         Modifier
             .padding(24.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterVertically),
+        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Bottom),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
