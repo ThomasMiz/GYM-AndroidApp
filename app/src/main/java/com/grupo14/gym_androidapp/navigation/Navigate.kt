@@ -48,8 +48,6 @@ fun handleOnNavigate(navController: NavController, route: String) {
         pedro = Escriin.RoutineEscriin
     }
 
-    println("PEDROOOOOOOOOO route=$route pedro=$pedro")
-
     if (pedro?.onNavigatedNewStart == null) {
         navController.navigate(route) {
             if (pedro?.onNavigatePopBack != null) {
@@ -74,7 +72,6 @@ fun getCurrentScreenOf(navController: NavController): Escriin? {
             }
         }
     }
-    println("Current screen is $currentScreen")
     return currentScreen
 }
 
