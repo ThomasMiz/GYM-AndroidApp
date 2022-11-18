@@ -106,4 +106,28 @@
     <string name="verifyHere">ingréselo aquí.</string>
     <string name="code">Código</string>
     <string name="pleaseInsertVerificationCode">Ingrese un código de verificación</string>
+
+    <string name="loadCategoriesFailed">No pudimos cargar las categorias</string>
+    <string name="searchTitle">Búsqueda</string>
+    <string name="searchRoutinePlaceholder">Buscar por nombre…</string>
+    <string name="searchCreatorPlaceholder">Buscar por creador…</string>
+    <string name="orderByDateString">Fecha de creación</string>
+    <string name="orderByRatingString">Puntuación</string>
+    <string name="orderByDifficultyString">Dificultad</string>
+    <string name="orderByCategoryString">Categoría</string>
+    <string name="orderByPlaceholder">Ordenar por</string>
+    <string name="filters">Filtros</string>
+    <string name="categories">Categorias</string>
+    <string name="difficulty">Dificultad</string>
+    <string name="rating">Clasificación</string>
+    <string name="noCategoriesFound">No se encontraron categorías</string>
+
+    <string name="searchResults">Resultados de la búsqueda</string>
+    <string name="noRoutinesFound">No se encontraron rutinas</string>
+    <string name="fetchRoutinesFailed">Ocurrió un error buscando las rutinas en el servidor</string>
+
+    <string name="serverCommunicationError">Ocurrió un error trayendo los datos del servidor</string>
+    <string name="serverInternalError">Ocurrió un error interno en el servidor</string>
+    <string name="serverUnknownError">Ocurrió un error inesperado en el servidor</string>
+    <string name="unknownError">Ocurrió un error inesperado</string>
 </resources>

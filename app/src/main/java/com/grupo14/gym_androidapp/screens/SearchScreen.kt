@@ -32,6 +32,7 @@ import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarConfig
 import com.gowtham.ratingbar.RatingBarStyle
 import com.grupo14.gym_androidapp.MyDropDownMenu
+import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.models.Difficulty
 import com.grupo14.gym_androidapp.viewmodels.SearchViewModel
 
@@ -43,9 +44,9 @@ fun SearchScreen(
     val context = LocalContext.current
 
     if (!viewModel.uiState.startedLoadingCategories) {
-        viewModel.fetchCategories() { // TODO: Traducir
-            Toast.makeText(context, "No se pudieron cargar las categorias", Toast.LENGTH_SHORT)
-                .show()
+        val loadCategoriesFailed = stringResource(id = R.string.loadCategoriesFailed)
+        viewModel.fetchCategories() {
+            Toast.makeText(context, loadCategoriesFailed, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -67,7 +68,7 @@ fun SearchScreen(
                 horizontalAlignment = CenterHorizontally
             ) {
                 Text(
-                    text = "Búsqueda", // TODO: Traducir
+                    text = stringResource(id = R.string.searchTitle),
                     fontFamily = FontFamily.SansSerif,
                     fontSize = 25.sp,
                     modifier = Modifier
@@ -88,7 +89,7 @@ fun SearchScreen(
                 Row() {
                     SearchBar(
                         text = viewModel.filterSearch,
-                        hint = "Buscar rutina...", // TODO: Traducir
+                        hint = stringResource(id = R.string.searchRoutinePlaceholder),
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .padding(horizontal = 10.dp, vertical = 5.dp)
@@ -96,23 +97,23 @@ fun SearchScreen(
 
                     SearchBar(
                         text = viewModel.filterUsername,
-                        hint = "Buscar creador...", // TODO: Traducir
+                        hint = stringResource(id = R.string.searchCreatorPlaceholder),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp, vertical = 5.dp),
                     ) { search -> viewModel.filterUsername = search }
                 }
 
-                val orderByStrings = listOf( // TODO: Traducir
-                    "Fecha de creación",
-                    "Puntuación",
-                    "Dificultad",
-                    "Categoría"
+                val orderByStrings = listOf(
+                    stringResource(id = R.string.orderByDateString),
+                    stringResource(id = R.string.orderByRatingString),
+                    stringResource(id = R.string.orderByDifficultyString),
+                    stringResource(id = R.string.orderByCategoryString)
                 )
                 val orderByValues = listOf("date", "score", "difficulty", "category")
 
                 MyDropDownMenu(
-                    label = "Ordenar por", // TODO: Traducir
+                    label = stringResource(id = R.string.orderByPlaceholder),
                     elements = orderByStrings,
                     selectedText = orderByStrings.elementAtOrNull(orderByValues.indexOfFirst { it == viewModel.filterOrderBy })
                         ?: "",
@@ -125,7 +126,7 @@ fun SearchScreen(
                 }
 
                 Text(
-                    text = "Filtros", // TODO: Traducir
+                    text = stringResource(id = R.string.filters),
                     fontFamily = FontFamily.SansSerif,
                     fontSize = 25.sp,
                     modifier = Modifier
@@ -155,11 +156,12 @@ fun SearchScreen(
                         } else {
                             val categoryStrings = mutableListOf<String>()
                             viewModel.uiState.categories.forEach { category ->
-                                if (category.name != null) categoryStrings.add(category.name)
+                                if (category.name != null)
+                                    categoryStrings.add(category.name)
                             }
 
                             MyDropDownMenu(
-                                label = "Categorias", // TODO: Traducir
+                                label = stringResource(id = R.string.categories),
                                 elements = categoryStrings,
                                 selectedText = viewModel.filterCategory?.name ?: "",
                                 modifier = Modifier
@@ -183,7 +185,7 @@ fun SearchScreen(
                             difficulties.map { stringResource(it.stringResourceId) }
 
                         MyDropDownMenu(
-                            label = "Dificultad",
+                            label = stringResource(id = R.string.difficulty),
                             elements = difficultyStrings,
                             selectedText = difficultyStrings.elementAtOrNull(difficulties.indexOfFirst { it == viewModel.filterDifficulty })
                                 ?: "",
@@ -199,7 +201,7 @@ fun SearchScreen(
                 }
 
                 Text(
-                    text = "Clasificación",
+                    text = stringResource(id = R.string.rating),
                     fontFamily = FontFamily.SansSerif,
                     fontSize = 25.sp,
                     modifier = Modifier
@@ -234,7 +236,7 @@ fun SearchScreen(
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                 ) {
                     Text(
-                        text = "Buscar", // TODO strings de mierda
+                        text = stringResource(id = R.string.search),
                         Modifier
                             .padding(vertical = 8.dp),
                         color = MaterialTheme.colors.secondary,

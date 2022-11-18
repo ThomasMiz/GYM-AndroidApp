@@ -74,7 +74,7 @@ class SearchResultsViewModel(
                 val moreRoutines = gymRepository.fetchRoutines(
                     page = nextFetchRoutinesPage,
                     search = search,
-                    userId = userId,
+                    userId = userId, // TODO: user id shit
                     categoryId = categoryId,
                     difficulty = difficulty,
                     score = score,
@@ -98,7 +98,7 @@ class SearchResultsViewModel(
                 if (isActive) {
                     uiState = uiState.copy(
                         isFetchingRoutines = false,
-                        fetchRoutinesErrorStringId = R.string.fetchFavoritesFailed, // TODO: Cambiar a routine
+                        fetchRoutinesErrorStringId = R.string.fetchRoutinesFailed,
                         hasMoreRoutinesToFetch = false
                     )
                 }

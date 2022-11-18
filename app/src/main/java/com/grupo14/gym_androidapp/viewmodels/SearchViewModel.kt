@@ -6,11 +6,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.SanitizeAndShit
 import com.grupo14.gym_androidapp.api.GymRepository
 import com.grupo14.gym_androidapp.api.api.ApiException
 import com.grupo14.gym_androidapp.api.models.Category
 import com.grupo14.gym_androidapp.api.models.Difficulty
+import com.grupo14.gym_androidapp.getErrorStringIdForHttpCode
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -35,7 +37,7 @@ class SearchViewModel(
 
     private var currentCategoriesJob: Job? = null
 
-    fun fetchCategories(onFailure: (errorMessage: String) -> Unit) {
+    fun fetchCategories(onFailure: (errorMessageId: Int) -> Unit) {
         if (currentCategoriesJob != null && currentCategoriesJob!!.isActive)
             return
 
@@ -54,17 +56,11 @@ class SearchViewModel(
                 )
 
                 if (uiState.categories.isEmpty())
-                    onFailure("No categories found.") // TODO cambiar
+                    onFailure(R.string.noCategoriesFound)
             } catch (e: ApiException) {
-                val errorMessage = when (e.response?.code()) {
-                    400 -> "Bad request: Request or data is invalid or has a constraint" // To Do: Cambiar
-                    500 -> "Internal server error"
-                    else -> "Unexpected error"
-                }
-
-                onFailure(errorMessage)
+                onFailure(getErrorStringIdForHttpCode(e.response?.code()))
             } catch (e: Exception) {
-                onFailure("pero la PUCHA, qué _MIERDA_ le paso al server??") // TODO: cambiar
+                onFailure(R.string.unknownError)
             }
         }
     }

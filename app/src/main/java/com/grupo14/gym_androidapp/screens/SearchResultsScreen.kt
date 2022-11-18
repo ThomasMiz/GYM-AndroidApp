@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,10 +27,6 @@ import com.grupo14.gym_androidapp.ui.theme.DifficultyRed
 import com.grupo14.gym_androidapp.ui.theme.ErrorRed
 import com.grupo14.gym_androidapp.ui.theme.StarYellow
 import com.grupo14.gym_androidapp.viewmodels.SearchResultsViewModel
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.message
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 
 @Composable
 fun SearchResultsScreen(
@@ -45,11 +41,13 @@ fun SearchResultsScreen(
             .fillMaxWidth()
     ) {
         Text(
-            text = stringResource(id = R.string.yourFavoriteRoutines), // TODO: Cambiar a search results
+            text = stringResource(id = R.string.searchResults),
             textAlign = TextAlign.Start,
             fontSize = 24.sp,
             modifier = Modifier.padding(bottom = 10.dp)
         )
+
+        // TODO: Dropdown for "order by"
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +75,7 @@ fun SearchResultsScreen(
                     viewModel.fetchMoreRoutines()
                 } else if (viewModel.uiState.routines.isEmpty() && viewModel.uiState.fetchRoutinesErrorStringId == null) {
                     Text(
-                        text = stringResource(id = R.string.noFavoritesYet),
+                        text = stringResource(id = R.string.noRoutinesFound),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
                     )
