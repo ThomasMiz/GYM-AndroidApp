@@ -3,24 +3,23 @@ package com.grupo14.gym_androidapp.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.viewmodels.ExecuteRoutineViewModel
 
@@ -36,20 +35,14 @@ fun ExecuteRoutineScreen(
         viewModel.start(routineId)
     }
 
-    ExecuteRoutineScreen()
-}
+    val isRunning = true
 
-@Composable
-fun ExecuteRoutineScreen(
-    isRunning : Boolean = true
-){
     TopBar(Modifier.padding(top = 20.dp, bottom = 16.dp))
     Column(
         Modifier
             .padding(horizontal = 10.dp, vertical = 30.dp)
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-        ,
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -102,7 +95,7 @@ fun ExecuteRoutineScreen(
             )
         }
 
-        if(!isRunning){
+        if (!isRunning) {
             Text(
                 text = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCCCC",
                 color = MaterialTheme.colors.secondary,
@@ -113,7 +106,7 @@ fun ExecuteRoutineScreen(
             )
 
             Button(
-                onClick = { /*To Do */},
+                onClick = { /*To Do */ },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
@@ -131,14 +124,13 @@ fun ExecuteRoutineScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(vertical = 10.dp)
-            ){
+            ) {
 
                 // Timer de MIERDA
 
                 Button(
-                    onClick = { /*To Do */},
-                    modifier = Modifier.
-                    fillMaxWidth(0.5f),
+                    onClick = { println("PEDRO ${viewModel.uiState}") },
+                    modifier = Modifier.fillMaxWidth(0.5f),
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                 ) {
@@ -156,7 +148,7 @@ fun ExecuteRoutineScreen(
             Row() {
 
                 Button(
-                    onClick = { /*To Do */},
+                    onClick = { /*To Do */ },
                     modifier = Modifier.fillMaxWidth(0.5f),
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray)
@@ -171,8 +163,10 @@ fun ExecuteRoutineScreen(
                 }
 
                 Button(
-                    onClick = { /*To Do */},
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                    onClick = { /*To Do */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 5.dp),
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
                 ) {
@@ -230,7 +224,7 @@ private fun ExecuteScreenError(
 
 
 @Composable
-fun ExecutionFinished(routineId : Int, onNavigateToRoutineExecutionRequested: (id: Int) -> Unit) {
+fun ExecutionFinished(routineId: Int, onNavigateToRoutineExecutionRequested: (id: Int) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -317,7 +311,7 @@ fun TopBar(modifier: Modifier) {
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ){
+        ) {
             Icon(
                 modifier = Modifier
                     .width(40.dp)
@@ -327,7 +321,8 @@ fun TopBar(modifier: Modifier) {
                 contentDescription = "Logo",
                 tint = MaterialTheme.colors.secondary
             )
-            Text(text = "ENTRENAGRATIS.ES".uppercase(),
+            Text(
+                text = "ENTRENAGRATIS.ES".uppercase(),
                 color = MaterialTheme.colors.secondary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
