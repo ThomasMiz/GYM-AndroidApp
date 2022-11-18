@@ -59,20 +59,37 @@ fun PreviewExecutionScreen(
     var mode = 1
     Column(
         Modifier
-            .padding(70.dp)
+            .padding(30.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Text(
-            text = "Ready?",
+            text = stringResource(id = R.string.ready),
             color = MaterialTheme.colors.secondary,
             style = MaterialTheme.typography.h2,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxHeight(0.6f)
+            modifier = Modifier.padding(10.dp).align(CenterHorizontally)
 
         )
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 5.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.rutina),
+                contentDescription = null,
+                alignment = Alignment.TopCenter,
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier
+                    .fillMaxHeight(0.6f)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10))
+            )
+        }
 
         Button(modifier = Modifier.fillMaxWidth(0.5f),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
@@ -80,7 +97,7 @@ fun PreviewExecutionScreen(
             onClick = {
                 mode = if (mode == 1) 2 else 1
                 Toast.makeText(
-                    context, "Modo cambiado a: ExecutionRoutineScreen$mode", Toast.LENGTH_SHORT
+                    context, R.string.executionMode, Toast.LENGTH_SHORT
                 ).show()
             }) {
             Text(

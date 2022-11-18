@@ -153,6 +153,8 @@
     <string name="millis">millis cant be negative</string>
     <string name="confirmCancelationRoutine"> Are you sure you want to stop the execution?</string>
     <string name="cancelExecution">Cancel execution</string>
+    <string name="executionMode">Execution mode updated</string>
+    <string name="ready">Ready?</string>
 
     <string name= "times">times</string>
 </resources>
