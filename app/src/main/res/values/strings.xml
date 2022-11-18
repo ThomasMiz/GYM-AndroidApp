@@ -121,6 +121,7 @@
     <string name="difficulty">Difficulty</string>
     <string name="rating">Ratings</string>
     <string name="noCategoriesFound">No categories found</string>
+    <string name="noUsersFoundBySearch">No routines found by that user</string>
 
     <string name="searchResults">Search results</string>
     <string name="noRoutinesFound">No routines found</string>

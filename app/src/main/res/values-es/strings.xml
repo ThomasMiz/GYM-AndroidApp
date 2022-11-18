@@ -121,6 +121,7 @@
     <string name="difficulty">Dificultad</string>
     <string name="rating">Clasificación</string>
     <string name="noCategoriesFound">No se encontraron categorías</string>
+    <string name="noUsersFoundBySearch">No se han encontrado rutinas por ese usuario</string>
 
     <string name="searchResults">Resultados de la búsqueda</string>
     <string name="noRoutinesFound">No se encontraron rutinas</string>

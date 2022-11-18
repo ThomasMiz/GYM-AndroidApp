@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.api.GymRepository
+import com.grupo14.gym_androidapp.api.api.ApiException
 import com.grupo14.gym_androidapp.api.models.Difficulty
 import com.grupo14.gym_androidapp.api.models.RoutineApiModel
+import com.grupo14.gym_androidapp.getErrorStringIdForHttpCode
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -49,9 +51,9 @@ class SearchResultsViewModel(
         direction: String?
     ) {
         this.search = if (search.isNullOrBlank()) null else search.trim()
-        this.username =  if (username.isNullOrBlank()) null else username.trim()
+        this.username = if (username.isNullOrBlank()) null else username.trim()
         this.categoryId = if (categoryId != null && categoryId >= 0) categoryId else null
-        this.difficulty =  Difficulty.values().find { it.apiEnumString == difficulty }
+        this.difficulty = Difficulty.values().find { it.apiEnumString == difficulty }
         this.score = if (score != null && score >= 0) score else null
         this.orderBy = if (orderBy.isNullOrBlank()) null else orderBy.trim()
         this.direction = if (direction.isNullOrBlank()) null else direction.trim()
@@ -67,14 +69,37 @@ class SearchResultsViewModel(
             return
 
         currentFetchRoutinesJob = viewModelScope.launch {
-            try {
-                uiState = uiState.copy(isFetchingRoutines = true)
+            uiState = uiState.copy(isFetchingRoutines = true)
+            var userId: Int? = null
 
-                val userId: Int? = null
+            if (username != null) {
+                try {
+                    val users = gymRepository.fetchUsers(0, 1, username)
+                    userId = users.content?.elementAtOrNull(0)?.id
+                } catch (e: ApiException) {
+                    if (isActive) {
+                        uiState = uiState.copy(
+                            isFetchingRoutines = false,
+                            fetchRoutinesErrorStringId = getErrorStringIdForHttpCode(e.response?.code()),
+                            hasMoreRoutinesToFetch = false
+                        )
+                    }
+                } catch (e: Exception) {
+                    if (isActive) {
+                        uiState = uiState.copy(
+                            isFetchingRoutines = false,
+                            fetchRoutinesErrorStringId = R.string.noUsersFoundBySearch,
+                            hasMoreRoutinesToFetch = false
+                        )
+                    }
+                }
+            }
+
+            try {
                 val moreRoutines = gymRepository.fetchRoutines(
                     page = nextFetchRoutinesPage,
                     search = search,
-                    userId = userId, // TODO: user id shit
+                    userId = userId,
                     categoryId = categoryId,
                     difficulty = difficulty,
                     score = score,
@@ -88,12 +113,22 @@ class SearchResultsViewModel(
 
                 nextFetchRoutinesPage++
 
-                uiState = uiState.copy(
-                    routines = newRoutinesList,
-                    isFetchingRoutines = false,
-                    fetchRoutinesErrorStringId = null,
-                    hasMoreRoutinesToFetch = !moreRoutines.isLastPage!! && newRoutinesList.size < maxRoutinesToShow
-                )
+                if (isActive) {
+                    uiState = uiState.copy(
+                        routines = newRoutinesList,
+                        isFetchingRoutines = false,
+                        fetchRoutinesErrorStringId = null,
+                        hasMoreRoutinesToFetch = !moreRoutines.isLastPage!! && newRoutinesList.size < maxRoutinesToShow
+                    )
+                }
+            } catch (e: ApiException) {
+                if (isActive) {
+                    uiState = uiState.copy(
+                        isFetchingRoutines = false,
+                        fetchRoutinesErrorStringId = getErrorStringIdForHttpCode(e.response?.code()),
+                        hasMoreRoutinesToFetch = false
+                    )
+                }
             } catch (e: Exception) {
                 if (isActive) {
                     uiState = uiState.copy(
