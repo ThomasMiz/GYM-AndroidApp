@@ -22,6 +22,7 @@ data class Escriin(
     val showBottomAppBar: Boolean = true,
     val onNavigatedNewStart: String? = null,
     val onNavigatedPopBackInclusive: Boolean = true,
+    val onNavigatePopBack: String? = null,
     val content: @Composable (gymRepository: GymRepository, onNavigate: ((route: String) -> Unit), navBackStackEntry: NavBackStackEntry) -> Unit
 ) {
     override fun toString(): String {
@@ -156,7 +157,8 @@ data class Escriin(
         val RoutineEscriin = Escriin(
             titleResId = R.string.routine,
             route = "routine/{routineId}",
-            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
+            routeArgs = listOf(navArgument("routineId") { type = NavType.IntType }),
+            onNavigatePopBack = "routine/{routineId}"
         ) { gymRepository, onNavigate, navBackStackEntry ->
             val viewModel by remember { mutableStateOf(RoutineViewModel(gymRepository)) }
             RoutineScreen(

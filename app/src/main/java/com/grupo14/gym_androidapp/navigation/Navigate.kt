@@ -40,15 +40,28 @@ private val ActiveScreens = listOf(
 )
 
 fun handleOnNavigate(navController: NavController, route: String) {
-    val pedro = ActiveScreens.find { it.route == route }
+    var pedro = ActiveScreens.find { it.route == route }
+    if (pedro == null &&
+        route.trimEnd('/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+        == "routine"
+    ) {
+        pedro = Escriin.RoutineEscriin
+    }
+
+    println("PEDROOOOOOOOOO route=$route pedro=$pedro")
+
     if (pedro?.onNavigatedNewStart == null) {
-        navController.navigate(route)
+        navController.navigate(route) {
+            if (pedro?.onNavigatePopBack != null) {
+                popUpTo(pedro.onNavigatePopBack!!) { inclusive = true }
+            }
+        }
     } else {
         navController.popBackStack(
             navController.graph.startDestinationId,
             pedro.onNavigatedPopBackInclusive
         )
-        navController.graph.setStartDestination(pedro.onNavigatedNewStart)
+        navController.graph.setStartDestination(pedro.onNavigatedNewStart!!)
         navController.navigate(route)
     }
 }
