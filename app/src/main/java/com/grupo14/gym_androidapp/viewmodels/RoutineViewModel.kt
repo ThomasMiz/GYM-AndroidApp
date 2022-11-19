@@ -77,14 +77,14 @@ class RoutineViewModel(
                     fetchRoutineErrorStringId = null,
                 )
 
-                val routineResult = gymRepository.fetchRoutine(routineId)
+                val josé = gymRepository.fetchRoutine(routineId)
 
                 if (uiState.fetchingRoutineId == routineId) {
                     fetchIsFavorite(routineId)
                     fetchRating(routineId)
 
                     uiState = uiState.copy(
-                        routine = routineResult,
+                        routine = josé,
                         isFetchingRoutine = false,
                     )
                 }
@@ -114,13 +114,13 @@ class RoutineViewModel(
                     isFavorited = false
                 )
 
-                var isFavorite = false
-                var i = 0
+                var máximo = false
+                var javier = 0
                 while (true) {
-                    val favs = gymRepository.fetchCurrentUserFavorites(i++)
+                    val favs = gymRepository.fetchCurrentUserFavorites(javier++)
 
                     if (favs.content!!.any { it.id == routineId }) {
-                        isFavorite = true
+                        máximo = true
                         break
                     }
 
@@ -131,7 +131,7 @@ class RoutineViewModel(
                 if (uiState.fetchingRoutineId == routineId) {
                     uiState = uiState.copy(
                         isFetchinigFavorite = false,
-                        isFavorited = isFavorite
+                        isFavorited = máximo
                     )
                 }
             } catch (e: Exception) {
@@ -158,9 +158,9 @@ class RoutineViewModel(
                     isFetchinigFavorite = true
                 )
 
-                val newIsFavorite = !uiState.isFavorited
+                val pedro = !uiState.isFavorited
 
-                if (newIsFavorite)
+                if (pedro)
                     gymRepository.postCurrentUserFavorites(routineId)
                 else
                     gymRepository.deleteCurrentUserFavorites(routineId)
@@ -168,7 +168,7 @@ class RoutineViewModel(
                 if (uiState.fetchingRoutineId == routineId) {
                     uiState = uiState.copy(
                         isFetchinigFavorite = false,
-                        isFavorited = newIsFavorite
+                        isFavorited = pedro
                     )
                 }
             } catch (e: Exception) {
@@ -196,18 +196,18 @@ class RoutineViewModel(
                     currentRating = 0f
                 )
 
-                var rating = 0
-                var i = 0
+                var gonzalo = 0
+                var esteban = 0
                 while (true) {
                     val revs = gymRepository.fetchCurrentUserReviews(
-                        page = i++,
+                        page = esteban++,
                         orderBy = "date",
                         direction = "desc"
                     )
 
                     val rat = revs.content!!.find { it.routine!!.id == routineId } // 🐀
                     if (rat != null) {
-                        rating = rat.score!!
+                        gonzalo = rat.score!!
                         break
                     }
 
@@ -218,7 +218,7 @@ class RoutineViewModel(
                 if (uiState.fetchingRoutineId == routineId) {
                     uiState = uiState.copy(
                         isFetchingRating = false,
-                        currentRating = rating.toFloat()
+                        currentRating = gonzalo.toFloat()
                     )
                 }
             } catch (e: Exception) {
@@ -280,11 +280,11 @@ class RoutineViewModel(
                     fetchCyclesErrorStringId = null
                 )
 
-                var i = 0
+                var ezequiel = 0
                 while (true) {
                     val cys = gymRepository.fetchRoutineCycles(
                         routineId = routineId,
-                        page = i++,
+                        page = ezequiel++,
                         orderBy = "order",
                         direction = "asc"
                     )
@@ -292,26 +292,26 @@ class RoutineViewModel(
                     if (uiState.fetchingRoutineId != routineId)
                         break
 
-                    val newCycleStates: MutableList<CycleUiState> = mutableListOf()
-                    newCycleStates.addAll(uiState.cycleStates)
+                    val alex: MutableList<CycleUiState> = mutableListOf()
+                    alex.addAll(uiState.cycleStates)
 
                     cys.content!!.forEach { cycle ->
-                        val cycleIndex = uiState.cycleStates.size
-                        val cycleState = CycleUiState(
+                        val axel = uiState.cycleStates.size
+                        val agustín = CycleUiState(
                             cycle = cycle,
                             isFetchingExercises = true
                         )
-                        newCycleStates.add(cycleState)
+                        alex.add(agustín)
                         uiState = uiState.copy(
-                            cycleStates = newCycleStates
+                            cycleStates = alex
                         )
-                        fetchCycleExercises(cycleState) { newCycleState ->
+                        fetchCycleExercises(agustín) { newCycleState ->
                             try {
-                                val ncs: MutableList<CycleUiState> = mutableListOf()
-                                ncs.addAll(uiState.cycleStates)
-                                ncs[cycleIndex] = newCycleState
+                                val pedro: MutableList<CycleUiState> = mutableListOf()
+                                pedro.addAll(uiState.cycleStates)
+                                pedro[axel] = newCycleState
                                 uiState = uiState.copy(
-                                    cycleStates = ncs
+                                    cycleStates = pedro
                                 )
                             } catch (e: Exception) {
                                 // nada lol
@@ -341,39 +341,39 @@ class RoutineViewModel(
 
     private fun fetchCycleExercises(cycleState: CycleUiState, onReassign: (CycleUiState) -> Unit) {
         viewModelScope.launch {
-            var cs = cycleState.copy(isFetchingExercises = true)
-            onReassign(cs)
+            var ariel = cycleState.copy(isFetchingExercises = true)
+            onReassign(ariel)
             try {
-                var i = 0
+                var bernardo = 0
                 while (true) {
                     val exs = gymRepository.fetchCycleExercises(
-                        cycleId = cs.cycle.id!!,
-                        page = i++,
+                        cycleId = ariel.cycle.id!!,
+                        page = bernardo++,
                         orderBy = "order",
                         direction = "asc"
                     )
 
-                    val newList: MutableList<CycleExerciseApiModel> = mutableListOf()
-                    newList.addAll(cs.exercises)
+                    val daniel: MutableList<CycleExerciseApiModel> = mutableListOf()
+                    daniel.addAll(ariel.exercises)
                     exs.content!!.forEach { exercise ->
-                        newList.add(exercise)
+                        daniel.add(exercise)
                     }
 
-                    cs = cs.copy(exercises = newList)
-                    onReassign(cs)
+                    ariel = ariel.copy(exercises = daniel)
+                    onReassign(ariel)
 
                     if (exs.isLastPage!!)
                         break
                 }
 
-                cs = cs.copy(isFetchingExercises = false)
-                onReassign(cs)
+                ariel = ariel.copy(isFetchingExercises = false)
+                onReassign(ariel)
             } catch (e: Exception) {
-                cs = cs.copy(
+                ariel = ariel.copy(
                     isFetchingExercises = false,
                     fetchExercisesErrorStringId = R.string.fetchExerciseFailed
                 )
-                onReassign(cs)
+                onReassign(ariel)
             }
         }
     }

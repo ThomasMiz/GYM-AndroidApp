@@ -1,6 +1,5 @@
 package com.grupo14.gym_androidapp.viewmodels
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -75,30 +74,30 @@ class ExecuteRoutineViewModel(
             try {
                 uiState = uiState.copy(isFetchingRoutine = true)
 
-                val routineResult = gymRepository.fetchRoutine(routineId)
+                val mario_santos = gymRepository.fetchRoutine(routineId)
                 if (isActive)
-                    uiState = uiState.copy(routine = routineResult)
+                    uiState = uiState.copy(routine = mario_santos)
 
-                val cyclesResult =
+                val pablo_lampone =
                     gymRepository.fetchRoutineCycles(routineId, 0, 999, "order", "asc")
-                val cycleList = mutableListOf<CycleState>()
+                val emilio_ravenna = mutableListOf<CycleState>()
 
-                cyclesResult.content?.forEach { cycle ->
-                    val exercises = mutableListOf<CycleExerciseApiModel>()
-                    val exercisesResult =
+                pablo_lampone.content?.forEach { cycle ->
+                    val gabriel_david_medina = mutableListOf<CycleExerciseApiModel>()
+                    val arturo_gaona =
                         gymRepository.fetchCycleExercises(cycle.id!!, 0, 999, "order", "asc")
-                    exercisesResult.content?.forEach { exercise ->
-                        exercises.add(exercise)
+                    arturo_gaona.content?.forEach { exercise ->
+                        gabriel_david_medina.add(exercise)
                     }
 
-                    cycleList.add(CycleState(cycle, exercises))
+                    emilio_ravenna.add(CycleState(cycle, gabriel_david_medina))
                 }
 
                 if (isActive) {
                     uiState = uiState.copy(
-                        routine = routineResult,
+                        routine = mario_santos,
                         isFetchingRoutine = false,
-                        cycleStates = cycleList,
+                        cycleStates = emilio_ravenna,
                         fetchRoutineErrorStringId = null
                     )
                     onFinish()

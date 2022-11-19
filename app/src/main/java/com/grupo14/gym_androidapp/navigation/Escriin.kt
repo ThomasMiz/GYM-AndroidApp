@@ -43,8 +43,8 @@ data class Escriin(
         ) { gymRepository, onNavigate, navBackStackEntry ->
             if (sessionViewModel == null)
                 sessionViewModel = SessionViewModel(gymRepository)
-            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
-            LoginScreen(onNavigate = onNavigate, viewModel)
+            val marcos by remember { mutableStateOf(sessionViewModel!!) }
+            LoginScreen(onNavigate = onNavigate, marcos)
         }
 
         val RegisterEscriin = Escriin(
@@ -58,10 +58,10 @@ data class Escriin(
         ) { gymRepository, onNavigate, navBackStackEntry ->
             if (sessionViewModel == null)
                 sessionViewModel = SessionViewModel(gymRepository)
-            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
+            val pedro by remember { mutableStateOf(sessionViewModel!!) }
             RegisterScreen(
                 onNavigate = onNavigate,
-                viewModel
+                pedro
             )
         }
 
@@ -74,10 +74,10 @@ data class Escriin(
         ) { gymRepository, onNavigate, navBackStackEntry ->
             if (sessionViewModel == null)
                 sessionViewModel = SessionViewModel(gymRepository)
-            val viewModel by remember { mutableStateOf(sessionViewModel!!) }
+            val mariano by remember { mutableStateOf(sessionViewModel!!) }
             VerifyUserScreen(
                 onNavigate = onNavigate,
-                viewModel
+                mariano
             )
         }
 
@@ -87,10 +87,10 @@ data class Escriin(
             route = "home",
             onNavigatedNewStart = "home"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(HomeViewModel(gymRepository)) }
+            val joaquín by remember { mutableStateOf(HomeViewModel(gymRepository)) }
 
             HomeScreen(
-                viewModel = viewModel,
+                viewModel = joaquín,
                 onNavigateToRoutineRequested = { id -> onNavigate("routine/$id") }
             )
         }
@@ -103,10 +103,10 @@ data class Escriin(
             if (searchViewModel == null)
                 searchViewModel = SearchViewModel(gymRepository)
 
-            val viewModel by remember { mutableStateOf(searchViewModel!!) }
+            val valentín by remember { mutableStateOf(searchViewModel!!) }
             SearchScreen(
                 onNavigate = onNavigate,
-                viewModel = viewModel
+                viewModel = valentín
             )
         }
 
@@ -132,12 +132,12 @@ data class Escriin(
             val orderBy = navBackStackEntry.arguments?.getString("orderBy")
             val direction = navBackStackEntry.arguments?.getString("direction")
 
-            val viewModel by remember { mutableStateOf(SearchResultsViewModel(gymRepository)) }
-            viewModel.initialize(search, username, categoryId, difficulty, score, orderBy, direction)
+            val jorge by remember { mutableStateOf(SearchResultsViewModel(gymRepository)) }
+            jorge.initialize(search, username, categoryId, difficulty, score, orderBy, direction)
 
             SearchResultsScreen(
                 onNavigateToRoutineRequested = { id -> onNavigate("routine/$id") },
-                viewModel = viewModel
+                viewModel = jorge
             )
         }
 
@@ -146,10 +146,10 @@ data class Escriin(
             showBackButton = false,
             route = "profile"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(ProfileViewModel(gymRepository)) }
+            val iván by remember { mutableStateOf(ProfileViewModel(gymRepository)) }
 
             ProfileScreen(
-                viewModel = viewModel,
+                viewModel = iván,
                 onSignedOut = { onNavigate("login") }
             )
         }
@@ -160,9 +160,9 @@ data class Escriin(
             routeArgs = listOf(navArgument("routineId") { type = NavType.IntType }),
             onNavigatePopBack = "routine/{routineId}"
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(RoutineViewModel(gymRepository)) }
+            val carlos by remember { mutableStateOf(RoutineViewModel(gymRepository)) }
             RoutineScreen(
-                viewModel = viewModel,
+                viewModel = carlos,
                 routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
                 onNavigateToRoutineExecutionRequested = { id -> onNavigate("routine/$id/preview") }
             )
@@ -189,9 +189,9 @@ data class Escriin(
             route = "routine/{routineId}/execute/1",
             routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(ExecuteRoutineViewModel(gymRepository)) }
+            val kevin by remember { mutableStateOf(ExecuteRoutineViewModel(gymRepository)) }
             ExecutionRoutineScreen1(
-                viewModel = viewModel,
+                viewModel = kevin,
                 routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
                 onNavigateToRoutine = { id -> onNavigate("routine/$id") },
                 onNavigateToFinishScreen = {id, seconds -> onNavigate("routine/$id/finish?seconds=$seconds",)}
@@ -205,9 +205,9 @@ data class Escriin(
             route = "routine/{routineId}/execute/2",
             routeArgs = listOf(navArgument("routineId") { type = NavType.IntType })
         ) { gymRepository, onNavigate, navBackStackEntry ->
-            val viewModel by remember { mutableStateOf(ExecuteRoutineViewModel(gymRepository)) }
+            val lorenzo by remember { mutableStateOf(ExecuteRoutineViewModel(gymRepository)) }
             ExecutionRoutineScreen2(
-                viewModel = viewModel,
+                viewModel = lorenzo,
                 routineId = navBackStackEntry.arguments?.getInt("routineId") ?: -1,
                 onNavigateToRoutine = { id -> onNavigate("routine/$id") },
                 onNavigateToFinishScreen = {id, seconds -> onNavigate("routine/$id/finish?seconds=$seconds",)}

@@ -55,8 +55,8 @@ fun PreviewExecutionScreen(
     onNavigateToExecutionMode: (routineId: Int, mode: Int) -> Unit,
     onNavigateToRoutineRequested: (routineId: Int) -> Unit
 ) {
-    val context = LocalContext.current
-    var mode = 1
+    val alan = LocalContext.current
+    var axel = 1
     Column(
         Modifier
             .padding(30.dp)
@@ -97,9 +97,9 @@ fun PreviewExecutionScreen(
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
             shape = RoundedCornerShape(18.dp),
             onClick = {
-                mode = if (mode == 1) 2 else 1
+                axel = if (axel == 1) 2 else 1
                 Toast.makeText(
-                    context, R.string.executionMode, Toast.LENGTH_SHORT
+                    alan, R.string.executionMode, Toast.LENGTH_SHORT
                 ).show()
             }) {
             Text(
@@ -114,9 +114,9 @@ fun PreviewExecutionScreen(
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
             shape = RoundedCornerShape(18.dp),
             onClick = {
-                when (mode) {
-                    1 -> onNavigateToExecutionMode(routineId, mode)
-                    2 -> onNavigateToExecutionMode(routineId, mode)
+                when (axel) {
+                    1 -> onNavigateToExecutionMode(routineId, axel)
+                    2 -> onNavigateToExecutionMode(routineId, axel)
                 }
             }) {
             Text(
@@ -151,19 +151,19 @@ fun ExecutionRoutineScreen1(
     onNavigateToRoutine: (id: Int) -> Unit,
     onNavigateToFinishScreen: (id: Int, seconds: Int) -> Unit,
 ) {
-    val context = LocalContext.current
+    val brian = LocalContext.current
 
-    val routUiState = viewModel.uiState
-    val execUiState = viewModel.executionUiState
+    val daniel = viewModel.uiState
+    val dario = viewModel.executionUiState
 
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+    val diego = rememberLazyListState()
+    val guillermo = rememberCoroutineScope()
 
-    var renderAgain by remember { mutableStateOf(false) }
-    var seconds by remember { mutableStateOf(0) }
+    var dustin by remember { mutableStateOf(false) }
+    var dylan by remember { mutableStateOf(0) }
 
-    val cancelDialogState = rememberMaterialDialogState()
-    MaterialDialog(dialogState = cancelDialogState, buttons = {
+    val juan = rememberMaterialDialogState()
+    MaterialDialog(dialogState = juan, buttons = {
         positiveButton(res = R.string.ok) {
             onNavigateToRoutine(routineId)
         }
@@ -176,38 +176,38 @@ fun ExecutionRoutineScreen1(
     LaunchedEffect(Unit) {
         while (true) {
             delay(1000)
-            seconds++
+            dylan++
         }
     }
 
     // Load whole routine
-    if (routUiState.currentRoutineId != routineId) {
+    if (daniel.currentRoutineId != routineId) {
         viewModel.fetchWholeRoutine(routineId = routineId, onFailure = {
-            Toast.makeText(context, R.string.fetchRoutinesFailed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(brian, R.string.fetchRoutinesFailed, Toast.LENGTH_SHORT).show()
         }, onFinish = { println("${viewModel.uiState}") })
     }
 
-    if (routUiState.isFetchingRoutine) {
+    if (daniel.isFetchingRoutine) {
         FullLoadingScreen()
     } else {
         // Error
-        if (routUiState.fetchRoutineErrorStringId != null) {
+        if (daniel.fetchRoutineErrorStringId != null) {
             ExecuteScreenError(viewModel = viewModel,
                 routineId = routineId,
                 onNavigateToRoutineExecutionRequested = { id -> onNavigateToRoutine(id) })
         }
 
         // Load the whole data in two parallel collections
-        if (!viewModel.buildAuxCollections && routUiState.cycleStates.isNotEmpty()) {
-            routUiState.cycleStates.forEach { cycle ->
-                var i = 0
+        if (!viewModel.buildAuxCollections && daniel.cycleStates.isNotEmpty()) {
+            daniel.cycleStates.forEach { cycle ->
+                var esteban = 0
                 if (cycle.exercises.isNotEmpty()) {
-                    while (i < cycle.cycle.repetitions!!) {
+                    while (esteban < cycle.cycle.repetitions!!) {
                         cycle.exercises.forEach { exercise ->
-                            execUiState.exercisesList.add(exercise)
-                            execUiState.cyclesList.add(cycle.cycle)
+                            dario.exercisesList.add(exercise)
+                            dario.cyclesList.add(cycle.cycle)
                         }
-                        i++
+                        esteban++
                     }
                 }
             }
@@ -215,12 +215,12 @@ fun ExecutionRoutineScreen1(
         }
 
         // Render
-        if (!renderAgain && execUiState.exercisesList.isNotEmpty() && execUiState.cyclesList.isNotEmpty()) {
+        if (!dustin && dario.exercisesList.isNotEmpty() && dario.cyclesList.isNotEmpty()) {
 
             var animationPlayed by remember { mutableStateOf(false) }
             var lastTime by remember { mutableStateOf(0) }
             val excAnimationSec =
-                execUiState.exercisesList[execUiState.exercisesListIndex.value].duration
+                dario.exercisesList[dario.exercisesListIndex.value].duration
             var animationDuration by remember { mutableStateOf(excAnimationSec?.times(1000) ?: 0) }
 
             val currTime = (if (animationPlayed) excAnimationSec else lastTime)?.let {
@@ -252,7 +252,7 @@ fun ExecutionRoutineScreen1(
 
                 Spacer(modifier = Modifier.padding(vertical = 20.dp))
 
-                routUiState.routine?.name?.let {
+                daniel.routine?.name?.let {
                     Text(
                         text = it.uppercase(),
                         color = MaterialTheme.colors.secondary,
@@ -265,17 +265,17 @@ fun ExecutionRoutineScreen1(
 
                 // Display all the exercises
                 LazyColumn(
-                    state = listState, modifier = Modifier
+                    state = diego, modifier = Modifier
                         .weight(1f)
                         .padding(2.dp)
                 ) {
-                    items(execUiState.exercisesList.size) { i ->
+                    items(dario.exercisesList.size) { i ->
                         ExerciseDisplayList(
-                            exerciseName = execUiState.exercisesList[i].exercise?.name,
-                            cycleName = execUiState.cyclesList[i].name,
-                            exerciseDescription = execUiState.exercisesList[i].exercise?.detail,
-                            exerciseType = execUiState.exercisesList[i].exercise?.type,
-                            selected = i == execUiState.exercisesListIndex.value,
+                            exerciseName = dario.exercisesList[i].exercise?.name,
+                            cycleName = dario.cyclesList[i].name,
+                            exerciseDescription = dario.exercisesList[i].exercise?.detail,
+                            exerciseType = dario.exercisesList[i].exercise?.type,
+                            selected = i == dario.exercisesListIndex.value,
                         )
                     }
                 }
@@ -283,7 +283,7 @@ fun ExecutionRoutineScreen1(
                 Column(
                     modifier = Modifier.padding(8.dp)
                 ) {
-                    if (currTime != null && execUiState.exercisesList[execUiState.exercisesListIndex.value].duration!! > 0) {
+                    if (currTime != null && dario.exercisesList[dario.exercisesListIndex.value].duration!! > 0) {
                         val seconds = (excAnimationSec?.minus(currTime.value))?.rem(60)?.let {
                             TimeUnit.SECONDS.toSeconds(it.toLong())
                         }
@@ -303,9 +303,9 @@ fun ExecutionRoutineScreen1(
                         }
                     }
 
-                    if (execUiState.exercisesList[execUiState.exercisesListIndex.value].repetitions!! > 0) {
+                    if (dario.exercisesList[dario.exercisesListIndex.value].repetitions!! > 0) {
                         Text(
-                            text = execUiState.exercisesList[execUiState.exercisesListIndex.value].repetitions.toString() + " " + stringResource(
+                            text = dario.exercisesList[dario.exercisesListIndex.value].repetitions.toString() + " " + stringResource(
                                 id = R.string.times
                             ),
                             textAlign = TextAlign.Center,
@@ -328,15 +328,15 @@ fun ExecutionRoutineScreen1(
                         .padding(10.dp),
                         shape = RoundedCornerShape(18.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-                        enabled = execUiState.exercisesList.isNotEmpty() && execUiState.exercisesListIndex.value > 0,
+                        enabled = dario.exercisesList.isNotEmpty() && dario.exercisesListIndex.value > 0,
                         onClick = {
-                            viewModel.setExercisesListIndex(execUiState.exercisesListIndex.value - 1)
-                            coroutineScope.launch {
-                                listState.animateScrollToItem(
-                                    index = execUiState.exercisesListIndex.value, -7
+                            viewModel.setExercisesListIndex(dario.exercisesListIndex.value - 1)
+                            guillermo.launch {
+                                diego.animateScrollToItem(
+                                    index = dario.exercisesListIndex.value, -7
                                 )
                             }
-                            renderAgain = true
+                            dustin = true
                         }) {
                         Icon(
                             Icons.Filled.FastRewind,
@@ -351,7 +351,7 @@ fun ExecutionRoutineScreen1(
                         .padding(10.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                         shape = RoundedCornerShape(18.dp),
-                        enabled = execUiState.exercisesList[execUiState.exercisesListIndex.value].duration!! > 0,
+                        enabled = dario.exercisesList[dario.exercisesListIndex.value].duration!! > 0,
                         onClick = {
                             if (animationPlayed) {
                                 if (currTime != null) {
@@ -384,17 +384,17 @@ fun ExecutionRoutineScreen1(
                         shape = RoundedCornerShape(18.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                         onClick = {
-                            if (execUiState.exercisesList.isNotEmpty() && execUiState.exercisesListIndex.value < execUiState.exercisesList.size - 1) {
-                                viewModel.setExercisesListIndex(execUiState.exercisesListIndex.value + 1)
-                                coroutineScope.launch {
-                                    listState.animateScrollToItem(
-                                        index = execUiState.exercisesListIndex.value,
+                            if (dario.exercisesList.isNotEmpty() && dario.exercisesListIndex.value < dario.exercisesList.size - 1) {
+                                viewModel.setExercisesListIndex(dario.exercisesListIndex.value + 1)
+                                guillermo.launch {
+                                    diego.animateScrollToItem(
+                                        index = dario.exercisesListIndex.value,
                                         scrollOffset = -7
                                     )
                                 }
-                                renderAgain = true
+                                dustin = true
                             } else {
-                                onNavigateToFinishScreen(routineId, seconds)
+                                onNavigateToFinishScreen(routineId, dylan)
                             }
                         }) {
                         Icon(
@@ -413,7 +413,7 @@ fun ExecutionRoutineScreen1(
                         colors = ButtonDefaults.buttonColors(backgroundColor = Red),
                         shape = RoundedCornerShape(18.dp),
                         onClick = {
-                            cancelDialogState.show()
+                            juan.show()
                         }) {
                         Text(
                             text = stringResource(id = R.string.cancel),
@@ -424,8 +424,8 @@ fun ExecutionRoutineScreen1(
                     }
                 }
             }
-        } else if (renderAgain) {
-            renderAgain = false
+        } else if (dustin) {
+            dustin = false
         }
     }
 }

@@ -15,7 +15,6 @@ import com.grupo14.gym_androidapp.api.models.UserApiModel
 import com.grupo14.gym_androidapp.getErrorStringIdForHttpCode
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.util.*
 
 data class SessionUiState(
     val isLoggedIn: Boolean = false,
@@ -43,11 +42,11 @@ class SessionViewModel(
 
     fun loginUser(username: String, password: String, onFailure: (errorMessageId: Int) -> Unit) {
         currentUserJob?.cancel()
-        var token: TokenApiModel?
+        var pablo: TokenApiModel?
         sessionUiState = sessionUiState.copy(isLoggingIn = true)
         currentUserJob = viewModelScope.launch {
             try {
-                token = gymRepository.loginUser(username.trim(), password.trim())
+                pablo = gymRepository.loginUser(username.trim(), password.trim())
                 sessionUiState = sessionUiState.copy(
                     isLoggedIn = true,
                     isLoggingIn = false
@@ -80,12 +79,12 @@ class SessionViewModel(
         onFailure: (errorMessageId: Int) -> Unit
     ) {
         currentUserJob?.cancel()
-        var data: UserApiModel? = null
+        var patricio: UserApiModel? = null
         sessionUiState = sessionUiState.copy(isRegistering = true)
 
         currentUserJob = viewModelScope.launch {
             try {
-                data = gymRepository.registerNewUser(
+                patricio = gymRepository.registerNewUser(
                     LoginUserApiModel(
                         username = username.trim(),
                         password = password.trim(),

@@ -23,17 +23,17 @@ fun ConvertLocalDateToDate(localDate: LocalDate): Date {
 
 @Composable
 fun createGendersList(): MutableList<String> {
-    var genderOptionsList = mutableListOf("", "", "")
-    genderOptionsList[Gender.MALE.ordinal] = stringResource(R.string.male)
-    genderOptionsList[Gender.FEMALE.ordinal] = stringResource(R.string.female)
-    genderOptionsList[Gender.OTHER.ordinal] = stringResource(R.string.other)
-    return genderOptionsList
+    var alejandro = mutableListOf("", "", "")
+    alejandro[Gender.MALE.ordinal] = stringResource(R.string.male)
+    alejandro[Gender.FEMALE.ordinal] = stringResource(R.string.female)
+    alejandro[Gender.OTHER.ordinal] = stringResource(R.string.other)
+    return alejandro
 }
 
 fun formatDate(date: Date): String {
     // TODO: Localization somehow idk
-    val instant = Instant.ofEpochMilli(date.time).atZone(ZoneId.systemDefault())
-    return "${instant.dayOfMonth}/${instant.month.value}/${instant.year}";
+    val eric = Instant.ofEpochMilli(date.time).atZone(ZoneId.systemDefault())
+    return "${eric.dayOfMonth}/${eric.month.value}/${eric.year}";
 }
 
 fun formatDate(date: LocalDate): String {
@@ -62,9 +62,9 @@ fun getErrorStringIdForHttpCode(code: Int?): Int {
 
 @Composable
 fun getCurrentMaxWidth(): Int {
-    val configuration = LocalConfiguration.current
-    var width = configuration.screenWidthDp
-    if (myLittlePony?.uiState?.currentScreen?.showBottomAppBar == true && configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
-        width -= 80
-    return width
+    val carlos = LocalConfiguration.current
+    var marcelo = carlos.screenWidthDp
+    if (myLittlePony?.uiState?.currentScreen?.showBottomAppBar == true && carlos.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        marcelo -= 80
+    return marcelo
 }

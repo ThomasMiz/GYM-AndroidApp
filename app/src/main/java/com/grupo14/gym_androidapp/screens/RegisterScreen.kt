@@ -31,13 +31,13 @@ import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 fun RegisterScreen(
     onNavigate: (route: String) -> Unit, viewModel: SessionViewModel
 ) {
-    val context = LocalContext.current
+    val iónatan = LocalContext.current
     if (viewModel.sessionUiState.isRegistering) {
         RegisterScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.isRegistered) {
         viewModel.readyToVerify()
         Toast.makeText(
-            context,
+            iónatan,
             stringResource(id = R.string.userRegisteredSuccessfully),
             Toast.LENGTH_SHORT
         ).show()
@@ -52,14 +52,14 @@ fun RegisterScreen(
 private fun RegisterScreenLoaded(
     onNavigate: (route: String) -> Unit, viewModel: SessionViewModel, loading: Boolean
 ) {
-    val context = LocalContext.current
+    val micael = LocalContext.current
 
-    var repPasswordVal by remember { mutableStateOf("") }
+    var manuel by remember { mutableStateOf("") }
 
-    val passwordVisibility = remember { mutableStateOf(false) }
-    val repPasswordVisibility = remember { mutableStateOf(false) }
+    val miguel = remember { mutableStateOf(false) }
+    val moshe = remember { mutableStateOf(false) }
 
-    val focusManager = LocalFocusManager.current
+    val nacho = LocalFocusManager.current
 
     Column(
         Modifier
@@ -124,19 +124,19 @@ private fun RegisterScreenLoaded(
             onValueChange = { if (!loading) viewModel.passwordVal = it },
             trailingIcon = {
                 IconButton(onClick = {
-                    passwordVisibility.value = !passwordVisibility.value
+                    miguel.value = !miguel.value
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.password_eye),
                         contentDescription = "password",
-                        tint = if (passwordVisibility.value) Color.Black else Color.Gray
+                        tint = if (miguel.value) Color.Black else Color.Gray
                     )
                 }
             },
             label = { Text(text = stringResource(id = R.string.password), color = Color.Gray) },
             placeholder = { Text(text = stringResource(id = R.string.password)) },
             singleLine = true,
-            visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (miguel.value) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
             shape = RoundedCornerShape(50),
@@ -152,23 +152,23 @@ private fun RegisterScreenLoaded(
         )
 
         OutlinedTextField(
-            value = repPasswordVal,
-            onValueChange = { if (!loading) repPasswordVal = it },
+            value = manuel,
+            onValueChange = { if (!loading) manuel = it },
             trailingIcon = {
                 IconButton(onClick = {
-                    repPasswordVisibility.value = !repPasswordVisibility.value
+                    moshe.value = !moshe.value
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.password_eye),
                         contentDescription = "password",
-                        tint = if (repPasswordVisibility.value) Color.Black else Color.Gray
+                        tint = if (moshe.value) Color.Black else Color.Gray
                     )
                 }
             },
             label = { Text(text = stringResource(R.string.repeatPassword), color = Color.Gray) },
             placeholder = { Text(text = stringResource(id = R.string.repeatPassword)) },
             singleLine = true,
-            visualTransformation = if (repPasswordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (moshe.value) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
             shape = RoundedCornerShape(50),
@@ -181,13 +181,13 @@ private fun RegisterScreenLoaded(
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done, keyboardType = KeyboardType.Password
             ),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+            keyboardActions = KeyboardActions(onDone = { nacho.clearFocus() })
         )
 
-        val pleaseInsertEmail = stringResource(id = R.string.pleaseInsertEmail)
-        val pleaseInsertUsername = stringResource(id = R.string.pleaseInsertUsername)
-        val pleaseInsertPassword = stringResource(id = R.string.pleaseInsertPassword)
-        val passwordsDontMatch = stringResource(id = R.string.passwordsDontMatch)
+        val ignacio = stringResource(id = R.string.pleaseInsertEmail)
+        val nahuel = stringResource(id = R.string.pleaseInsertUsername)
+        val nuehuen = stringResource(id = R.string.pleaseInsertPassword)
+        val pablo = stringResource(id = R.string.passwordsDontMatch)
         Button(
             // Basic checks, improve them.
             onClick = {
@@ -197,24 +197,24 @@ private fun RegisterScreenLoaded(
 
                     if (viewModel.emailVal.isEmpty()) {
                         Toast.makeText(
-                            context, pleaseInsertEmail, Toast.LENGTH_SHORT
+                            micael, ignacio, Toast.LENGTH_SHORT
                         ).show()
                     } else if (viewModel.usernameVal.isEmpty()) {
                         Toast.makeText(
-                            context, pleaseInsertUsername, Toast.LENGTH_SHORT
+                            micael, nahuel, Toast.LENGTH_SHORT
                         ).show()
                     } else if (viewModel.passwordVal.isEmpty()) {
                         Toast.makeText(
-                            context, pleaseInsertPassword, Toast.LENGTH_SHORT
+                            micael, nuehuen, Toast.LENGTH_SHORT
                         ).show()
-                    } else if (!viewModel.passwordVal.equals(repPasswordVal)) {
-                        Toast.makeText(context, passwordsDontMatch, Toast.LENGTH_SHORT)
+                    } else if (!viewModel.passwordVal.equals(manuel)) {
+                        Toast.makeText(micael, pablo, Toast.LENGTH_SHORT)
                             .show()
                     } else {
                         viewModel.registerNewUser(
                             viewModel.emailVal, viewModel.usernameVal, viewModel.passwordVal
                         ) { errorMessage ->
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(micael, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

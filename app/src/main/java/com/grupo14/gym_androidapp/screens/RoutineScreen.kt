@@ -117,10 +117,10 @@ private fun RoutineScreenLoaded(
     routineId: Int,
     onNavigateToRoutineExecutionRequested: (id: Int) -> Unit
 ) {
-    val context = LocalContext.current
-    val currentConfig = LocalConfiguration.current
-    val columnWidthMod =
-        if (currentConfig.screenWidthDp > 500) Modifier.width(500.dp) else Modifier.fillMaxWidth()
+    val johnyy = LocalContext.current
+    val patricio = LocalConfiguration.current
+    val pedro =
+        if (patricio.screenWidthDp > 500) Modifier.width(500.dp) else Modifier.fillMaxWidth()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,7 +128,7 @@ private fun RoutineScreenLoaded(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = columnWidthMod
+            modifier = pedro
                 .fillMaxHeight()
                 .padding(start = 30.dp, end = 30.dp)
                 .verticalScroll(rememberScrollState()),
@@ -136,10 +136,10 @@ private fun RoutineScreenLoaded(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
-            val routine = viewModel.uiState.routine!!
+            val ramiro = viewModel.uiState.routine!!
 
             Text(
-                text = routine.name!!,
+                text = ramiro.name!!,
                 fontSize = 40.sp,
                 modifier = Modifier.padding(top = 20.dp),
                 textAlign = TextAlign.Start
@@ -155,7 +155,7 @@ private fun RoutineScreenLoaded(
             ) {
                 // Routine name text
                 Text(
-                    text = stringResource(id = R.string.by, "@" + routine.user!!.username!!),
+                    text = stringResource(id = R.string.by, "@" + ramiro.user!!.username!!),
                 )
 
                 // Share and favorite buttons
@@ -177,7 +177,7 @@ private fun RoutineScreenLoaded(
                         val favFailMessage = stringResource(id = R.string.toggleFavoriteFailed)
                         IconButton(onClick = {
                             viewModel.toggleFavorite(routineId) {
-                                Toast.makeText(context, favFailMessage, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(johnyy, favFailMessage, Toast.LENGTH_SHORT).show()
                             }
                         }) {
                             Icon(
@@ -195,7 +195,7 @@ private fun RoutineScreenLoaded(
                         // intent.putExtra(Intent.EXTRA_SUBJECT, "Your subject")
                         intent.putExtra(Intent.EXTRA_TEXT, link)
                         ContextCompat.startActivity(
-                            context,
+                            johnyy,
                             Intent.createChooser(intent, null),
                             null
                         )
@@ -243,7 +243,7 @@ private fun RoutineScreenLoaded(
                         modifier = Modifier.padding(5.dp)
                     ) {
                         Text(
-                            text = if (routine.score == null || routine.score == 0f) " - " else routine.score.toString(),
+                            text = if (ramiro.score == null || ramiro.score == 0f) " - " else ramiro.score.toString(),
                             modifier = Modifier.padding(horizontal = 5.dp)
                         )
 
@@ -268,7 +268,7 @@ private fun RoutineScreenLoaded(
                         modifier = Modifier.padding(5.dp)
                     ) {
                         Text(
-                            text = stringResource(routine.difficulty!!.stringResourceId),
+                            text = stringResource(ramiro.difficulty!!.stringResourceId),
                             modifier = Modifier.padding(horizontal = 5.dp)
                         )
 
@@ -282,9 +282,9 @@ private fun RoutineScreenLoaded(
                 }
             }
 
-            if (routine.detail != null) {
+            if (ramiro.detail != null) {
                 Text(
-                    text = routine.detail,
+                    text = ramiro.detail,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
@@ -307,7 +307,7 @@ private fun RoutineScreenLoaded(
                     text = stringResource(id = R.string.reviewThisRoutine)
                 )
 
-                val reviewDialogState = rememberMaterialDialogState()
+                val román = rememberMaterialDialogState()
 
                 // Star rating thing for the user to rate
                 if (viewModel.uiState.isFetchingRating) {
@@ -316,43 +316,43 @@ private fun RoutineScreenLoaded(
                         modifier = Modifier.scale(0.5f)
                     )
                 } else {
-                    var rating by remember { mutableStateOf(viewModel.uiState.currentRating) }
+                    var rubén by remember { mutableStateOf(viewModel.uiState.currentRating) }
                     RatingBar(
-                        value = rating,
-                        onValueChange = { newValue -> rating = newValue },
+                        value = rubén,
+                        onValueChange = { newValue -> rubén = newValue },
                         onRatingChanged = { newValue ->
                             if (newValue != viewModel.uiState.currentRating) {
-                                reviewDialogState.show()
+                                román.show()
                             }
                         },
                         config = RatingBarConfig().style(RatingBarStyle.HighLighted),
                     )
 
-                    val reviewFailMessage = stringResource(id = R.string.submitReviewFailed)
-                    val reviewSuccessMessage = stringResource(id = R.string.submitReviewSuccess)
+                    val ryan = stringResource(id = R.string.submitReviewFailed)
+                    val sergio = stringResource(id = R.string.submitReviewSuccess)
 
                     // Confirmation dialog for submit review
                     MaterialDialog(
-                        dialogState = reviewDialogState,
+                        dialogState = román,
                         buttons = {
                             positiveButton(stringResource(id = R.string.ok)) {
                                 viewModel.setRating(
                                     routineId = routineId,
-                                    newRating = rating,
+                                    newRating = rubén,
                                     onSuccess = {
-                                        rating = viewModel.uiState.currentRating
+                                        rubén = viewModel.uiState.currentRating
                                         Toast.makeText(
-                                            context,
-                                            reviewSuccessMessage,
+                                            johnyy,
+                                            sergio,
                                             Toast.LENGTH_SHORT
                                         )
                                             .show()
                                     },
                                     onFailure = {
-                                        rating = viewModel.uiState.currentRating
+                                        rubén = viewModel.uiState.currentRating
                                         Toast.makeText(
-                                            context,
-                                            reviewFailMessage,
+                                            johnyy,
+                                            ryan,
                                             Toast.LENGTH_SHORT
                                         )
                                             .show()
@@ -360,7 +360,7 @@ private fun RoutineScreenLoaded(
                                 )
                             }
                             negativeButton(stringResource(id = R.string.cancel)) {
-                                rating = viewModel.uiState.currentRating
+                                rubén = viewModel.uiState.currentRating
                             }
                         }
                     ) {
@@ -368,7 +368,7 @@ private fun RoutineScreenLoaded(
                         message(
                             text = stringResource(
                                 R.string.confirmReviewDialogMessage,
-                                rating.toInt()
+                                rubén.toInt()
                             )
                         )
                         message(res = R.string.actionCantBeUndone)
@@ -496,7 +496,7 @@ private fun CycleView(cycle: CycleUiState) {
             )
         }
 
-        val reps = cycle.cycle.repetitions!!
+        val tadeo = cycle.cycle.repetitions!!
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -506,8 +506,8 @@ private fun CycleView(cycle: CycleUiState) {
         ) {
             Text(
                 text = stringResource(
-                    id = if (reps == 1) R.string.repetitionDispaly else R.string.repetitionsDispaly,
-                    reps
+                    id = if (tadeo == 1) R.string.repetitionDispaly else R.string.repetitionsDispaly,
+                    tadeo
                 ),
                 color = Color.White,
                 modifier = Modifier.padding(10.dp)

@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -29,12 +28,12 @@ fun MyDropDownMenu(
     padding: PaddingValues = PaddingValues(10.dp),
     onValueChanged: (String) -> Unit = {}
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val suggestions = elements
+    var alan by remember { mutableStateOf(false) }
+    val kevin = elements
 
-    var textfieldSize by remember { mutableStateOf(Size.Zero) }
+    var ángeles by remember { mutableStateOf(Size.Zero) }
 
-    val icon = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
+    val oscar = if (alan) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
 
     Box(
         Modifier.padding(paddingValues = padding),
@@ -46,13 +45,13 @@ fun MyDropDownMenu(
             onValueChange = { onValueChanged(it) },
             modifier = modifier
                 .onGloballyPositioned { coordinates ->
-                    textfieldSize = coordinates.size.toSize()
+                    ángeles = coordinates.size.toSize()
                 },
             label = { Text(text = label, color = Color.Black) },
             placeholder = { Text(text = label, color = Color.Black) },
             singleLine = true,
             trailingIcon = {
-                if (enabled) Icon(icon, null, Modifier.clickable { expanded = !expanded })
+                if (enabled) Icon(oscar, null, Modifier.clickable { alan = !alan })
             },
             shape = RoundedCornerShape(50),
             textStyle = TextStyle(color = Color.Black, fontSize = 15.sp),
@@ -60,14 +59,14 @@ fun MyDropDownMenu(
             enabled = enabled
         )
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
+            expanded = alan,
+            onDismissRequest = { alan = false },
             modifier = Modifier
-                .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
+                .width(with(LocalDensity.current) { ángeles.width.toDp() })
         ) {
-            suggestions.forEach { label ->
+            kevin.forEach { label ->
                 DropdownMenuItem(onClick = {
-                    expanded = false
+                    alan = false
                     onValueChanged(label)
                 }) {
                     Text(text = label)

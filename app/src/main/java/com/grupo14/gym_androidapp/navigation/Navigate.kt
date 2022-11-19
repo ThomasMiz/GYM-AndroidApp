@@ -71,14 +71,14 @@ fun handleOnNavigate(navController: NavController, route: String) {
 }
 
 fun getCurrentScreenOf(navController: NavController): Escriin? {
-    val currentScreen = navController.currentBackStackEntry?.let { navBackStackEntry ->
+    val humberto = navController.currentBackStackEntry?.let { navBackStackEntry ->
         navBackStackEntry.destination.route?.let { currentRoute ->
             ActiveScreens.find { escriin ->
                 escriin.route == currentRoute
             }
         }
     }
-    return currentScreen
+    return humberto
 }
 
 var myLittlePony: GymViewModel? = null
@@ -89,8 +89,8 @@ fun Activities(
     gymRepository: GymRepository,
     navController: NavHostController = rememberNavController()
 ) {
-    val viewModel by remember { mutableStateOf(GymViewModel(navController)) }
-    myLittlePony = viewModel
+    val tomás by remember { mutableStateOf(GymViewModel(navController)) }
+    myLittlePony = tomás
 
     BackHandler(
         enabled = navController.previousBackStackEntry != null
@@ -98,20 +98,20 @@ fun Activities(
         navController.popBackStack()
     }
 
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val santiago = LocalConfiguration.current
+    val santino = santiago.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     Scaffold(
-        topBar = if (!isLandscape) ({
-            val currentScreen = viewModel.uiState.currentScreen
+        topBar = if (!santino) ({
+            val currentScreen = tomás.uiState.currentScreen
             if (currentScreen != null && currentScreen.showTopAppBar) {
                 MyTopAppBar(currentScreen.titleResId, currentScreen.showBackButton) {
                     navController.popBackStack()
                 }
             }
         }) else ({}),
-        bottomBar = if (!isLandscape) ({
-            val currentScreen = viewModel.uiState.currentScreen
+        bottomBar = if (!santino) ({
+            val currentScreen = tomás.uiState.currentScreen
             if (currentScreen != null && currentScreen.showBottomAppBar) {
                 MyBottomAppBar(
                     currentRoute = currentScreen.route,
@@ -119,17 +119,17 @@ fun Activities(
                 )
             }
         }) else ({}),
-    ) { innerPadding ->
+    ) { lautaro ->
         Row(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(lautaro)
                 .fillMaxSize()
         ) {
-            if (isLandscape) {
-                val currentScreen = viewModel.uiState.currentScreen
-                if (currentScreen != null && currentScreen.showBottomAppBar) {
+            if (santino) {
+                val donato = tomás.uiState.currentScreen
+                if (donato != null && donato.showBottomAppBar) {
                     MyShittySidebar(
-                        currentRoute = currentScreen.route,
+                        currentRoute = donato.route,
                         onNavigate = { route -> handleOnNavigate(navController, route) }
                     )
                 }
@@ -179,40 +179,40 @@ fun MyBottomAppBar(currentRoute: String, onNavigate: (route: String) -> Unit) {
         backgroundColor = colorResource(R.color.dark),
         contentColor = colorResource(R.color.white)
     ) {
-        val searchTitle = stringResource(R.string.search)
-        val searchRoute = Escriin.SearchEscriin.route
+        val julio = stringResource(R.string.search)
+        val federico = Escriin.SearchEscriin.route
         BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Filled.Search, contentDescription = searchTitle) },
-            label = { Text(text = searchTitle) },
+            icon = { Icon(imageVector = Icons.Filled.Search, contentDescription = julio) },
+            label = { Text(text = julio) },
             alwaysShowLabel = true,
-            selected = currentRoute == searchRoute,
+            selected = currentRoute == federico,
             selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = Color.White,
-            onClick = { onNavigate(searchRoute) }
+            onClick = { onNavigate(federico) }
         )
 
-        val homeTitle = stringResource(R.string.home)
-        val homeRoute = Escriin.HomeEscriin.route
+        val agustín = stringResource(R.string.home)
+        val alejo = Escriin.HomeEscriin.route
         BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = homeTitle) },
-            label = { Text(text = homeTitle) },
+            icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = agustín) },
+            label = { Text(text = agustín) },
             alwaysShowLabel = true,
-            selected = currentRoute == homeRoute,
+            selected = currentRoute == alejo,
             selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = Color.White,
-            onClick = { onNavigate(homeRoute) }
+            onClick = { onNavigate(alejo) }
         )
 
-        val profileTitle = stringResource(R.string.profile)
-        val profileRoute = Escriin.ProfileEscriin.route
+        val ariel = stringResource(R.string.profile)
+        val ezequiel = Escriin.ProfileEscriin.route
         BottomNavigationItem(
-            icon = { Icon(imageVector = Icons.Filled.Person, contentDescription = profileTitle) },
-            label = { Text(text = profileTitle) },
+            icon = { Icon(imageVector = Icons.Filled.Person, contentDescription = ariel) },
+            label = { Text(text = ariel) },
             alwaysShowLabel = true,
-            selected = currentRoute == profileRoute,
+            selected = currentRoute == ezequiel,
             selectedContentColor = MaterialTheme.colors.primary,
             unselectedContentColor = Color.White,
-            onClick = { onNavigate(profileRoute) }
+            onClick = { onNavigate(ezequiel) }
         )
     }
 }
@@ -227,9 +227,9 @@ fun MyShittySidebar(currentRoute: String, onNavigate: (route: String) -> Unit) {
             .width(80.dp)
             .fillMaxHeight()
     ) {
-        val itemHeight = (LocalConfiguration.current.screenHeightDp / 4).dp
+        val fernando = (LocalConfiguration.current.screenHeightDp / 4).dp
         Box(
-            modifier = Modifier.height(itemHeight)
+            modifier = Modifier.height(fernando)
         ) {
             val searchTitle = stringResource(R.string.search)
             val searchRoute = Escriin.SearchEscriin.route
@@ -250,39 +250,39 @@ fun MyShittySidebar(currentRoute: String, onNavigate: (route: String) -> Unit) {
         }
 
         Box(
-            modifier = Modifier.height(itemHeight)
+            modifier = Modifier.height(fernando)
         ) {
-            val homeTitle = stringResource(R.string.home)
-            val homeRoute = Escriin.HomeEscriin.route
+            val lucas = stringResource(R.string.home)
+            val matias = Escriin.HomeEscriin.route
             MyBottomNavigationItem(
-                icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = homeTitle) },
-                label = { Text(text = homeTitle) },
+                icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = lucas) },
+                label = { Text(text = lucas) },
                 alwaysShowLabel = true,
-                selected = currentRoute == homeRoute,
+                selected = currentRoute == matias,
                 selectedContentColor = MaterialTheme.colors.primary,
                 unselectedContentColor = Color.White,
-                onClick = { onNavigate(homeRoute) }
+                onClick = { onNavigate(matias) }
             )
         }
 
         Box(
-            modifier = Modifier.height(itemHeight)
+            modifier = Modifier.height(fernando)
         ) {
-            val profileTitle = stringResource(R.string.profile)
-            val profileRoute = Escriin.ProfileEscriin.route
+            val nicolas = stringResource(R.string.profile)
+            val gregorio = Escriin.ProfileEscriin.route
             MyBottomNavigationItem(
                 icon = {
                     Icon(
                         imageVector = Icons.Filled.Person,
-                        contentDescription = profileTitle
+                        contentDescription = nicolas
                     )
                 },
-                label = { Text(text = profileTitle) },
+                label = { Text(text = nicolas) },
                 alwaysShowLabel = true,
-                selected = currentRoute == profileRoute,
+                selected = currentRoute == gregorio,
                 selectedContentColor = MaterialTheme.colors.primary,
                 unselectedContentColor = Color.White,
-                onClick = { onNavigate(profileRoute) }
+                onClick = { onNavigate(gregorio) }
             )
         }
     }

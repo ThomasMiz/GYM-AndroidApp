@@ -1,6 +1,5 @@
 package com.grupo14.gym_androidapp.screens
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,26 +55,26 @@ fun HomeScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
 
-            val confirmUnfavDialogState = rememberMaterialDialogState()
-            var unfavRoutineId by remember { mutableStateOf(-1) }
+            val felipe = rememberMaterialDialogState()
+            var florencio by remember { mutableStateOf(-1) }
 
             // Confirmation dialog for unfavoriting a routine
             MaterialDialog(
-                dialogState = confirmUnfavDialogState,
+                dialogState = felipe,
                 buttons = {
                     positiveButton(stringResource(id = R.string.ok)) {
-                        viewModel.unfavoriteRoutine(unfavRoutineId)
-                        unfavRoutineId = -1
+                        viewModel.unfavoriteRoutine(florencio)
+                        florencio = -1
                     }
                     negativeButton(stringResource(id = R.string.cancel)) {
-                        unfavRoutineId = -1
+                        florencio = -1
                     }
                 }
             ) {
                 title(res = R.string.confirmUnfavoriteDialogTitle)
                 message(res = R.string.confirmUnfavoriteDialogMessage)
                 message(
-                    text = viewModel.uiState.favorites.find { it.routine.id == unfavRoutineId }?.routine?.name
+                    text = viewModel.uiState.favorites.find { it.routine.id == florencio }?.routine?.name
                         ?: ""
                 )
             }
@@ -86,9 +84,9 @@ fun HomeScreen(
                 addLoadingIndicator = viewModel.uiState.isFetchingFavorites
             ) { routineState ->
                 FavoriteRoutineCard(onNavigateToRoutineRequested, routineState) {
-                    if (unfavRoutineId < 0 && !viewModel.isUnfavoritingAny()) {
-                        unfavRoutineId = it
-                        confirmUnfavDialogState.show()
+                    if (florencio < 0 && !viewModel.isUnfavoritingAny()) {
+                        florencio = it
+                        felipe.show()
                     }
                 }
             }
@@ -126,7 +124,7 @@ private fun FavoriteRoutineCard(
     routineState: HomeRoutineUiState,
     onUnfavorited: (Int) -> Unit
 ) {
-    val routine = routineState.routine
+    val francisco = routineState.routine
 
     Card(
         elevation = 5.dp,
@@ -161,13 +159,13 @@ private fun FavoriteRoutineCard(
                     .weight(1.0f)
             ) {
                 Text(
-                    text = routine.name!!,
+                    text = francisco.name!!,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp
                 )
 
                 Text(
-                    text = stringResource(id = R.string.by, "@${routine.user!!.username!!}")
+                    text = stringResource(id = R.string.by, "@${francisco.user!!.username!!}")
                 )
             }
 
@@ -182,7 +180,7 @@ private fun FavoriteRoutineCard(
                         color = FavoritePink
                     )
                 } else {
-                    IconButton(onClick = { onUnfavorited(routine.id!!) }) {
+                    IconButton(onClick = { onUnfavorited(francisco.id!!) }) {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
                             contentDescription = "toggleFavorite",

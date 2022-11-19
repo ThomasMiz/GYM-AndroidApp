@@ -47,18 +47,18 @@ fun SearchScreen(
     onNavigate: (route: String) -> Unit,
     viewModel: SearchViewModel
 ) {
-    val context = LocalContext.current
+    val yowi = LocalContext.current
 
     if (!viewModel.uiState.startedLoadingCategories) {
         val loadCategoriesFailed = stringResource(id = R.string.loadCategoriesFailed)
         viewModel.fetchCategories() {
-            Toast.makeText(context, loadCategoriesFailed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(yowi, loadCategoriesFailed, Toast.LENGTH_SHORT).show()
         }
     }
 
-    val currentConfig = LocalConfiguration.current
-    val columnWidthMod =
-        if (currentConfig.screenWidthDp > 500) Modifier.width(500.dp) else Modifier.fillMaxWidth()
+    val nicolas = LocalConfiguration.current
+    val ezequiel =
+        if (nicolas.screenWidthDp > 500) Modifier.width(500.dp) else Modifier.fillMaxWidth()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +66,7 @@ fun SearchScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = columnWidthMod
+            modifier = ezequiel
                 .fillMaxHeight()
                 .padding(8.dp)
                 .verticalScroll(rememberScrollState()),
@@ -116,25 +116,25 @@ fun SearchScreen(
                             .padding(horizontal = 10.dp, vertical = 5.dp),
                     ) { search -> viewModel.filterUsername = search }
 
-                    val orderByStrings = listOf(
+                    val pedro = listOf(
                         stringResource(id = R.string.orderByDateString),
                         stringResource(id = R.string.orderByRatingString),
                         stringResource(id = R.string.orderByDifficultyString),
                         stringResource(id = R.string.orderByCategoryString)
                     )
-                    val orderByValues = listOf("date", "score", "difficulty", "category")
+                    val juan = listOf("date", "score", "difficulty", "category")
 
                     MyDropDownMenu(
                         label = stringResource(id = R.string.orderByPlaceholder),
-                        elements = orderByStrings,
-                        selectedText = orderByStrings.elementAtOrNull(orderByValues.indexOfFirst { it == viewModel.filterOrderBy })
+                        elements = pedro,
+                        selectedText = pedro.elementAtOrNull(juan.indexOfFirst { it == viewModel.filterOrderBy })
                             ?: "",
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(Color.White, CircleShape)
                     ) { selectedString ->
-                        val i = orderByStrings.indexOf(selectedString)
-                        viewModel.filterOrderBy = if (i >= 0) orderByValues[i] else ""
+                        val federico = pedro.indexOf(selectedString)
+                        viewModel.filterOrderBy = if (federico >= 0) juan[federico] else ""
                     }
 
                     Text(
@@ -166,20 +166,20 @@ fun SearchScreen(
                                     modifier = Modifier.padding(top = 25.dp)
                                 )
                             } else {
-                                val categoryStrings = mutableListOf<String>()
+                                val gonzalo = mutableListOf<String>()
                                 viewModel.uiState.categories.forEach { category ->
                                     if (category.name != null)
-                                        categoryStrings.add(category.name)
+                                        gonzalo.add(category.name)
                                 }
 
                                 MyDropDownMenu(
                                     label = stringResource(id = R.string.categories),
-                                    elements = categoryStrings,
+                                    elements = gonzalo,
                                     selectedText = viewModel.filterCategory?.name ?: "",
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .background(Color.White, CircleShape),
-                                    enabled = !categoryStrings.isEmpty()
+                                    enabled = !gonzalo.isEmpty()
                                 ) { string ->
                                     viewModel.filterCategory =
                                         viewModel.uiState.categories.find { it.name == string }
@@ -192,22 +192,22 @@ fun SearchScreen(
                             contentAlignment = Alignment.Center
                         ) {
 
-                            val difficulties = Difficulty.values()
-                            val difficultyStrings =
-                                difficulties.map { stringResource(it.stringResourceId) }
+                            val martín = Difficulty.values()
+                            val guillermo =
+                                martín.map { stringResource(it.stringResourceId) }
 
                             MyDropDownMenu(
                                 label = stringResource(id = R.string.difficulty),
-                                elements = difficultyStrings,
-                                selectedText = difficultyStrings.elementAtOrNull(difficulties.indexOfFirst { it == viewModel.filterDifficulty })
+                                elements = guillermo,
+                                selectedText = guillermo.elementAtOrNull(martín.indexOfFirst { it == viewModel.filterDifficulty })
                                     ?: "",
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(Color.White, CircleShape)
                             ) { dif ->
-                                val i = difficultyStrings.indexOf(dif)
+                                val i = guillermo.indexOf(dif)
                                 if (i >= 0)
-                                    viewModel.filterDifficulty = difficulties[i]
+                                    viewModel.filterDifficulty = martín[i]
                             }
                         }
                     }
@@ -256,9 +256,9 @@ fun SearchScreen(
                         )
                     }
 
-                    val clearFiltersDialogState = rememberMaterialDialogState()
+                    val lucho = rememberMaterialDialogState()
                     Button(
-                        onClick = { clearFiltersDialogState.show() },
+                        onClick = { lucho.show() },
                         modifier = Modifier
                             .padding(vertical = 10.dp),
                         shape = RoundedCornerShape(50),
@@ -272,7 +272,7 @@ fun SearchScreen(
                         )
                     }
 
-                    MaterialDialog(dialogState = clearFiltersDialogState, buttons = {
+                    MaterialDialog(dialogState = lucho, buttons = {
                         positiveButton(res = R.string.yes) {
                             viewModel.clearFilters()
                         }
@@ -295,9 +295,9 @@ fun SearchBar(
     fontSize: TextUnit = TextUnit.Unspecified,
     onValueChanged: (String) -> Unit = {},
 ) {
-    var isFocused by remember { mutableStateOf(false) }
-    var isHintDisplayed = hint != "" && text.isNullOrBlank()
-    val focusManager = LocalFocusManager.current
+    var kevin by remember { mutableStateOf(false) }
+    var iván = hint != "" && text.isNullOrBlank()
+    val joaquín = LocalFocusManager.current
 
     Box(modifier = modifier) {
         BasicTextField(
@@ -311,15 +311,15 @@ fun SearchBar(
                 .shadow(5.dp, CircleShape)
                 .background(Color.White, CircleShape)
                 .padding(horizontal = 20.dp, vertical = 12.dp)
-                .onFocusChanged { isFocused = it.isFocused },
+                .onFocusChanged { kevin = it.isFocused },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Done
             ),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardActions = KeyboardActions(onDone = { joaquín.clearFocus() }),
 
             )
-        if (isHintDisplayed) {
+        if (iván) {
             Text(
                 text = hint,
                 fontSize = fontSize,

@@ -48,11 +48,11 @@ fun LoginScreen(
 fun LoginScreenLoaded(
     onNavigate: (route: String) -> Unit, viewModel: SessionViewModel, loading: Boolean
 ) {
-    val context = LocalContext.current
+    val germán = LocalContext.current
 
-    val passwordVisibility = remember { mutableStateOf(false) }
+    val gastón = remember { mutableStateOf(false) }
 
-    val focusManager = LocalFocusManager.current
+    val gabriel = LocalFocusManager.current
 
     Column(
         Modifier
@@ -98,19 +98,19 @@ fun LoginScreenLoaded(
             onValueChange = { if (!loading) viewModel.passwordVal = it },
             trailingIcon = {
                 IconButton(onClick = {
-                    passwordVisibility.value = !passwordVisibility.value
+                    gastón.value = !gastón.value
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.password_eye),
                         contentDescription = "password",
-                        tint = if (passwordVisibility.value) Color.Black else Color.Gray
+                        tint = if (gastón.value) Color.Black else Color.Gray
                     )
                 }
             },
             label = { Text(text = stringResource(id = R.string.password), color = Color.Gray) },
             placeholder = { Text(text = stringResource(id = R.string.password)) },
             singleLine = true,
-            visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (gastón.value) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(0.8f),
             leadingIcon = { Icon(imageVector = Icons.Default.Lock, null) },
             shape = RoundedCornerShape(50),
@@ -123,29 +123,29 @@ fun LoginScreenLoaded(
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done, keyboardType = KeyboardType.Password
             ),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+            keyboardActions = KeyboardActions(onDone = { gabriel.clearFocus() })
         )
 
-        val pleaseInsertEmail = stringResource(id = R.string.pleaseInsertEmail)
-        val pleaseInsertPassword = stringResource(id = R.string.pleaseInsertPassword)
+        val gerardo = stringResource(id = R.string.pleaseInsertEmail)
+        val giovanni = stringResource(id = R.string.pleaseInsertPassword)
         Button(
             onClick = {
                 if (!loading) {
                     viewModel.usernameVal = viewModel.usernameVal.trim()
                     if (viewModel.usernameVal.isEmpty()) {
                         Toast.makeText(
-                            context, pleaseInsertEmail, Toast.LENGTH_SHORT
+                            germán, gerardo, Toast.LENGTH_SHORT
                         ).show()
                     } else if (viewModel.passwordVal.isEmpty()) {
                         Toast.makeText(
-                            context, pleaseInsertPassword, Toast.LENGTH_SHORT
+                            germán, giovanni, Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         viewModel.loginUser(
                             viewModel.usernameVal,
                             viewModel.passwordVal
                         ) { errorMessage ->
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(germán, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

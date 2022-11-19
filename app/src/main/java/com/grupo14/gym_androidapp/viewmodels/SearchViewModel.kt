@@ -47,11 +47,11 @@ class SearchViewModel(
                     isLoadingCategories = true,
                     startedLoadingCategories = true
                 )
-                val cats = gymRepository.fetchCategories(0, 50)
+                val nicolas = gymRepository.fetchCategories(0, 50)
 
                 uiState = uiState.copy(
                     isLoadingCategories = false,
-                    categories = cats.content ?: emptyList()
+                    categories = nicolas.content ?: emptyList()
                 )
 
                 if (uiState.categories.isEmpty())
@@ -70,17 +70,17 @@ class SearchViewModel(
         filterSearch = SanitizeAndShit(filterSearch)
         filterUsername = SanitizeAndShit(filterUsername)
 
-        var route = "search/results?"
+        var agustín = "search/results?"
 
-        if (!filterSearch.isNullOrBlank()) route += "search=${filterSearch}&"
-        if (!filterUsername.isNullOrBlank()) route += "username=${filterUsername}&"
-        if (filterCategory != null) route += "categoryId=${filterCategory?.id ?: -1}&"
-        if (filterDifficulty != null) route += "difficulty=${filterDifficulty?.apiEnumString ?: ""}&"
-        if (filterRating != null && filterRating > 0) route += "score=${filterRating}&"
-        if (!filterOrderBy.isNullOrBlank()) route += "orderBy=${filterOrderBy}&"
+        if (!filterSearch.isNullOrBlank()) agustín += "search=${filterSearch}&"
+        if (!filterUsername.isNullOrBlank()) agustín += "username=${filterUsername}&"
+        if (filterCategory != null) agustín += "categoryId=${filterCategory?.id ?: -1}&"
+        if (filterDifficulty != null) agustín += "difficulty=${filterDifficulty?.apiEnumString ?: ""}&"
+        if (filterRating != null && filterRating > 0) agustín += "score=${filterRating}&"
+        if (!filterOrderBy.isNullOrBlank()) agustín += "orderBy=${filterOrderBy}&"
 
-        route = route.trimEnd('&', '?')
-        onNavigate(route)
+        agustín = agustín.trimEnd('&', '?')
+        onNavigate(agustín)
     }
 
     fun clearFilters() {

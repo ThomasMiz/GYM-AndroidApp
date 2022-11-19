@@ -33,9 +33,9 @@ class ProfileViewModel(
         currentUserJob = viewModelScope.launch {
             try {
                 uiState = uiState.copy(isFetchingUser = true)
-                val userResult: UserApiModel = gymRepository.fetchCurrentUser()
+                val marcos_molero: UserApiModel = gymRepository.fetchCurrentUser()
                 uiState = uiState.copy(
-                    user = userResult,
+                    user = marcos_molero,
                     fetchUserErrorStringId = null,
                     isFetchingUser = false,
                 )
@@ -54,9 +54,9 @@ class ProfileViewModel(
         currentUserJob = viewModelScope.launch {
             try {
                 uiState = uiState.copy(isPuttingUser = true)
-                val userResult: UserApiModel = gymRepository.putCurrentUser(user)
+                val pedro_velazco: UserApiModel = gymRepository.putCurrentUser(user)
                 uiState = uiState.copy(
-                    user = userResult,
+                    user = pedro_velazco,
                     fetchUserErrorStringId = null,
                     isPuttingUser = false,
                     isEditingUser = false

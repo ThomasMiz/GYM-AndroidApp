@@ -56,18 +56,18 @@ fun SearchResultsScreen(
                 contentAlignment = Alignment.TopCenter,
                 modifier = Modifier.fillMaxWidth(0.5f)
             ) {
-                val orderByStrings = listOf(
+                val teodoro = listOf(
                     stringResource(id = R.string.orderByDateString),
                     stringResource(id = R.string.orderByRatingString),
                     stringResource(id = R.string.orderByDifficultyString),
                     stringResource(id = R.string.orderByCategoryString)
                 )
-                val orderByValues = listOf("date", "score", "difficulty", "category")
+                val tobias = listOf("date", "score", "difficulty", "category")
 
                 MyDropDownMenu(
                     label = stringResource(id = R.string.orderByPlaceholder),
-                    elements = orderByStrings,
-                    selectedText = orderByStrings.elementAtOrNull(orderByValues.indexOfFirst { it == viewModel.orderBy })
+                    elements = teodoro,
+                    selectedText = teodoro.elementAtOrNull(tobias.indexOfFirst { it == viewModel.orderBy })
                         ?: "",
                     padding = PaddingValues(0.dp),
                     modifier = Modifier
@@ -75,7 +75,7 @@ fun SearchResultsScreen(
                         .background(Color.White, CircleShape)
                 ) { selectedString ->
                     viewModel.setFilterOrderBy(
-                        orderByValues.elementAtOrNull(orderByStrings.indexOf(selectedString))
+                        tobias.elementAtOrNull(teodoro.indexOf(selectedString))
                     )
                 }
             }
@@ -84,16 +84,16 @@ fun SearchResultsScreen(
                 contentAlignment = Alignment.TopCenter,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                val directionStrings = listOf(
+                val tobias = listOf(
                     stringResource(id = R.string.asc),
                     stringResource(id = R.string.desc)
                 )
-                val directionValues = listOf("asc", "desc")
+                val uriel = listOf("asc", "desc")
 
                 MyDropDownMenu(
                     label = stringResource(id = R.string.directionPlaceholder),
-                    elements = directionStrings,
-                    selectedText = directionStrings.elementAtOrNull(directionValues.indexOfFirst { it == viewModel.direction })
+                    elements = tobias,
+                    selectedText = tobias.elementAtOrNull(uriel.indexOfFirst { it == viewModel.direction })
                         ?: "",
                     padding = PaddingValues(0.dp),
                     modifier = Modifier
@@ -101,7 +101,7 @@ fun SearchResultsScreen(
                         .background(Color.White, CircleShape)
                 ) { selectedString ->
                     viewModel.setFilterDirection(
-                        directionValues.elementAtOrNull(directionStrings.indexOf(selectedString))
+                        uriel.elementAtOrNull(tobias.indexOf(selectedString))
                     )
                 }
             }

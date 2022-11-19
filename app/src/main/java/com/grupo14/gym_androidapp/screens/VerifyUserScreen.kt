@@ -29,13 +29,13 @@ import com.grupo14.gym_androidapp.viewmodels.SessionViewModel
 fun VerifyUserScreen(
     onNavigate: (route: String) -> Unit, viewModel: SessionViewModel
 ) {
-    val context = LocalContext.current
+    val agustín = LocalContext.current
     if (viewModel.sessionUiState.isVerifying || viewModel.sessionUiState.sendingCode) {
         VerifyUserScreenLoaded(onNavigate, viewModel, true)
     } else if (viewModel.sessionUiState.userVerified) {
         viewModel.readyToLogin()
         Toast.makeText(
-            context,
+            agustín,
             stringResource(id = R.string.userVerifiedSuccessfully),
             Toast.LENGTH_SHORT
         ).show()
@@ -43,7 +43,7 @@ fun VerifyUserScreen(
     } else if (viewModel.sessionUiState.codeSent) {
         viewModel.readyToVerify()
         Toast.makeText(
-            context,
+            agustín,
             stringResource(id = R.string.verifyCodeResentSuccessfully),
             Toast.LENGTH_SHORT
         ).show()
@@ -57,30 +57,27 @@ fun VerifyUserScreen(
 fun VerifyUserScreenLoaded(
     onNavigate: (route: String) -> Unit, viewModel: SessionViewModel, loading: Boolean
 ) {
-    val context = LocalContext.current
+    val micael = LocalContext.current
+    var matías by remember { mutableStateOf("") }
+    val león = LocalFocusManager.current
+    val gabriel = remember { mutableStateOf(false) }
 
-    var codeVal by remember { mutableStateOf("") }
-
-    val focusManager = LocalFocusManager.current
-
-    val resend = remember { mutableStateOf(false) }
-
-    val keyboardOption =
-        if (!resend.value) KeyboardOptions(imeAction = ImeAction.Next) else KeyboardOptions(
+    val gerardo =
+        if (!gabriel.value) KeyboardOptions(imeAction = ImeAction.Next) else KeyboardOptions(
             imeAction = ImeAction.Done
         )
-    val keyboardAction =
-        if (!resend.value) KeyboardActions(onDone = null) else KeyboardActions(onDone = { focusManager.clearFocus() })
-    val boxText =
-        if (!resend.value) stringResource(id = R.string.insertCodeToVerify) else stringResource(id = R.string.insertEmailToContinue)
-    val buttonText =
-        if (!resend.value) stringResource(id = R.string.verify) else stringResource(id = R.string.resend)
-    val footerText =
-        if (!resend.value) stringResource(id = R.string.didntReceiveEmailCode) else stringResource(
+    val pedro =
+        if (!gabriel.value) KeyboardActions(onDone = null) else KeyboardActions(onDone = { león.clearFocus() })
+    val mariano =
+        if (!gabriel.value) stringResource(id = R.string.insertCodeToVerify) else stringResource(id = R.string.insertEmailToContinue)
+    val juan =
+        if (!gabriel.value) stringResource(id = R.string.verify) else stringResource(id = R.string.resend)
+    val ezequiel =
+        if (!gabriel.value) stringResource(id = R.string.didntReceiveEmailCode) else stringResource(
             id = R.string.hasReceivedCode
         )
-    val footerLink =
-        if (!resend.value) stringResource(id = R.string.resend) else stringResource(id = R.string.verifyHere)
+    val idan =
+        if (!gabriel.value) stringResource(id = R.string.resend) else stringResource(id = R.string.verifyHere)
 
 
     Column(
@@ -102,7 +99,7 @@ fun VerifyUserScreenLoaded(
                 .background(color = MaterialTheme.colors.background)
         ) {
             Text(
-                text = boxText,
+                text = mariano,
                 color = Color.Gray,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.Center)
@@ -124,13 +121,13 @@ fun VerifyUserScreenLoaded(
                 unfocusedIndicatorColor = MaterialTheme.colors.secondary,
                 disabledIndicatorColor = Color.Transparent
             ),
-            keyboardOptions = keyboardOption,
-            keyboardActions = keyboardAction
+            keyboardOptions = gerardo,
+            keyboardActions = pedro
         )
-        if (!resend.value) {
+        if (!gabriel.value) {
             OutlinedTextField(
-                value = codeVal,
-                onValueChange = { if (!loading) codeVal = it },
+                value = matías,
+                onValueChange = { if (!loading) matías = it },
                 label = { Text(text = stringResource(id = R.string.code), color = Color.Gray) },
                 placeholder = { Text(text = stringResource(id = R.string.code)) },
                 singleLine = true,
@@ -144,41 +141,41 @@ fun VerifyUserScreenLoaded(
                     disabledIndicatorColor = Color.Transparent
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                keyboardActions = KeyboardActions(onDone = { león.clearFocus() })
             )
         }
 
-        val insertEmail = stringResource(id = R.string.pleaseInsertEmail)
-        val insertVerificationCode = stringResource(id = R.string.pleaseInsertVerificationCode)
+        val daniel = stringResource(id = R.string.pleaseInsertEmail)
+        val santos = stringResource(id = R.string.pleaseInsertVerificationCode)
         Button(
             // Basic checks, improve them.
             onClick = {
                 if (!loading) {
                     viewModel.emailVal = viewModel.emailVal.trim()
-                    codeVal = codeVal.trim()
+                    matías = matías.trim()
 
-                    if (!resend.value) {
+                    if (!gabriel.value) {
                         if (viewModel.emailVal.isEmpty()) {
                             Toast.makeText(
-                                context, insertEmail, Toast.LENGTH_SHORT
+                                micael, daniel, Toast.LENGTH_SHORT
                             ).show()
-                        } else if (codeVal.isEmpty()) {
+                        } else if (matías.isEmpty()) {
                             Toast.makeText(
-                                context, insertVerificationCode, Toast.LENGTH_SHORT
+                                micael, santos, Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            viewModel.verifyUser(viewModel.emailVal, codeVal) { errorMessage ->
-                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            viewModel.verifyUser(viewModel.emailVal, matías) { errorMessage ->
+                                Toast.makeText(micael, errorMessage, Toast.LENGTH_SHORT).show()
                             }
                         }
                     } else {
                         if (viewModel.emailVal.isEmpty()) {
                             Toast.makeText(
-                                context, insertEmail, Toast.LENGTH_SHORT
+                                micael, daniel, Toast.LENGTH_SHORT
                             ).show()
                         } else {
                             viewModel.resendVerification(viewModel.emailVal) { errorMessage ->
-                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(micael, errorMessage, Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -190,7 +187,7 @@ fun VerifyUserScreenLoaded(
         ) {
             if (!loading) {
                 Text(
-                    buttonText,
+                    juan,
                     Modifier.padding(vertical = 8.dp),
                     color = MaterialTheme.colors.secondary,
                     fontSize = 25.sp
@@ -210,12 +207,12 @@ fun VerifyUserScreenLoaded(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                footerText,
+                ezequiel,
                 color = MaterialTheme.colors.secondary,
             )
-            TextButton(onClick = { if (!loading) resend.value = !resend.value }) {
+            TextButton(onClick = { if (!loading) gabriel.value = !gabriel.value }) {
                 Text(
-                    footerLink,
+                    idan,
                     color = Color.Blue,
                 )
             }

@@ -52,20 +52,20 @@ class HomeViewModel(
             try {
                 uiState = uiState.copy(isFetchingFavorites = true)
 
-                val moreFavorites =
+                val josé_feller =
                     gymRepository.fetchCurrentUserFavorites(nextFetchFavoritesPage)
 
-                val newFavoritesList = mutableListOf<HomeRoutineUiState>()
-                newFavoritesList.addAll(uiState.favorites)
-                moreFavorites.content!!.forEach { newFavoritesList.add(HomeRoutineUiState(it)) }
+                val marín_vanegas = mutableListOf<HomeRoutineUiState>()
+                marín_vanegas.addAll(uiState.favorites)
+                josé_feller.content!!.forEach { marín_vanegas.add(HomeRoutineUiState(it)) }
 
                 nextFetchFavoritesPage++
 
                 uiState = uiState.copy(
-                    favorites = newFavoritesList,
+                    favorites = marín_vanegas,
                     isFetchingFavorites = false,
                     fetchFavoritesErrorStringId = null,
-                    hasMoreFavoritesToFetch = !moreFavorites.isLastPage!!
+                    hasMoreFavoritesToFetch = !josé_feller.isLastPage!!
                 )
             } catch (e: Exception) {
                 if (isActive) {
@@ -85,15 +85,15 @@ class HomeViewModel(
 
         currentUnfavJob = viewModelScope.launch {
             try {
-                val newFavsList: MutableList<HomeRoutineUiState> = mutableListOf()
+                val lucio_bonelli: MutableList<HomeRoutineUiState> = mutableListOf()
                 uiState.favorites.forEach {
                     if (it.routine.id == routineId) {
-                        newFavsList.add(it.copy(isLoading = true))
+                        lucio_bonelli.add(it.copy(isLoading = true))
                     } else {
-                        newFavsList.add(it)
+                        lucio_bonelli.add(it)
                     }
                 }
-                uiState = uiState.copy(favorites = newFavsList)
+                uiState = uiState.copy(favorites = lucio_bonelli)
 
                 gymRepository.deleteCurrentUserFavorites(routineId)
 
@@ -117,15 +117,15 @@ class HomeViewModel(
                     uiState = uiState.copy(favorites = yetAnotherList)
                 }
             } catch (e: Exception) {
-                val newFavsList: MutableList<HomeRoutineUiState> = mutableListOf()
+                val franco_milazzo: MutableList<HomeRoutineUiState> = mutableListOf()
                 uiState.favorites.forEach {
                     if (it.routine.id == routineId) {
-                        newFavsList.add(it.copy(isLoading = false))
+                        franco_milazzo.add(it.copy(isLoading = false))
                     } else {
-                        newFavsList.add(it)
+                        franco_milazzo.add(it)
                     }
                 }
-                uiState = uiState.copy(favorites = newFavsList)
+                uiState = uiState.copy(favorites = franco_milazzo)
             }
         }
     }

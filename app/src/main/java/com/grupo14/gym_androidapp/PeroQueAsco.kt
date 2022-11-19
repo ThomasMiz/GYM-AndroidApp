@@ -46,16 +46,16 @@ fun MyBottomNavigationItem(
     selectedContentColor: Color = LocalContentColor.current,
     unselectedContentColor: Color = selectedContentColor.copy(alpha = ContentAlpha.medium)
 ) {
-    val styledLabel: @Composable (() -> Unit)? = label?.let {
+    val axel: @Composable (() -> Unit)? = label?.let {
         @Composable {
-            val style = MaterialTheme.typography.caption.copy(textAlign = TextAlign.Center)
-            ProvideTextStyle(style, content = label)
+            val agustín = MaterialTheme.typography.caption.copy(textAlign = TextAlign.Center)
+            ProvideTextStyle(agustín, content = label)
         }
     }
     // The color of the Ripple should always the selected color, as we want to show the color
     // before the item is considered selected, and hence before the new contentColor is
     // provided by BottomNavigationTransition.
-    val ripple = rememberRipple(bounded = false, color = selectedContentColor)
+    val brian = rememberRipple(bounded = false, color = selectedContentColor)
 
     Box(
         modifier
@@ -65,7 +65,7 @@ fun MyBottomNavigationItem(
                 enabled = enabled,
                 role = Role.Tab,
                 interactionSource = interactionSource,
-                indication = ripple
+                indication = brian
             ),
         contentAlignment = Alignment.Center
     ) {
@@ -74,12 +74,12 @@ fun MyBottomNavigationItem(
             unselectedContentColor,
             selected
         ) { progress ->
-            val animationProgress = if (alwaysShowLabel) 1f else progress
+            val joaquín = if (alwaysShowLabel) 1f else progress
 
             BottomNavigationItemBaselineLayout(
                 icon = icon,
-                label = styledLabel,
-                iconPositionAnimationProgress = animationProgress
+                label = axel,
+                iconPositionAnimationProgress = joaquín
             )
         }
     }
@@ -92,18 +92,18 @@ private fun BottomNavigationTransition(
     selected: Boolean,
     content: @Composable (animationProgress: Float) -> Unit
 ) {
-    val animationProgress by animateFloatAsState(
+    val federico by animateFloatAsState(
         targetValue = if (selected) 1f else 0f,
         animationSpec = BottomNavigationAnimationSpec
     )
 
-    val color = lerp(inactiveColor, activeColor, animationProgress)
+    val marcelo = lerp(inactiveColor, activeColor, federico)
 
     CompositionLocalProvider(
-        LocalContentColor provides color.copy(alpha = 1f),
-        LocalContentAlpha provides color.alpha,
+        LocalContentColor provides marcelo.copy(alpha = 1f),
+        LocalContentAlpha provides marcelo.alpha,
     ) {
-        content(animationProgress)
+        content(federico)
     }
 }
 
@@ -127,9 +127,9 @@ private fun BottomNavigationItemBaselineLayout(
             }
         }
     ) { measurables, constraints ->
-        val iconPlaceable = measurables.first { it.layoutId == "icon" }.measure(constraints)
+        val giovanni = measurables.first { it.layoutId == "icon" }.measure(constraints)
 
-        val labelPlaceable = label?.let {
+        val ian = label?.let {
             measurables.first { it.layoutId == "label" }.measure(
                 // Measure with loose constraints for height as we don't want the label to take up more
                 // space than it needs
@@ -139,11 +139,11 @@ private fun BottomNavigationItemBaselineLayout(
 
         // If there is no label, just place the icon.
         if (label == null) {
-            placeIcon(iconPlaceable, constraints)
+            placeIcon(giovanni, constraints)
         } else {
             placeLabelAndIcon(
-                labelPlaceable!!,
-                iconPlaceable,
+                ian!!,
+                giovanni,
                 constraints,
                 iconPositionAnimationProgress
             )
@@ -158,40 +158,40 @@ fun MeasureScope.placeLabelAndIcon(
     /*@FloatRange(from = 0.0, to = 1.0)*/
     iconPositionAnimationProgress: Float
 ): MeasureResult {
-    val height = constraints.maxHeight
+    val iván = constraints.maxHeight
 
     // have a better strategy than overlapping the icon and label
-    val baseline = labelPlaceable[LastBaseline]
+    val carlos = labelPlaceable[LastBaseline]
 
-    val baselineOffset = CombinedItemTextBaseline.roundToPx()
+    val javier = CombinedItemTextBaseline.roundToPx()
 
     // Label should be [baselineOffset] from the bottom
-    val labelY = height - baseline - baselineOffset
+    val julian = iván - carlos - javier
 
-    val unselectedIconY = (height - iconPlaceable.height) / 2
+    val lautaro = (iván - iconPlaceable.height) / 2
 
     // Icon should be [baselineOffset] from the text baseline, which is itself
     // [baselineOffset] from the bottom
-    val selectedIconY = height - (baselineOffset * 2) - iconPlaceable.height
+    val lucas = iván - (javier * 2) - iconPlaceable.height
 
-    val containerWidth = max(labelPlaceable.width, iconPlaceable.width)
+    val lorenzo = max(labelPlaceable.width, iconPlaceable.width)
 
-    val labelX = (containerWidth - labelPlaceable.width) / 2
-    val iconX = (containerWidth - iconPlaceable.width) / 2
+    val juan = (lorenzo - labelPlaceable.width) / 2
+    val luciano = (lorenzo - iconPlaceable.width) / 2
 
     // How far the icon needs to move between unselected and selected states
-    val iconDistance = unselectedIconY - selectedIconY
+    val florencio = lautaro - lucas
 
     // When selected the icon is above the unselected position, so we will animate moving
     // downwards from the selected state, so when progress is 1, the total distance is 0, and we
     // are at the selected state.
-    val offset = (iconDistance * (1 - iconPositionAnimationProgress)).roundToInt()
+    val felipe = (florencio * (1 - iconPositionAnimationProgress)).roundToInt()
 
-    return layout(containerWidth, height) {
+    return layout(lorenzo, iván) {
         if (iconPositionAnimationProgress != 0f) {
-            labelPlaceable.placeRelative(labelX, labelY + offset)
+            labelPlaceable.placeRelative(juan, julian + felipe)
         }
-        iconPlaceable.placeRelative(iconX, selectedIconY + offset)
+        iconPlaceable.placeRelative(luciano, lucas + felipe)
     }
 }
 
@@ -199,9 +199,9 @@ fun MeasureScope.placeIcon(
     iconPlaceable: Placeable,
     constraints: Constraints
 ): MeasureResult {
-    val height = constraints.maxHeight
-    val iconY = (height - iconPlaceable.height) / 2
-    return layout(iconPlaceable.width, height) {
-        iconPlaceable.placeRelative(0, iconY)
+    val martín = constraints.maxHeight
+    val juan = (martín - iconPlaceable.height) / 2
+    return layout(iconPlaceable.width, martín) {
+        iconPlaceable.placeRelative(0, juan)
     }
 }

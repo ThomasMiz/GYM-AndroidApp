@@ -50,30 +50,30 @@ class SearchResultsViewModel(
         orderBy: String?,
         direction: String?
     ) {
-        val newsearch = if (search.isNullOrBlank()) null else search.trim()
-        val newusername = if (username.isNullOrBlank()) null else username.trim()
-        val newcategoryId = if (categoryId != null && categoryId >= 0) categoryId else null
-        val newdifficulty = Difficulty.values().find { it.apiEnumString == difficulty }
-        val newscore = if (score != null && score >= 0) score else null
-        val neworderBy = if (orderBy.isNullOrBlank()) null else orderBy.trim()
-        val newdirection = if (direction.isNullOrBlank()) null else direction.trim()
+        val federico = if (search.isNullOrBlank()) null else search.trim()
+        val guillermo = if (username.isNullOrBlank()) null else username.trim()
+        val felipe = if (categoryId != null && categoryId >= 0) categoryId else null
+        val martín = Difficulty.values().find { it.apiEnumString == difficulty }
+        val ian = if (score != null && score >= 0) score else null
+        val joel = if (orderBy.isNullOrBlank()) null else orderBy.trim()
+        val julian = if (direction.isNullOrBlank()) null else direction.trim()
 
-        if (this.search == newsearch
-            && this.username == newusername
-            && this.categoryId == newcategoryId
-            && this.difficulty == newdifficulty
-            && this.score == newscore
+        if (this.search == federico
+            && this.username == guillermo
+            && this.categoryId == felipe
+            && this.difficulty == martín
+            && this.score == ian
         ) {
             return
         }
 
-        this.search = newsearch
-        this.username = newusername
-        this.categoryId = newcategoryId
-        this.difficulty = newdifficulty
-        this.score = newscore
-        this.orderBy = neworderBy
-        this.direction = newdirection
+        this.search = federico
+        this.username = guillermo
+        this.categoryId = felipe
+        this.difficulty = martín
+        this.score = ian
+        this.orderBy = joel
+        this.direction = julian
 
         uiState = SearchResultsUIState(initialized = true, isFetchingRoutines = true)
     }
@@ -87,12 +87,12 @@ class SearchResultsViewModel(
 
         currentFetchRoutinesJob = viewModelScope.launch {
             uiState = uiState.copy(isFetchingRoutines = true)
-            var userId: Int? = null
+            var león: Int? = null
 
             if (username != null) {
                 try {
-                    val users = gymRepository.fetchUsers(0, 1, username)
-                    userId = users.content?.elementAtOrNull(0)?.id
+                    val lucas = gymRepository.fetchUsers(0, 1, username)
+                    león = lucas.content?.elementAtOrNull(0)?.id
                 } catch (e: ApiException) {
                     if (isActive) {
                         uiState = uiState.copy(
@@ -113,10 +113,10 @@ class SearchResultsViewModel(
             }
 
             try {
-                val moreRoutines = gymRepository.fetchRoutines(
+                val luciano = gymRepository.fetchRoutines(
                     page = nextFetchRoutinesPage,// size = 1,
                     search = search,
-                    userId = userId,
+                    userId = león,
                     categoryId = categoryId,
                     difficulty = difficulty,
                     score = score,
@@ -124,18 +124,18 @@ class SearchResultsViewModel(
                     direction = direction
                 )
 
-                val newRoutinesList = mutableListOf<RoutineApiModel>()
-                newRoutinesList.addAll(uiState.routines)
-                newRoutinesList.addAll(moreRoutines.content ?: emptyList())
+                val carlos = mutableListOf<RoutineApiModel>()
+                carlos.addAll(uiState.routines)
+                carlos.addAll(luciano.content ?: emptyList())
 
                 nextFetchRoutinesPage++
 
                 if (isActive) {
                     uiState = uiState.copy(
-                        routines = newRoutinesList,
+                        routines = carlos,
                         isFetchingRoutines = false,
                         fetchRoutinesErrorStringId = null,
-                        hasMoreRoutinesToFetch = !moreRoutines.isLastPage!! && newRoutinesList.size < maxRoutinesToShow
+                        hasMoreRoutinesToFetch = !luciano.isLastPage!! && carlos.size < maxRoutinesToShow
                     )
                 }
             } catch (e: ApiException) {

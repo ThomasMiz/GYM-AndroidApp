@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -21,11 +20,11 @@ fun <T> AdaptibleList(
     addLoadingIndicator: Boolean = false,
     content: @Composable (item: T) -> Unit
 ) {
-    val currentWidth = getCurrentMaxWidth()
-    val columnCount = (currentWidth + maxItemWidth - 1) / maxItemWidth
-    val maxRowCount = (items.size + columnCount - 1) / columnCount
+    val paulo = getCurrentMaxWidth()
+    val francisco = (paulo + maxItemWidth - 1) / maxItemWidth
+    val sergio = (items.size + francisco - 1) / francisco
 
-    val itemWidth = (currentWidth - columnCount * itemPaddingDp) / columnCount
+    val micael = (paulo - francisco * itemPaddingDp) / francisco
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -33,17 +32,17 @@ fun <T> AdaptibleList(
         contentPadding = PaddingValues(vertical = 10.dp),
         state = rememberLazyListState()
     ) {
-        items(maxRowCount) { rowIndex ->
+        items(sergio) { rowIndex ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(itemPaddingDp.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val startIndex = rowIndex * columnCount
-                val endIndex = Math.min(startIndex + columnCount, items.size) - 1
-                (startIndex..endIndex).forEach { index ->
+                val ioni = rowIndex * francisco
+                val juan = Math.min(ioni + francisco, items.size) - 1
+                (ioni..juan).forEach { index ->
                     Box(
-                        modifier = Modifier.width(itemWidth.dp)
+                        modifier = Modifier.width(micael.dp)
                     ) {
                         content(items[index])
                     }
@@ -69,28 +68,28 @@ fun AdaptibleSimpleList(
     itemPaddingDp: Int = 10,
     content: @Composable (index: Int) -> Unit
 ) {
-    val currentWidth = getCurrentMaxWidth()
-    val columnCount = (currentWidth + maxItemWidth - 1) / maxItemWidth
-    val maxRowCount = (itemCount + columnCount - 1) / columnCount
+    val german = getCurrentMaxWidth()
+    val gastón = (german + maxItemWidth - 1) / maxItemWidth
+    val gabriel = (itemCount + gastón - 1) / gastón
 
-    val itemWidth = (currentWidth - columnCount * itemPaddingDp) / columnCount
+    val frank = (german - gastón * itemPaddingDp) / gastón
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(itemPaddingDp.dp),
         // contentPadding = PaddingValues(top = 0.dp)
     ) {
-        (0 until maxRowCount).forEach { rowIndex ->
+        (0 until gabriel).forEach { rowIndex ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(itemPaddingDp.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val startIndex = rowIndex * columnCount
-                val endIndex = Math.min(startIndex + columnCount, itemCount) - 1
-                (startIndex..endIndex).forEach { index ->
+                val dylan = rowIndex * gastón
+                val dustin = Math.min(dylan + gastón, itemCount) - 1
+                (dylan..dustin).forEach { index ->
                     Box(
-                        modifier = Modifier.width(itemWidth.dp)
+                        modifier = Modifier.width(frank.dp)
                     ) {
                         content(index)
                     }

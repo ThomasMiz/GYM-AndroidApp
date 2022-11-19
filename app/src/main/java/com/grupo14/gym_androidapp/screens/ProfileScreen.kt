@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
@@ -93,9 +92,9 @@ private fun ProfileScreenLoaded(
     viewModel: ProfileViewModel,
     onSignedOut: () -> Unit
 ) {
-    val currentConfig = LocalConfiguration.current
-    val columnWidthMod =
-        if (currentConfig.screenWidthDp > 500) Modifier.width(500.dp) else Modifier.fillMaxWidth()
+    val gonzalo = LocalConfiguration.current
+    val martín =
+        if (gonzalo.screenWidthDp > 500) Modifier.width(500.dp) else Modifier.fillMaxWidth()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -104,50 +103,50 @@ private fun ProfileScreenLoaded(
     ) {
 
         Column(
-            modifier = columnWidthMod
+            modifier = martín
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState()),
             //.background(Color(255, 0, 0, 50)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
-            val user: UserApiModel = viewModel.uiState.user!!
+            val ian: UserApiModel = viewModel.uiState.user!!
 
-            var fullName = "${user.firstName?.trim() ?: ""} ${user.lastName?.trim() ?: ""}"
-            if (fullName.isBlank())
-                fullName = user.username!!
+            var ilan = "${ian.firstName?.trim() ?: ""} ${ian.lastName?.trim() ?: ""}"
+            if (ilan.isBlank())
+                ilan = ian.username!!
 
-            var fullnameEditing by remember { mutableStateOf(fullName) }
-            var seggsIndexEditing by remember { mutableStateOf(user.gender!!.ordinal) }
-            var birthdateEditing by remember {
-                mutableStateOf(user.birthdate?.let {
+            var ioel by remember { mutableStateOf(ilan) }
+            var iván by remember { mutableStateOf(ian.gender!!.ordinal) }
+            var javier by remember {
+                mutableStateOf(ian.birthdate?.let {
                     ConvertDateToLocalDate(
                         it
                     )
                 })
             }
 
-            val datepickerDialogState = rememberMaterialDialogState()
-            val discardDialogState = rememberMaterialDialogState()
-            val signoutDialogState = rememberMaterialDialogState()
+            val joel = rememberMaterialDialogState()
+            val kevin = rememberMaterialDialogState()
+            val agustín = rememberMaterialDialogState()
 
-            val genderOptionsList = createGendersList()
+            val león = createGendersList()
 
             Box(
                 modifier = Modifier.padding(horizontal = 75.dp, vertical = 20.dp)
             ) {
-                var profileImageMods =
-                    if (currentConfig.screenWidthDp > 400) Modifier.width(400.dp) else Modifier.fillMaxWidth()
+                var luciano =
+                    if (gonzalo.screenWidthDp > 400) Modifier.width(400.dp) else Modifier.fillMaxWidth()
 
                 if (viewModel.uiState.isEditingUser)
-                    profileImageMods = profileImageMods.clickable {  }
+                    luciano = luciano.clickable {  }
 
                 Image(
                     painter = painterResource(R.drawable.profile_placeholder),
                     contentDescription = "ProfilePic",
                     contentScale = ContentScale.FillWidth,
                     alignment = Alignment.Center,
-                    modifier = profileImageMods.clip(RoundedCornerShape(10)),
+                    modifier = luciano.clip(RoundedCornerShape(10)),
                     colorFilter = if (viewModel.uiState.isEditingUser) ColorFilter.tint(Color.Gray, BlendMode.Multiply) else null
                     // .border(5.dp, Color.Gray, RoundedCornerShape(10))
                 )
@@ -155,23 +154,23 @@ private fun ProfileScreenLoaded(
 
             if (!viewModel.uiState.isEditingUser) {
                 Text(
-                    text = fullName, fontSize = 40.sp, modifier = Modifier.padding(top = 10.dp)
+                    text = ilan, fontSize = 40.sp, modifier = Modifier.padding(top = 10.dp)
                 )
                 Text(
-                    text = "@" + user.username, modifier = Modifier.padding(bottom = 10.dp)
+                    text = "@" + ian.username, modifier = Modifier.padding(bottom = 10.dp)
                 )
 
                 Text(
                     text = stringResource(
                         R.string.profileSeggsLabel,
-                        stringResource(id = user.gender!!.stringResourceId)
+                        stringResource(id = ian.gender!!.stringResourceId)
                     ), fontSize = 24.sp, modifier = Modifier.padding(vertical = 10.dp)
                 )
 
                 Text(
                     text = stringResource(
                         R.string.profileBithdateLabel,
-                        user.birthdate?.let { formatDate(it) }
+                        ian.birthdate?.let { formatDate(it) }
                             ?: stringResource(id = R.string.unspecified)),
                     fontSize = 24.sp,
                     modifier = Modifier.padding(vertical = 10.dp)
@@ -179,9 +178,9 @@ private fun ProfileScreenLoaded(
 
                 Button(
                     onClick = {
-                        fullnameEditing = fullName
-                        seggsIndexEditing = user.gender!!.ordinal
-                        birthdateEditing = user.birthdate?.let { ConvertDateToLocalDate(it) }
+                        ioel = ilan
+                        iván = ian.gender!!.ordinal
+                        javier = ian.birthdate?.let { ConvertDateToLocalDate(it) }
                         viewModel.startEditUser()
                     }, modifier = Modifier.padding(10.dp)
                 ) {
@@ -198,7 +197,7 @@ private fun ProfileScreenLoaded(
                 }
 
                 OutlinedButton(
-                    onClick = { signoutDialogState.show() },
+                    onClick = { agustín.show() },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = MaterialTheme.colors.secondaryVariant,
                     ),
@@ -217,7 +216,7 @@ private fun ProfileScreenLoaded(
                     }
                 }
 
-                MaterialDialog(dialogState = signoutDialogState, buttons = {
+                MaterialDialog(dialogState = agustín, buttons = {
                     positiveButton(res = R.string.ok) {
                         viewModel.signOut() {
                             onSignedOut()
@@ -234,8 +233,8 @@ private fun ProfileScreenLoaded(
                     modifier = Modifier.padding(top = 10.dp, start = 50.dp, end = 50.dp)
                 ) {
                     OutlinedTextField(
-                        value = fullnameEditing,
-                        onValueChange = { newValue -> fullnameEditing = newValue },
+                        value = ioel,
+                        onValueChange = { newValue -> ioel = newValue },
                         //fontSize = 40.sp,
                         modifier = Modifier
                             .padding(horizontal = 0.dp, vertical = 10.dp)
@@ -247,18 +246,18 @@ private fun ProfileScreenLoaded(
                     )
 
                     MyDropDownMenu(
-                        elements = genderOptionsList,
-                        selectedText = genderOptionsList[seggsIndexEditing],
+                        elements = león,
+                        selectedText = león[iván],
                         label = stringResource(R.string.seggsPlaceholder),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        seggsIndexEditing = genderOptionsList.indexOf(it)
-                        if (seggsIndexEditing < 0)
-                            seggsIndexEditing = genderOptionsList.lastIndex
+                        iván = león.indexOf(it)
+                        if (iván < 0)
+                            iván = león.lastIndex
                     }
 
                     Button(
-                        onClick = { datepickerDialogState.show() },
+                        onClick = { joel.show() },
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
                         enabled = !viewModel.uiState.isPuttingUser,
                         modifier = Modifier.padding(top = 10.dp)
@@ -266,7 +265,7 @@ private fun ProfileScreenLoaded(
                         Text(
                             text = stringResource(
                                 R.string.profileBithdateLabel,
-                                birthdateEditing?.let { formatDate(it) }
+                                javier?.let { formatDate(it) }
                                     ?: stringResource(id = R.string.unspecified)
                             ),
                             color = Color.Black,
@@ -278,25 +277,25 @@ private fun ProfileScreenLoaded(
                 }
 
                 MaterialDialog(
-                    dialogState = datepickerDialogState,
+                    dialogState = joel,
                     buttons = {
                         positiveButton(text = stringResource(id = R.string.ok))
                         negativeButton(text = stringResource(id = R.string.cancel))
                     },
                 ) {
                     datepicker(
-                        initialDate = birthdateEditing ?: LocalDate.of(2000, 4, 20),
+                        initialDate = javier ?: LocalDate.of(2000, 4, 20),
                         colors = DatePickerDefaults.colors(
                             headerBackgroundColor = MaterialTheme.colors.secondaryVariant,
                             calendarHeaderTextColor = MaterialTheme.colors.secondaryVariant,
                             dateActiveBackgroundColor = MaterialTheme.colors.secondaryVariant
                         )
                     ) { date ->
-                        birthdateEditing = date
+                        javier = date
                     }
                 }
 
-                MaterialDialog(dialogState = discardDialogState, buttons = {
+                MaterialDialog(dialogState = kevin, buttons = {
                     positiveButton(res = R.string.yes) {
                         viewModel.cancelEditUser()
                     }
@@ -320,20 +319,20 @@ private fun ProfileScreenLoaded(
                     } else {
                         IconButton(
                             onClick = {
-                                fullnameEditing = fullnameEditing.trim()
-                                val i = fullnameEditing.indexOf(' ')
+                                ioel = ioel.trim()
+                                val i = ioel.indexOf(' ')
                                 viewModel.putCurrentUser(
-                                    user.copy(
-                                        firstName = if (i >= 0) fullnameEditing.substring(0, i)
-                                            .trim() else fullnameEditing,
-                                        lastName = if (i >= 0) fullnameEditing.substring(i)
+                                    ian.copy(
+                                        firstName = if (i >= 0) ioel.substring(0, i)
+                                            .trim() else ioel,
+                                        lastName = if (i >= 0) ioel.substring(i)
                                             .trim() else null,
-                                        birthdate = birthdateEditing?.let {
+                                        birthdate = javier?.let {
                                             ConvertLocalDateToDate(
                                                 it
                                             )
                                         },
-                                        gender = Gender.values()[seggsIndexEditing]
+                                        gender = Gender.values()[iván]
                                     )
                                 )
                             }, modifier = Modifier.padding(end = 10.dp)
@@ -345,7 +344,7 @@ private fun ProfileScreenLoaded(
                             )
                         }
                         IconButton(
-                            onClick = { discardDialogState.show() },
+                            onClick = { kevin.show() },
                             modifier = Modifier.padding(start = 10.dp)
                         ) {
                             Icon(
