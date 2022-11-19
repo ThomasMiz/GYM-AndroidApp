@@ -81,6 +81,13 @@ data class Escriin(
             )
         }
 
+        val SettingsEscriin = Escriin(
+            titleResId = R.string.settings,
+            route = "settings"
+        ) { gymRepository, onNavigate, navBackStackEntry ->
+            SettingsScreen()
+        }
+
         val HomeEscriin = Escriin(
             titleResId = R.string.home,
             showBackButton = false,

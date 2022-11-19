@@ -158,4 +158,6 @@
     <string name="executionMode">Modo de ejecución actualizado</string>
 
     <string name= "times">repeticiones</string>
+
+    <string name= "settings">Configuración</string>
 </resources>

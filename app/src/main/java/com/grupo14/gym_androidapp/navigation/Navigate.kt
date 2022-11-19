@@ -7,10 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +31,7 @@ private val ActiveScreens = listOf(
     Escriin.LoginEscriin,
     Escriin.RegisterEscriin,
     Escriin.VerifyEscriin,
+    Escriin.SettingsEscriin,
     Escriin.HomeEscriin,
     Escriin.ProfileEscriin,
     Escriin.SearchEscriin,
@@ -56,6 +54,7 @@ fun handleOnNavigate(navController: NavController, route: String) {
 
     if (pedro?.onNavigatedNewStart == null) {
         navController.navigate(route) {
+            launchSingleTop = true
             if (pedro?.onNavigatePopBack != null) {
                 popUpTo(pedro.onNavigatePopBack!!) { inclusive = true }
             }
@@ -66,7 +65,7 @@ fun handleOnNavigate(navController: NavController, route: String) {
             pedro.onNavigatedPopBackInclusive
         )
         navController.graph.setStartDestination(pedro.onNavigatedNewStart!!)
-        navController.navigate(route)
+        navController.navigate(route) { launchSingleTop = true }
     }
 }
 
@@ -105,9 +104,12 @@ fun Activities(
         topBar = if (!santino) ({
             val currentScreen = tomás.uiState.currentScreen
             if (currentScreen != null && currentScreen.showTopAppBar) {
-                MyTopAppBar(currentScreen.titleResId, currentScreen.showBackButton) {
-                    navController.popBackStack()
-                }
+                MyTopAppBar(
+                    titleResId = currentScreen.titleResId,
+                    showBackButton = currentScreen.showBackButton,
+                    onBackClicked = { navController.popBackStack() },
+                    onSettingsClicked = { handleOnNavigate(navController, "settings") }
+                )
             }
         }) else ({}),
         bottomBar = if (!santino) ({
@@ -160,7 +162,7 @@ fun Activities(
 }
 
 @Composable
-fun MyTopAppBar(titleResId: Int, showBackButton: Boolean, onBackClicked: () -> Unit) {
+fun MyTopAppBar(titleResId: Int, showBackButton: Boolean, onBackClicked: () -> Unit, onSettingsClicked: () -> Unit) {
     TopAppBar(
         title = { if (titleResId >= 0) Text(stringResource(titleResId)) },
         navigationIcon = if (showBackButton) ({
@@ -168,6 +170,11 @@ fun MyTopAppBar(titleResId: Int, showBackButton: Boolean, onBackClicked: () -> U
                 Icon(Icons.Filled.ArrowBack, "backIcon")
             }
         }) else null,
+        actions = {
+            IconButton(onClick = onSettingsClicked) {
+                Icon(Icons.Filled.Settings, "settingsIcon")
+            }
+        },
         backgroundColor = colorResource(R.color.dark),
         contentColor = colorResource(R.color.white)
     )
