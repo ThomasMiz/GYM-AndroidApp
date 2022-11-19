@@ -154,7 +154,7 @@
     <string name="millis">El parámetro millis no puede ser negativo</string>
     <string name="confirmCancelationRoutine">¿Estás seguro que deseas cancelar la ejecución?</string>
     <string name="cancelExecution">Cancelar ejecución</string>
-    <string name="ready">=¿Todo listo?</string>
+    <string name="ready">¿Todo listo?</string>
     <string name="executionMode">Modo de ejecución actualizado</string>
 
     <string name= "times">repeticiones</string>

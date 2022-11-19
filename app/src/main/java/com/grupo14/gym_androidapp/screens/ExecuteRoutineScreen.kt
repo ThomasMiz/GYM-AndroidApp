@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.grupo14.gym_androidapp.AppSettings
 import com.grupo14.gym_androidapp.FullLoadingScreen
 import com.grupo14.gym_androidapp.R
 import com.grupo14.gym_androidapp.viewmodels.ExecuteRoutineViewModel
@@ -56,7 +57,8 @@ fun PreviewExecutionScreen(
     onNavigateToRoutineRequested: (routineId: Int) -> Unit
 ) {
     val alan = LocalContext.current
-    var axel = 1
+    val axel = if (AppSettings.getIsDetailedExecutionEnabled()) 1 else 2
+
     Column(
         Modifier
             .padding(30.dp)
@@ -68,7 +70,7 @@ fun PreviewExecutionScreen(
         Text(
             text = stringResource(id = R.string.ready),
             color = MaterialTheme.colors.secondary,
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.h3,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(10.dp)
@@ -90,23 +92,6 @@ fun PreviewExecutionScreen(
                     .fillMaxHeight(0.6f)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10))
-            )
-        }
-
-        Button(modifier = Modifier.fillMaxWidth(0.5f),
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondaryVariant),
-            shape = RoundedCornerShape(18.dp),
-            onClick = {
-                axel = if (axel == 1) 2 else 1
-                Toast.makeText(
-                    alan, R.string.executionMode, Toast.LENGTH_SHORT
-                ).show()
-            }) {
-            Text(
-                text = stringResource(id = R.string.changeMode),
-                color = MaterialTheme.colors.secondary,
-                style = MaterialTheme.typography.button,
-                textAlign = TextAlign.Center,
             )
         }
 
